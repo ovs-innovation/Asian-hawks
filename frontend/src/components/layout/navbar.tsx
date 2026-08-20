@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { BrandLogo } from "@/components/brand-logo";
 import { cn } from "@/lib/utils";
@@ -24,10 +24,21 @@ export function Navbar() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
   return (
     <header className="sticky top-0 z-50 border-b border-[var(--border)] bg-white">
-      <div className="mx-auto flex h-[64px] w-full max-w-[var(--max-w)] items-center justify-between gap-3 px-4 sm:h-[76px] sm:px-5">
-        <BrandLogo className="min-w-0" height={40} />
+      <div className="mx-auto flex h-14 w-full max-w-[var(--max-w)] items-center justify-between gap-2 px-3 sm:h-[72px] sm:gap-3 sm:px-5">
+        <BrandLogo className="min-w-0" height={36} />
 
         <nav className="hidden items-center lg:flex">
           {links.map((l) => (
@@ -44,7 +55,7 @@ export function Navbar() {
           ))}
         </nav>
 
-        <div className="hidden items-center gap-2.5 md:flex">
+        <div className="hidden items-center gap-2.5 lg:flex">
           <Link
             href="/login"
             className="inline-flex h-10 items-center rounded-lg border border-[var(--primary)] px-5 text-[13px] font-semibold text-[var(--primary)] hover:bg-[#eff6ff]"
@@ -59,23 +70,42 @@ export function Navbar() {
           </Link>
         </div>
 
-        <button type="button" className="rounded-lg p-2 lg:hidden" aria-label="Menu" onClick={() => setOpen((v) => !v)}>
+        <button
+          type="button"
+          className="grid h-11 w-11 place-items-center rounded-lg lg:hidden"
+          aria-label={open ? "Close menu" : "Open menu"}
+          aria-expanded={open}
+          onClick={() => setOpen((v) => !v)}
+        >
           {open ? <X size={22} /> : <Menu size={22} />}
         </button>
       </div>
 
       {open && (
-        <div className="border-t border-[var(--border)] bg-white px-5 py-4 lg:hidden">
+        <div className="fixed inset-x-0 top-14 bottom-0 z-40 overflow-y-auto bg-white px-5 py-4 sm:top-[72px] lg:hidden">
           {links.map((l) => (
-            <Link key={l.href} href={l.href} className="block py-2.5 text-[14px] font-medium" onClick={() => setOpen(false)}>
+            <Link
+              key={l.href}
+              href={l.href}
+              className={cn(
+                "block border-b border-[#eef2f6] py-3.5 text-[16px] font-medium text-[#111827]",
+                l.match(pathname) && "text-[var(--primary)]"
+              )}
+            >
               {l.label}
             </Link>
           ))}
-          <div className="mt-3 flex gap-2">
-            <Link href="/login" className="flex-1 rounded-lg border border-[var(--primary)] py-2.5 text-center text-[14px] font-semibold text-[var(--primary)]" onClick={() => setOpen(false)}>
+          <div className="mt-5 flex flex-col gap-2 sm:flex-row">
+            <Link
+              href="/login"
+              className="flex-1 rounded-lg border border-[var(--primary)] py-3 text-center text-[15px] font-semibold text-[var(--primary)]"
+            >
               Login
             </Link>
-            <Link href="/signup" className="flex-1 rounded-lg bg-[var(--cta)] py-2.5 text-center text-[14px] font-semibold text-white" onClick={() => setOpen(false)}>
+            <Link
+              href="/signup"
+              className="flex-1 rounded-lg bg-[var(--cta)] py-3 text-center text-[15px] font-semibold text-white"
+            >
               Register
             </Link>
           </div>

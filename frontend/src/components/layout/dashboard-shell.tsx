@@ -123,15 +123,34 @@ export function DashboardShell({
         </Button>
       </aside>
       <div className="md:pl-64">
-        <header className="sticky top-0 z-20 flex h-16 items-center justify-between border-b border-[#e5e7eb] bg-white/95 px-6 backdrop-blur">
-          <p className="text-sm text-[#64748b]">
-            {user.name} · {user.role.replace("_", " ")}
-          </p>
-          <Link href="/" className="text-sm font-medium text-[#0f5daa] hover:underline">
-            View website
-          </Link>
+        <header className="sticky top-0 z-20 border-b border-[#e5e7eb] bg-white/95 backdrop-blur">
+          <div className="flex h-14 items-center justify-between gap-3 px-4 sm:h-16 sm:px-6">
+            <p className="truncate text-sm text-[#64748b]">
+              {user.name} · {user.role.replace("_", " ")}
+            </p>
+            <Link href="/" className="shrink-0 text-sm font-medium text-[#0f5daa] hover:underline">
+              View website
+            </Link>
+          </div>
+          <nav className="flex gap-1 overflow-x-auto border-t border-[#eef2f6] px-3 py-2 md:hidden [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {items.map(([label, href]) => {
+              const active = pathname === href || (href !== `/${area}` && pathname.startsWith(href));
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  className={cn(
+                    "shrink-0 rounded-full px-3 py-1.5 text-[12px] font-semibold",
+                    active ? "bg-[#0f5daa] text-white" : "bg-[#f1f5f9] text-[#475569]"
+                  )}
+                >
+                  {label}
+                </Link>
+              );
+            })}
+          </nav>
         </header>
-        <div className="p-6 lg:p-10">{children}</div>
+        <div className="p-4 sm:p-6 lg:p-10">{children}</div>
       </div>
     </div>
   );
@@ -141,7 +160,7 @@ export function PageHeader({ title, body, action }: { title: string; body?: stri
   return (
     <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight text-[#111827]">{title}</h1>
+        <h1 className="text-2xl font-bold tracking-tight text-[#111827] sm:text-3xl">{title}</h1>
         {body && <p className="mt-1 text-sm text-[#64748b]">{body}</p>}
       </div>
       {action}

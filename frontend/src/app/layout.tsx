@@ -16,6 +16,12 @@ export const metadata: Metadata = {
   description: "Government jobs, private jobs, and career growth in one place. Asian Hawks Manpower Services Pvt. Ltd.",
 };
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+};
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">

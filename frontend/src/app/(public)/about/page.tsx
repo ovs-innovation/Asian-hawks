@@ -27,23 +27,23 @@ export default function AboutPage() {
         <div className="mx-auto grid w-full max-w-[var(--max-w)] items-center gap-10 px-5 py-12 lg:grid-cols-[1.15fr_0.85fr] lg:py-16">
           <div>
             <p className="text-[12px] font-semibold uppercase tracking-[0.16em] text-white/80">About us</p>
-            <h1 className="mt-2 max-w-xl text-[32px] font-extrabold leading-tight tracking-tight !text-white sm:text-[40px]">
+            <h1 className="mt-2 max-w-xl text-[26px] font-extrabold leading-tight tracking-tight !text-white sm:text-[40px]">
               Asian Hawks Manpower Services
             </h1>
             <p className="mt-4 max-w-lg text-[16px] leading-relaxed text-white/90">
               We help people find work and get ready for it — government and private jobs, banking training, and placement on real bank projects.
             </p>
             <p className="mt-4 text-[16px] font-semibold text-white">Find Jobs. Learn Skills. Build Your Future.</p>
-            <div className="mt-7 flex flex-wrap gap-3">
+            <div className="mt-7 flex w-full flex-col gap-3 sm:flex-row sm:flex-wrap">
               <Link
                 href="/jobs"
-                className="inline-flex h-11 items-center rounded-lg bg-white px-5 text-[14px] font-semibold text-[#03224c]"
+                className="inline-flex h-12 w-full items-center justify-center rounded-lg bg-white px-5 text-[14px] font-semibold text-[#03224c] sm:h-11 sm:w-auto"
               >
                 Browse jobs
               </Link>
               <Link
                 href="/contact"
-                className="inline-flex h-11 items-center rounded-lg border border-white/40 bg-white/10 px-5 text-[14px] font-semibold !text-white"
+                className="inline-flex h-12 w-full items-center justify-center rounded-lg border border-white/40 bg-white/10 px-5 text-[14px] font-semibold !text-white sm:h-11 sm:w-auto"
               >
                 Talk to HR
               </Link>
@@ -120,11 +120,11 @@ export default function AboutPage() {
             <p className="text-[20px] font-extrabold text-white">Ready to apply or join a batch?</p>
             <p className="mt-1 text-[14px] text-white/80">Open jobs, or message HR if you need the right role first.</p>
           </div>
-          <div className="flex flex-wrap gap-3">
-            <Link href="/jobs" className="inline-flex h-11 items-center rounded-lg bg-white px-5 text-[14px] font-semibold text-[#03224c]">
+          <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
+            <Link href="/jobs" className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-white px-5 text-[14px] font-semibold text-[#03224c] sm:w-auto">
               View jobs
             </Link>
-            <Link href="/training" className="inline-flex h-11 items-center rounded-lg bg-[#b31b43] px-5 text-[14px] font-semibold text-white">
+            <Link href="/training" className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-[#b31b43] px-5 text-[14px] font-semibold text-white sm:w-auto">
               View courses
             </Link>
           </div>

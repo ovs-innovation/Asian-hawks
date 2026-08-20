@@ -24,6 +24,7 @@
 html {
   scroll-behavior: smooth;
   color-scheme: light;
+  overflow-x: clip;
 }
 
 body {
@@ -33,10 +34,27 @@ body {
   font-size: 15px;
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+  min-width: 0;
+}
+
+img,
+video,
+svg {
+  max-width: 100%;
 }
 
 h1, h2, h3, h4 {
   color: var(--heading);
+  overflow-wrap: break-word;
+}
+
+button,
+a,
+input,
+select,
+textarea {
+  max-width: 100%;
 }
 
 ::selection {

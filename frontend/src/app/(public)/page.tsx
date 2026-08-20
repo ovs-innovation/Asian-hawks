@@ -66,7 +66,7 @@ export default function HomePage() {
         <div className="relative mx-auto grid w-full max-w-[var(--max-w)] items-center gap-8 px-5 pb-8 pt-12 lg:grid-cols-[1fr_0.9fr] lg:pb-10 lg:pt-16">
           <div>
             <p className="text-[13px] font-semibold tracking-wide text-[var(--primary)]">Find jobs faster. Build your career.</p>
-            <h1 className="mt-3 max-w-xl text-[28px] font-extrabold leading-[1.12] tracking-tight text-[var(--heading)] sm:text-[40px] md:text-[48px]">
+            <h1 className="mt-3 max-w-xl text-[26px] font-extrabold leading-[1.15] tracking-tight text-[var(--heading)] sm:text-[40px] md:text-[48px]">
               Find Your Next Opportunity
             </h1>
             <p className="mt-4 max-w-md text-[16px] leading-relaxed text-[var(--text-secondary)]">
@@ -85,10 +85,10 @@ export default function HomePage() {
       </section>
 
       {/* Search card — in flow so fields are not clipped */}
-      <div className="relative z-20 -mt-4 px-5">
+      <div className="relative z-20 -mt-2 px-3 sm:-mt-4 sm:px-5">
         <form
           onSubmit={search}
-          className="mx-auto w-full max-w-[var(--max-w)] rounded-2xl border border-[var(--border)] bg-white p-5 shadow-[var(--shadow-md)]"
+          className="mx-auto w-full max-w-[var(--max-w)] rounded-2xl border border-[var(--border)] bg-white p-4 shadow-[var(--shadow-md)] sm:p-5"
         >
           <div className="flex flex-wrap gap-4 border-b border-[var(--border)] pb-3 text-[13px] font-semibold sm:gap-6 sm:text-[14px]">
             {(
@@ -108,7 +108,7 @@ export default function HomePage() {
               </button>
             ))}
           </div>
-          <div className="mt-4 grid gap-3 md:grid-cols-[1.4fr_1fr_1fr_auto]">
+          <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_auto]">
             <label className="flex items-center gap-2 rounded-lg border border-[var(--border)] px-3 py-2.5">
               <Search size={16} className="text-[var(--muted)]" />
               <input
@@ -139,7 +139,7 @@ export default function HomePage() {
               <option>Government</option>
               <option>Sales</option>
             </select>
-            <button type="submit" className="h-[46px] rounded-lg bg-[var(--cta)] px-6 text-[14px] font-bold text-white hover:bg-[var(--cta-hover)]">
+            <button type="submit" className="h-[46px] w-full rounded-lg bg-[var(--cta)] px-6 text-[14px] font-bold text-white hover:bg-[var(--cta-hover)] sm:col-span-2 lg:col-span-1 lg:w-auto">
               Search Jobs
             </button>
           </div>
@@ -250,14 +250,14 @@ export default function HomePage() {
       {/* Jobs for you — Naukri-style wide listings */}
       <section className="bg-[#f8fafc] py-12">
         <div className="mx-auto w-full max-w-[var(--max-w)] px-5">
-          <div className="flex items-end justify-between gap-4">
-            <h2 className="text-[26px] font-extrabold tracking-tight text-[var(--heading)]">Jobs for you</h2>
-            <Link href={activeTrack.href} className="text-[14px] font-semibold text-[var(--primary)]">
+          <div className="flex flex-wrap items-end justify-between gap-3">
+            <h2 className="text-[22px] font-extrabold tracking-tight text-[var(--heading)] sm:text-[26px]">Jobs for you</h2>
+            <Link href={activeTrack.href} className="shrink-0 text-[14px] font-semibold text-[var(--primary)]">
               View all
             </Link>
           </div>
 
-          <div className="mt-5 flex gap-8 border-b border-[#e5eaf0]">
+          <div className="-mx-5 mt-5 flex gap-5 overflow-x-auto border-b border-[#e5eaf0] px-5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {jobTracks.map((t) => (
               <button
                 key={t.id}
@@ -265,8 +265,8 @@ export default function HomePage() {
                 onClick={() => setJobsTrack(t.id)}
                 className={
                   jobsTrack === t.id
-                    ? "-mb-px border-b-2 border-[var(--primary)] pb-3 text-[14px] font-semibold text-[var(--primary)]"
-                    : "pb-3 text-[14px] font-medium text-[#64748b] hover:text-[var(--heading)]"
+                    ? "-mb-px shrink-0 border-b-2 border-[var(--primary)] pb-3 text-[14px] font-semibold text-[var(--primary)]"
+                    : "shrink-0 pb-3 text-[14px] font-medium text-[#64748b] hover:text-[var(--heading)]"
                 }
               >
                 {t.label}
@@ -320,7 +320,7 @@ export default function HomePage() {
 
       {/* Stats */}
       <section className="py-12">
-        <div className="mx-auto grid w-full max-w-[var(--max-w)] grid-cols-2 divide-y divide-[var(--border)] px-5 sm:grid-cols-3 lg:grid-cols-5 lg:divide-x lg:divide-y-0">
+        <div className="mx-auto grid w-full max-w-[var(--max-w)] grid-cols-2 px-5 lg:grid-cols-5 lg:divide-x lg:divide-[var(--border)]">
           {[
             [Briefcase, `${PLATFORM_STATS.jobs.toLocaleString()}+`, "Jobs Available"],
             [Building2, "850+", "Companies"],
@@ -343,12 +343,12 @@ export default function HomePage() {
 
       <section className="bg-[#f4f7fb] py-12">
         <div className="mx-auto w-full max-w-[var(--max-w)] px-5">
-          <div className="flex items-end justify-between gap-4">
+          <div className="flex flex-wrap items-end justify-between gap-3">
             <div>
               <p className="text-[12px] font-semibold uppercase tracking-[0.16em] text-[#0f5daa]">Training</p>
-              <h2 className="mt-1 text-[26px] font-extrabold tracking-tight text-[var(--heading)]">Banking courses</h2>
+              <h2 className="mt-1 text-[22px] font-extrabold tracking-tight text-[var(--heading)] sm:text-[26px]">Banking courses</h2>
             </div>
-            <Link href="/training" className="text-[14px] font-semibold text-[#0f5daa]">
+            <Link href="/training" className="shrink-0 text-[14px] font-semibold text-[#0f5daa]">
               View all
             </Link>
           </div>
@@ -407,16 +407,16 @@ export default function HomePage() {
             <Mail className="text-[var(--primary)]" size={22} />
             <p className="text-[15px] font-semibold text-[var(--heading)]">Get career alerts</p>
           </div>
-          <div className="flex w-full max-w-md gap-2">
+          <div className="flex w-full min-w-0 max-w-md gap-2">
             <input
               type="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@email.com"
-              className="h-11 flex-1 rounded-lg border border-[var(--border)] bg-white px-3 text-[14px] outline-none"
+              className="h-11 min-w-0 flex-1 rounded-lg border border-[var(--border)] bg-white px-3 text-[14px] outline-none"
             />
-            <button type="submit" className="h-11 rounded-lg bg-[var(--cta)] px-5 text-[14px] font-bold text-white hover:bg-[var(--cta-hover)]">
+            <button type="submit" className="h-11 shrink-0 rounded-lg bg-[var(--cta)] px-4 text-[14px] font-bold text-white hover:bg-[var(--cta-hover)] sm:px-5">
               Subscribe
             </button>
           </div>
@@ -448,9 +448,9 @@ function JobListing({
       <span className="min-w-0">
         <span className="block truncate text-[16px] font-semibold text-[#1f2937] group-hover:text-[var(--primary)]">{title}</span>
         <span className="mt-0.5 block truncate text-[13px] text-[#64748b]">{company}</span>
-        <span className="mt-2 flex items-center gap-2 text-[13px] text-[#64748b]">
-          <MapPin size={13} className="shrink-0" />
-          <span className="truncate">
+        <span className="mt-2 flex min-w-0 items-start gap-2 text-[13px] text-[#64748b]">
+          <MapPin size={13} className="mt-0.5 shrink-0" />
+          <span className="min-w-0 break-words">
             {location}
             <span className="mx-2 text-[#cbd5e1]">|</span>
             {meta}

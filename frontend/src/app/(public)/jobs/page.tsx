@@ -41,7 +41,7 @@ function JobsBrowser() {
       <div className="border-b border-[#e8eef5] bg-white">
         <div className="mx-auto w-full max-w-[1080px] px-4 py-8 sm:px-6 sm:py-10">
           <p className="text-[12px] font-semibold uppercase tracking-[0.14em] text-[#0f5daa]">Asian Hawks</p>
-          <h1 className="mt-1 text-[28px] font-extrabold tracking-tight text-[#111827] sm:text-[32px]">Open jobs</h1>
+          <h1 className="mt-1 text-[24px] font-extrabold tracking-tight text-[#111827] sm:text-[32px]">Open jobs</h1>
           <p className="mt-2 max-w-xl text-[15px] text-[#64748b]">
             Banking, field, and customer roles with salary and location on every listing.
           </p>

@@ -41,7 +41,7 @@ const cols = [
 export function Footer() {
   return (
     <footer className="bg-[var(--navy)] text-white">
-      <div className="mx-auto grid w-full max-w-[var(--max-w)] gap-10 px-5 py-10 sm:py-14 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr_1fr]">
+      <div className="mx-auto grid w-full max-w-[var(--max-w)] gap-8 px-4 py-10 sm:gap-10 sm:px-5 sm:py-14 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr_1fr]">
         <div className="min-w-0">
           <span className="inline-flex rounded-lg bg-white px-2 py-1">
             <BrandLogo height={44} />

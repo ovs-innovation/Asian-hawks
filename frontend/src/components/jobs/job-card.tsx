@@ -57,7 +57,7 @@ export function JobCard({
   );
 
   const className =
-    "group block rounded-xl border border-[#e8eef5] bg-white px-5 py-5 transition hover:border-[#bfdbfe] hover:shadow-[0_8px_24px_rgba(15,93,170,0.08)]";
+    "group block rounded-xl border border-[#e8eef5] bg-white px-3.5 py-4 transition hover:border-[#bfdbfe] hover:shadow-[0_8px_24px_rgba(15,93,170,0.08)] sm:px-5 sm:py-5";
 
   if (preview) {
     return <article className={className}>{inner}</article>;

@@ -7,16 +7,16 @@ export default function ContactPage() {
       <div className="bg-[linear-gradient(135deg,#03224c_0%,#0f5daa_100%)]">
         <div className="mx-auto w-full max-w-[var(--max-w)] px-5 py-12 sm:py-14">
           <p className="text-[12px] font-semibold uppercase tracking-[0.16em] text-white/80">Asian Hawks</p>
-          <h1 className="mt-2 text-[32px] font-extrabold tracking-tight !text-white sm:text-[38px]">
+          <h1 className="mt-2 text-[26px] font-extrabold tracking-tight !text-white sm:text-[38px]">
             Contact us
           </h1>
           <p className="mt-3 max-w-lg text-[16px] leading-relaxed text-white/90">
             Jobs, training, or interview help — call, WhatsApp, or send a message.
           </p>
-          <div className="mt-7 flex flex-wrap gap-3">
+          <div className="mt-7 flex w-full flex-col gap-3 sm:flex-row sm:flex-wrap">
             <a
               href="tel:6280698650"
-              className="inline-flex h-11 items-center gap-2 rounded-lg bg-white px-5 text-[14px] font-semibold text-[#03224c]"
+              className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-white px-5 text-[14px] font-semibold text-[#03224c] sm:h-11 sm:w-auto"
             >
               <Phone size={16} /> 6280698650
             </a>
@@ -24,7 +24,7 @@ export default function ContactPage() {
               href="https://wa.me/916280698650"
               target="_blank"
               rel="noreferrer"
-              className="inline-flex h-11 items-center gap-2 rounded-lg bg-[#157347] px-5 text-[14px] font-semibold text-white"
+              className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-[#157347] px-5 text-[14px] font-semibold text-white sm:h-11 sm:w-auto"
             >
               <MessageCircle size={16} /> WhatsApp
             </a>
@@ -36,7 +36,7 @@ export default function ContactPage() {
         <div className="space-y-4">
           <div className="rounded-2xl border border-[#e6edf5] bg-white p-6">
             <p className="text-[13px] font-semibold text-[#64748b]">Phone</p>
-            <a href="tel:6280698650" className="mt-1 block text-[22px] font-bold text-[#0f5daa]">
+            <a href="tel:6280698650" className="mt-1 block break-all text-[22px] font-bold text-[#0f5daa] sm:text-[24px]">
               6280698650
             </a>
             <p className="mt-2 text-[14px] text-[#475569]">Monday – Friday, 9:00 am – 6:00 pm IST</p>

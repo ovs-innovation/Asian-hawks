@@ -30,18 +30,18 @@ export function CoursesBrowser() {
       <div className="bg-[linear-gradient(135deg,#03224c_0%,#0f5daa_100%)] text-white">
         <div className="mx-auto w-full max-w-[var(--max-w)] px-5 py-12">
           <p className="text-[12px] font-semibold uppercase tracking-[0.16em] text-white/70">Training</p>
-          <h1 className="mt-2 text-[32px] font-extrabold tracking-tight">Banking courses</h1>
+          <h1 className="mt-2 text-[26px] font-extrabold tracking-tight !text-white sm:text-[32px]">Banking courses</h1>
           <p className="mt-2 max-w-lg text-[15px] text-white/75">
             Classroom, field, and exam batches — separate from job openings.
           </p>
-          <form onSubmit={onSearch} className="mt-6 flex max-w-lg gap-2">
+          <form onSubmit={onSearch} className="mt-6 flex w-full max-w-lg flex-col gap-2 sm:flex-row">
             <input
-              className="h-11 flex-1 rounded-lg bg-white px-4 text-[14px] text-[#111827] outline-none"
+              className="h-11 min-w-0 flex-1 rounded-lg bg-white px-4 text-[14px] text-[#111827] outline-none"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Search a course"
             />
-            <button type="submit" className="h-11 rounded-lg bg-[#b31b43] px-5 text-[14px] font-semibold text-white">
+            <button type="submit" className="h-11 rounded-lg bg-[#b31b43] px-5 text-[14px] font-semibold text-white sm:shrink-0">
               Search
             </button>
           </form>

@@ -18,7 +18,7 @@ export function BrandLogo({
       width={280}
       height={72}
       priority
-      className="h-full w-auto max-w-[240px] object-contain object-left"
+      className="h-full w-auto max-w-[148px] object-contain object-left sm:max-w-[200px] lg:max-w-[240px]"
       unoptimized
     />
   );
