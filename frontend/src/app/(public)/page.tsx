@@ -50,9 +50,9 @@ export default function HomePage() {
   const privateJobs = jobs.slice(0, 6);
   const openings = jobs.slice(0, 6);
   const jobTracks = [
-    { id: "gov" as const, label: "Government jobs", href: "/government-jobs" },
-    { id: "private" as const, label: "Private jobs", href: "/private-jobs" },
-    { id: "latest" as const, label: "Latest openings", href: "/jobs" },
+    { id: "gov" as const, label: "Government", href: "/government-jobs" },
+    { id: "private" as const, label: "Private", href: "/private-jobs" },
+    { id: "latest" as const, label: "Latest", href: "/jobs" },
   ];
   const activeTrack = jobTracks.find((t) => t.id === jobsTrack)!;
 
@@ -255,7 +255,7 @@ export default function HomePage() {
       </section>
 
       {/* Jobs for you — Naukri-style wide listings */}
-      <section className="bg-[#f8fafc] py-12">
+      <section className="bg-[#f8fafc] py-8 sm:py-12">
         <div className="mx-auto w-full max-w-[var(--max-w)] px-4 sm:px-5">
           <div className="flex flex-wrap items-end justify-between gap-3">
             <h2 className="text-[22px] font-extrabold tracking-tight text-[var(--heading)] sm:text-[26px]">Jobs for you</h2>
@@ -433,6 +433,13 @@ export default function HomePage() {
   );
 }
 
+function shortPlace(location?: string) {
+  if (!location) return "Pan India";
+  const first = location.split(",")[0].trim();
+  if (location.includes(",") || location.includes("+")) return `${first} + more`;
+  return first;
+}
+
 function JobListing({
   href,
   title,
@@ -450,13 +457,17 @@ function JobListing({
   logo?: string;
 }) {
   return (
-    <Link href={href} className="group flex gap-3 border-b border-[#e8eef5] py-4 sm:gap-4 sm:py-5">
-      <CompanyLogo name={company} logo={logo} size={40} className="h-10 w-10 shrink-0 sm:h-12 sm:w-12" />
+    <Link href={href} className="group flex items-start gap-3 border-b border-[#e8eef5] py-3.5 sm:gap-4 sm:py-5">
+      <CompanyLogo name={company} logo={logo} size={40} className="shrink-0" />
       <span className="min-w-0 flex-1">
-        <span className="block text-[15px] font-semibold leading-snug text-[#1f2937] group-hover:text-[var(--primary)] sm:truncate sm:text-[16px]">{title}</span>
-        <span className="mt-0.5 block truncate text-[12px] text-[#64748b] sm:text-[13px]">{company}</span>
-        <span className="mt-1.5 block text-[12px] leading-snug text-[#64748b] sm:text-[13px]">
-          {location} · {meta}
+        <span className="line-clamp-1 text-[15px] font-semibold text-[#1f2937] group-hover:text-[var(--primary)] sm:text-[16px]">
+          {title}
+        </span>
+        <span className="mt-0.5 block truncate text-[12px] text-[#64748b]">{company}</span>
+        <span className="mt-1 flex flex-wrap gap-x-2 text-[12px] text-[#64748b]">
+          <span className="truncate">{shortPlace(location)}</span>
+          <span className="text-[#cbd5e1]">·</span>
+          <span className="truncate">{meta}</span>
         </span>
       </span>
     </Link>

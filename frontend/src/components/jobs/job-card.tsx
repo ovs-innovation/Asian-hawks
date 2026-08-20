@@ -38,7 +38,7 @@ export function JobCard({
           </h3>
           <p className="mt-0.5 line-clamp-1 text-[12px] text-[#64748b] sm:text-[13px]">{companyName}</p>
           <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-[12px] text-[#64748b] sm:text-[13px]">
-            <span className="inline-flex items-center gap-1"><MapPin size={12} />{location}</span>
+            <span className="inline-flex items-center gap-1"><MapPin size={12} />{location.split(",")[0]}</span>
             <span className="inline-flex items-center gap-1"><Wallet size={12} />{salary}</span>
             <span className="hidden items-center gap-1 sm:inline-flex"><Briefcase size={12} />{employmentLabel(job.employmentType)}</span>
             <span className="hidden items-center gap-1 sm:inline-flex"><Clock size={12} />{job.createdAt ? timeAgo(job.createdAt) : "Today"}</span>
