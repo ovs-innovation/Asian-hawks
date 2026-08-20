@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Northline — Find your next career move</title>
+    <meta
+      name="description"
+      content="Northline connects professionals with verified companies. Search roles, meet recruiters directly, and hire with a process built for clarity."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://api.fontshare.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://api.fontshare.com/v2/css?f[]=general-sans@500,600,650,700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect width='24' height='24' rx='6' fill='%232563EB'/><path d='M6 16V8h3.2c2.1 0 3.3 1.1 3.3 2.8 0 1.8-1.2 2.9-3.3 2.9H8.2V16H6zm2.2-4.6h.9c.8 0 1.3-.4 1.3-1.1S9.9 9.2 9.1 9.2h-.9v2.2z' fill='white'/></svg>" />
+  </head>
+  <body>
+    <header class="nav">
+      <div class="nav-inner">
+        <a class="logo" href="index.html">
+          <svg class="logo-mark" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <rect width="24" height="24" rx="6" fill="#2563EB" />
+            <path d="M6 16V8h3.2c2.1 0 3.3 1.1 3.3 2.8 0 1.8-1.2 2.9-3.3 2.9H8.2V16H6zm2.2-4.6h.9c.8 0 1.3-.4 1.3-1.1S9.9 9.2 9.1 9.2h-.9v2.2z" fill="#fff"/>
+          </svg>
+          Northline
+        </a>
+        <nav class="nav-links">
+          <a href="jobs.html">Jobs</a>
+          <a href="companies.html">Companies</a>
+          <a href="candidates.html">Candidates</a>
+          <a href="resources.html">Resources</a>
+          <a href="pricing.html">Pricing</a>
+        </nav>
+        <div class="nav-actions">
+          <a class="btn btn-ghost" href="login.html">Login</a>
+          <a class="btn btn-primary" href="signup.html">Sign Up</a>
+          <button class="menu-toggle" aria-label="Open menu">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 7h16M4 12h16M4 17h16" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="reveal">
+          <p class="eyebrow">Recruitment, rebuilt for clarity</p>
+          <h1>Find Your Next Career Move</h1>
+          <p class="lead">
+            Northline is a hiring platform for people who take their work seriously.
+            Search verified roles, talk to recruiters directly, and move from application
+            to offer without the usual noise.
+          </p>
+          <form class="search-card" id="job-search">
+            <div class="search-field">
+              <label for="role">Job title</label>
+              <input id="role" name="role" type="text" placeholder="Product designer" />
+            </div>
+            <div class="search-field">
+              <label for="location">Location</label>
+              <input id="location" name="location" type="text" placeholder="Remote or city" />
+            </div>
+            <div class="search-field">
+              <label for="experience">Experience</label>
+              <select id="experience" name="experience">
+                <option value="">Any level</option>
+                <option>Entry</option>
+                <option>Mid-level</option>
+                <option>Senior</option>
+                <option>Staff+</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" type="submit">Search</button>
+          </form>
+        </div>
+        <div class="hero-visual reveal d2">
+          <img
+            class="hero-photo"
+            src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=1400&q=80"
+            alt="Two colleagues reviewing work together at a sunlit office desk"
+          />
+          <div class="stat-card stat-1">
+            <strong>12,000+</strong>
+            <span>Active jobs</span>
+          </div>
+          <div class="stat-card stat-2">
+            <strong>850+</strong>
+            <span>Hiring companies</span>
+          </div>
+          <div class="stat-card stat-3">
+            <strong>97%</strong>
+            <span>Hiring success</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="logos">
+      <p class="logos-label">Trusted by teams that hire carefully</p>
+      <div class="marquee" aria-hidden="true">
+        <span>Helios Bank</span>
+        <span>Nimbus Labs</span>
+        <span>Harbor Health</span>
+        <span>Brightpath</span>
+        <span>Keystone</span>
+        <span>Oakridge</span>
+        <span>Solstice</span>
+        <span>Copper &amp; Co</span>
+        <span>Helios Bank</span>
+        <span>Nimbus Labs</span>
+        <span>Harbor Health</span>
+        <span>Brightpath</span>
+        <span>Keystone</span>
+        <span>Oakridge</span>
+        <span>Solstice</span>
+        <span>Copper &amp; Co</span>
+      </div>
+    </section>
+
+    <section class="section section-soft" id="jobs">
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow">Open roles</p>
+          <h2>Featured jobs</h2>
+          <p class="lead">Roles from companies that publish salary, process, and hiring manager details up front.</p>
+        </div>
+        <div class="jobs-grid">
+          <article class="job-card">
+            <div class="job-top">
+              <div class="company-chip">
+                <div class="company-initial">HB</div>
+                <div>
+                  <h3>Senior Product Designer</h3>
+                  <p class="muted">Helios Bank</p>
+                </div>
+              </div>
+              <button class="save-btn" aria-label="Save job" aria-pressed="false">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 4h10a1 1 0 0 1 1 1v16l-6-3.5L6 21V5a1 1 0 0 1 1-1z"/></svg>
+              </button>
+            </div>
+            <div class="job-meta">
+              <span>San Francisco</span>
+              <span>$140k–$175k</span>
+              <span>Full-time</span>
+              <span>2d ago</span>
+            </div>
+            <div class="job-footer">
+              <span class="tag">Design</span>
+              <a class="btn btn-primary btn-sm" href="signup.html">Apply</a>
+            </div>
+          </article>
+          <article class="job-card">
+            <div class="job-top">
+              <div class="company-chip">
+                <div class="company-initial">NL</div>
+                <div>
+                  <h3>Staff Backend Engineer</h3>
+                  <p class="muted">Nimbus Labs</p>
+                </div>
+              </div>
+              <button class="save-btn" aria-label="Save job" aria-pressed="false">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 4h10a1 1 0 0 1 1 1v16l-6-3.5L6 21V5a1 1 0 0 1 1-1z"/></svg>
+              </button>
+            </div>
+            <div class="job-meta">
+              <span>Remote</span>
+              <span>$180k–$220k</span>
+              <span>Full-time</span>
+              <span>1d ago</span>
+            </div>
+            <div class="job-footer">
+              <span class="tag">Engineering</span>
+              <a class="btn btn-primary btn-sm" href="signup.html">Apply</a>
+            </div>
+          </article>
+          <article class="job-card">
+            <div class="job-top">
+              <div class="company-chip">
+                <div class="company-initial">HH</div>
+                <div>
+                  <h3>People Operations Lead</h3>
+                  <p class="muted">Harbor Health</p>
+                </div>
+              </div>
+              <button class="save-btn" aria-label="Save job" aria-pressed="false">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 4h10a1 1 0 0 1 1 1v16l-6-3.5L6 21V5a1 1 0 0 1 1-1z"/></svg>
+              </button>
+            </div>
+            <div class="job-meta">
+              <span>New York</span>
+              <span>$125k–$150k</span>
+              <span>Full-time</span>
+              <span>4d ago</span>
+            </div>
+            <div class="job-footer">
+              <span class="tag">People</span>
+              <a class="btn btn-primary btn-sm" href="signup.html">Apply</a>
+            </div>
+          </article>
+          <article class="job-card">
+            <div class="job-top">
+              <div class="company-chip">
+                <div class="company-initial">BP</div>
+                <div>
+                  <h3>Growth Marketing Manager</h3>
+                  <p class="muted">Brightpath</p>
+                </div>
+              </div>
+              <button class="save-btn" aria-label="Save job" aria-pressed="false">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 4h10a1 1 0 0 1 1 1v16l-6-3.5L6 21V5a1 1 0 0 1 1-1z"/></svg>
+              </button>
+            </div>
+            <div class="job-meta">
+              <span>Austin</span>
+              <span>$110k–$135k</span>
+              <span>Full-time</span>
+              <span>3d ago</span>
+            </div>
+            <div class="job-footer">
+              <span class="tag">Marketing</span>
+              <a class="btn btn-primary btn-sm" href="signup.html">Apply</a>
+            </div>
+          </article>
+          <article class="job-card">
+            <div class="job-top">
+              <div class="company-chip">
+                <div class="company-initial">KS</div>
+                <div>
+                  <h3>Forward Deployed Engineer</h3>
+                  <p class="muted">Keystone</p>
+                </div>
+              </div>
+              <button class="save-btn" aria-label="Save job" aria-pressed="false">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 4h10a1 1 0 0 1 1 1v16l-6-3.5L6 21V5a1 1 0 0 1 1-1z"/></svg>
+              </button>
+            </div>
+            <div class="job-meta">
+              <span>London</span>
+              <span>£90k–£120k</span>
+              <span>Full-time</span>
+              <span>5d ago</span>
+            </div>
+            <div class="job-footer">
+              <span class="tag">Engineering</span>
+              <a class="btn btn-primary btn-sm" href="signup.html">Apply</a>
+            </div>
+          </article>
+          <article class="job-card">
+            <div class="job-top">
+              <div class="company-chip">
+                <div class="company-initial">OR</div>
+                <div>
+                  <h3>Customer Success Manager</h3>
+                  <p class="muted">Oakridge</p>
+                </div>
+              </div>
+              <button class="save-btn" aria-label="Save job" aria-pressed="false">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 4h10a1 1 0 0 1 1 1v16l-6-3.5L6 21V5a1 1 0 0 1 1-1z"/></svg>
+              </button>
+            </div>
+            <div class="job-meta">
+              <span>Chicago</span>
+              <span>$95k–$115k</span>
+              <span>Full-time</span>
+              <span>1w ago</span>
+            </div>
+            <div class="job-footer">
+              <span class="tag">Customer</span>
+              <a class="btn btn-primary btn-sm" href="signup.html">Apply</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head center">
+          <p class="eyebrow">Why Northline</p>
+          <h2>Built for serious hiring</h2>
+          <p class="lead">No marketplace clutter. Just the parts of recruiting that actually move a hire forward.</p>
+        </div>
+        <div class="why-grid">
+          <div class="why-card">
+            <p class="why-num">01</p>
+            <h3>Verified companies</h3>
+            <p>Every employer is reviewed before a role goes live. No ghost listings.</p>
+          </div>
+          <div class="why-card">
+            <p class="why-num">02</p>
+            <h3>Quick hiring process</h3>
+            <p>Structured stages, clear timelines, and fewer loops between screens.</p>
+          </div>
+          <div class="why-card">
+            <p class="why-num">03</p>
+            <h3>Direct recruiter connect</h3>
+            <p>Talk to the person running the search, not a generic inbox.</p>
+          </div>
+          <div class="why-card">
+            <p class="why-num">04</p>
+            <h3>AI Resume Match</h3>
+            <p>Role fit is scored against the actual job, then reviewed by a recruiter.</p>
+          </div>
+          <div class="why-card">
+            <p class="why-num">05</p>
+            <h3>Career support</h3>
+            <p>Interview prep and offer guidance from people who hire for a living.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-soft">
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow">For candidates</p>
+          <h2>A clear path from profile to offer</h2>
+          <p class="lead">Five steps. No extra forms. You always know where you stand.</p>
+        </div>
+        <div class="timeline">
+          <div class="step">
+            <div class="step-dot">1</div>
+            <h3>Create profile</h3>
+            <p>Share the work you want next, not a generic biography.</p>
+          </div>
+          <div class="step">
+            <div class="step-dot">2</div>
+            <h3>Upload resume</h3>
+            <p>One file. We keep it current across every application.</p>
+          </div>
+          <div class="step">
+            <div class="step-dot">3</div>
+            <h3>Get matched</h3>
+            <p>Roles are ranked by skill, location, and compensation range.</p>
+          </div>
+          <div class="step">
+            <div class="step-dot">4</div>
+            <h3>Interview</h3>
+            <p>Meet hiring managers with context already in the room.</p>
+          </div>
+          <div class="step">
+            <div class="step-dot">5</div>
+            <h3>Get hired</h3>
+            <p>Offers come with range, start date, and next-step owners.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow">Employers</p>
+          <h2>Featured companies</h2>
+          <p class="lead">Teams with open roles, real offices, and hiring plans you can actually read.</p>
+        </div>
+        <div class="company-grid">
+          <article class="company-card">
+            <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=900&q=80" alt="Bright open-plan office with long desks and large windows" />
+            <div class="company-body">
+              <h3>Helios Bank</h3>
+              <p class="muted">Financial services</p>
+              <div class="company-stats">
+                <span>2,400 employees</span>
+                <span>18 open roles</span>
+              </div>
+              <a class="btn btn-secondary btn-sm" href="companies.html">Visit profile</a>
+            </div>
+          </article>
+          <article class="company-card">
+            <img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=900&q=80" alt="Modern office lounge with plants and meeting tables" />
+            <div class="company-body">
+              <h3>Nimbus Labs</h3>
+              <p class="muted">Software</p>
+              <div class="company-stats">
+                <span>320 employees</span>
+                <span>12 open roles</span>
+              </div>
+              <a class="btn btn-secondary btn-sm" href="companies.html">Visit profile</a>
+            </div>
+          </article>
+          <article class="company-card">
+            <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=900&q=80" alt="Team working together around laptops in a shared workspace" />
+            <div class="company-body">
+              <h3>Harbor Health</h3>
+              <p class="muted">Healthcare</p>
+              <div class="company-stats">
+                <span>1,100 employees</span>
+                <span>9 open roles</span>
+              </div>
+              <a class="btn btn-secondary btn-sm" href="companies.html">Visit profile</a>
+            </div>
+          </article>
+          <article class="company-card">
+            <img src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=900&q=80" alt="Quiet office interior with wooden desks and natural light" />
+            <div class="company-body">
+              <h3>Brightpath</h3>
+              <p class="muted">Education</p>
+              <div class="company-stats">
+                <span>180 employees</span>
+                <span>7 open roles</span>
+              </div>
+              <a class="btn btn-secondary btn-sm" href="companies.html">Visit profile</a>
+            </div>
+          </article>
+          <article class="company-card">
+            <img src="https://images.unsplash.com/photo-1556761175-4b46a572b786?auto=format&fit=crop&w=900&q=80" alt="Colleagues in discussion at a conference table" />
+            <div class="company-body">
+              <h3>Keystone</h3>
+              <p class="muted">Consulting</p>
+              <div class="company-stats">
+                <span>850 employees</span>
+                <span>14 open roles</span>
+              </div>
+              <a class="btn btn-secondary btn-sm" href="companies.html">Visit profile</a>
+            </div>
+          </article>
+          <article class="company-card">
+            <img src="https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=900&q=80" alt="Sunlit office with rows of desks and large windows" />
+            <div class="company-body">
+              <h3>Oakridge</h3>
+              <p class="muted">Logistics</p>
+              <div class="company-stats">
+                <span>3,200 employees</span>
+                <span>22 open roles</span>
+              </div>
+              <a class="btn btn-secondary btn-sm" href="companies.html">Visit profile</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-soft">
+      <div class="container">
+        <div class="section-head center">
+          <p class="eyebrow">From the floor</p>
+          <h2>What hiring looks like here</h2>
+        </div>
+        <div class="quotes">
+          <figure class="quote">
+            <p>“I knew the salary band and the interview steps before I applied. That should be normal. On Northline it actually is.”</p>
+            <figcaption class="quote-person">
+              <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80" alt="Portrait of Maya Chen" />
+              <div>
+                <strong>Maya Chen</strong>
+                <span>Product Designer, Helios</span>
+              </div>
+            </figcaption>
+          </figure>
+          <figure class="quote">
+            <p>“We stopped collecting resumes into a void. Recruiters see the same notes as hiring managers, so nobody repeats a screen.”</p>
+            <figcaption class="quote-person">
+              <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=200&q=80" alt="Portrait of James Okonkwo" />
+              <div>
+                <strong>James Okonkwo</strong>
+                <span>Engineering Manager, Nimbus</span>
+              </div>
+            </figcaption>
+          </figure>
+          <figure class="quote">
+            <p>“The candidate experience is quiet and specific. People show up prepared because the role was explained properly.”</p>
+            <figcaption class="quote-person">
+              <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=200&q=80" alt="Portrait of Priya Shah" />
+              <div>
+                <strong>Priya Shah</strong>
+                <span>Head of Talent, Harbor Health</span>
+              </div>
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container split">
+        <img
+          src="https://images.unsplash.com/photo-1542744173-8eaa3b11aeb7?auto=format&fit=crop&w=1400&q=80"
+          alt="Hiring team in a meeting reviewing documents around a table"
+        />
+        <div>
+          <p class="eyebrow">For employers</p>
+          <h2>A hiring process that stays in order</h2>
+          <p class="lead">Post once. Review with your team. Move people forward without losing the thread.</p>
+          <div class="process-list">
+            <div class="process-item">
+              <span class="n">01</span>
+              <div>
+                <h3>Post job</h3>
+                <p>Publish salary, team, and interview plan with the listing.</p>
+              </div>
+            </div>
+            <div class="process-item">
+              <span class="n">02</span>
+              <div>
+                <h3>Review applications</h3>
+                <p>Score against the role, not a pile of unstructured PDFs.</p>
+              </div>
+            </div>
+            <div class="process-item">
+              <span class="n">03</span>
+              <div>
+                <h3>Shortlist</h3>
+                <p>Share a ranked list with notes your panel can actually use.</p>
+              </div>
+            </div>
+            <div class="process-item">
+              <span class="n">04</span>
+              <div>
+                <h3>Interview</h3>
+                <p>Schedule, scorecards, and feedback live in one thread.</p>
+              </div>
+            </div>
+            <div class="process-item">
+              <span class="n">05</span>
+              <div>
+                <h3>Hire</h3>
+                <p>Send the offer, collect the yes, and close the requisition.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-soft" id="pricing">
+      <div class="container">
+        <div class="section-head center">
+          <p class="eyebrow">Pricing</p>
+          <h2>Simple plans for how you hire</h2>
+          <p class="lead">Start with one role. Expand when the team is ready.</p>
+        </div>
+        <div class="pricing-grid">
+          <article class="price-card">
+            <h3>Starter</h3>
+            <p class="muted">For a first hire</p>
+            <p class="price">$49<span>/mo</span></p>
+            <ul>
+              <li>1 active job</li>
+              <li>Candidate inbox</li>
+              <li>Basic screening</li>
+              <li>Email support</li>
+            </ul>
+            <a class="btn btn-secondary" href="signup.html">Start hiring</a>
+          </article>
+          <article class="price-card featured">
+            <h3>Growth</h3>
+            <p class="muted">For growing teams</p>
+            <p class="price">$149<span>/mo</span></p>
+            <ul>
+              <li>8 active jobs</li>
+              <li>Shared scorecards</li>
+              <li>AI Resume Match</li>
+              <li>Recruiter connect</li>
+            </ul>
+            <a class="btn btn-primary" href="signup.html">Choose Growth</a>
+          </article>
+          <article class="price-card">
+            <h3>Enterprise</h3>
+            <p class="muted">For talent teams</p>
+            <p class="price">Custom</p>
+            <ul>
+              <li>Unlimited roles</li>
+              <li>SSO and permissions</li>
+              <li>Dedicated success</li>
+              <li>Custom workflows</li>
+            </ul>
+            <a class="btn btn-secondary" href="signup.html">Talk to us</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head center">
+          <p class="eyebrow">FAQ</p>
+          <h2>Questions, answered plainly</h2>
+        </div>
+        <div class="faq">
+          <div class="faq-item open">
+            <button>Is Northline for candidates or companies? <span>+</span></button>
+            <div class="faq-body">
+              <p>Both. Candidates search and apply. Companies post roles, review applications, and hire. Each side has its own workspace.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button>Do you charge candidates? <span>+</span></button>
+            <div class="faq-body">
+              <p>No. Creating a profile, applying, and talking to recruiters is free. Employers pay for hiring tools.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button>How are companies verified? <span>+</span></button>
+            <div class="faq-body">
+              <p>We confirm domain, hiring contact, and a live role before a company can publish. Listings without a salary range stay private.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button>What does AI Resume Match actually do? <span>+</span></button>
+            <div class="faq-body">
+              <p>It compares a resume to the job description and highlights overlap. A recruiter still decides who moves forward.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-lg section-soft">
+      <div class="container final-cta">
+        <p class="eyebrow">Get started</p>
+        <h2>Ready to Hire Better Talent?</h2>
+        <p class="lead">Post a role this afternoon, or set up a candidate profile in a few minutes.</p>
+        <div class="cta-actions">
+          <a class="btn btn-primary btn-lg" href="signup.html">Create an account</a>
+          <a class="btn btn-secondary btn-lg" href="jobs.html">Browse open roles</a>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-grid">
+          <div>
+            <a class="logo" href="index.html">Northline</a>
+            <p>Hiring infrastructure for teams that prefer a quiet, precise process.</p>
+          </div>
+          <div>
+            <h4>Company</h4>
+            <a href="resources.html">About</a>
+            <a href="resources.html">Careers</a>
+            <a href="resources.html">Press</a>
+          </div>
+          <div>
+            <h4>Product</h4>
+            <a href="jobs.html">Jobs</a>
+            <a href="companies.html">Companies</a>
+            <a href="pricing.html">Pricing</a>
+          </div>
+          <div>
+            <h4>Resources</h4>
+            <a href="resources.html">Guides</a>
+            <a href="resources.html">Hiring handbook</a>
+            <a href="candidates.html">For candidates</a>
+          </div>
+          <div>
+            <h4>Legal</h4>
+            <a href="resources.html">Privacy</a>
+            <a href="resources.html">Terms</a>
+            <a href="resources.html">Security</a>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>© 2026 Northline. All rights reserved.</p>
+          <div class="socials">
+            <a href="#">LinkedIn</a>
+            <a href="#">X</a>
+            <a href="#">YouTube</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+    <script src="js/main.js"></script>
+  </body>
+</html>
