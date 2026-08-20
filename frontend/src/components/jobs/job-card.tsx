@@ -29,23 +29,23 @@ export function JobCard({
   const salary = formatSalary(job.minSalary, job.maxSalary, job.currency || "INR");
 
   const inner = (
-    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-      <div className="flex min-w-0 items-start gap-3.5">
-        <CompanyLogo name={companyName} logo={job.company?.logo} size={48} />
-        <div className="min-w-0">
-          <h3 className="text-[17px] font-semibold leading-snug text-[#111827] group-hover:text-[#0f5daa]">
+    <div className="flex flex-col gap-3">
+      <div className="flex min-w-0 items-start gap-3">
+        <CompanyLogo name={companyName} logo={job.company?.logo} size={40} className="h-10 w-10 shrink-0 sm:h-12 sm:w-12" />
+        <div className="min-w-0 flex-1">
+          <h3 className="text-[15px] font-semibold leading-snug text-[#111827] group-hover:text-[#0f5daa] sm:text-[17px]">
             {job.title || "Job title"}
           </h3>
-          <p className="mt-0.5 truncate text-[13px] text-[#64748b]">{companyName}</p>
-          <div className="mt-2.5 flex flex-wrap gap-x-4 gap-y-1.5 text-[13px] text-[#64748b]">
-            <span className="inline-flex items-center gap-1"><MapPin size={13} />{location}</span>
-            <span className="inline-flex items-center gap-1"><Wallet size={13} />{salary}</span>
-            <span className="inline-flex items-center gap-1"><Briefcase size={13} />{employmentLabel(job.employmentType)}</span>
-            <span className="inline-flex items-center gap-1"><Clock size={13} />{job.createdAt ? timeAgo(job.createdAt) : "Today"}</span>
+          <p className="mt-0.5 line-clamp-1 text-[12px] text-[#64748b] sm:text-[13px]">{companyName}</p>
+          <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-[12px] text-[#64748b] sm:text-[13px]">
+            <span className="inline-flex items-center gap-1"><MapPin size={12} />{location}</span>
+            <span className="inline-flex items-center gap-1"><Wallet size={12} />{salary}</span>
+            <span className="hidden items-center gap-1 sm:inline-flex"><Briefcase size={12} />{employmentLabel(job.employmentType)}</span>
+            <span className="hidden items-center gap-1 sm:inline-flex"><Clock size={12} />{job.createdAt ? timeAgo(job.createdAt) : "Today"}</span>
           </div>
         </div>
       </div>
-      <div className="flex shrink-0 items-center justify-between gap-3 sm:flex-col sm:items-end">
+      <div className="flex items-center justify-between gap-3">
         <span className="rounded-md bg-[#eaf3fb] px-2.5 py-1 text-[11px] font-semibold text-[#0f5daa]">
           {job.category || "Banking Jobs"}
         </span>
@@ -57,7 +57,7 @@ export function JobCard({
   );
 
   const className =
-    "group block rounded-xl border border-[#e8eef5] bg-white px-3.5 py-4 transition hover:border-[#bfdbfe] hover:shadow-[0_8px_24px_rgba(15,93,170,0.08)] sm:px-5 sm:py-5";
+    "group block rounded-xl border border-[#e8eef5] bg-white px-3.5 py-3.5 sm:px-5 sm:py-5";
 
   if (preview) {
     return <article className={className}>{inner}</article>;

@@ -37,8 +37,8 @@ export function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-[var(--border)] bg-white">
-      <div className="mx-auto flex h-14 w-full max-w-[var(--max-w)] items-center justify-between gap-2 px-3 sm:h-[72px] sm:gap-3 sm:px-5">
-        <BrandLogo className="min-w-0" height={36} />
+      <div className="mx-auto flex h-16 w-full max-w-[var(--max-w)] items-center justify-between gap-3 px-4 sm:h-[72px] sm:px-5">
+        <BrandLogo className="shrink-0" height={40} />
 
         <nav className="hidden items-center lg:flex">
           {links.map((l) => (
@@ -82,7 +82,7 @@ export function Navbar() {
       </div>
 
       {open && (
-        <div className="fixed inset-x-0 top-14 bottom-0 z-40 overflow-y-auto bg-white px-5 py-4 sm:top-[72px] lg:hidden">
+        <div className="fixed inset-x-0 top-16 bottom-0 z-40 overflow-y-auto bg-white px-5 py-4 sm:top-[72px] lg:hidden">
           {links.map((l) => (
             <Link
               key={l.href}

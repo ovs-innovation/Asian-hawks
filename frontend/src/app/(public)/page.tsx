@@ -63,52 +63,62 @@ export default function HomePage() {
         <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-[42%] overflow-hidden lg:block">
           <div className="absolute inset-y-0 right-0 w-[86%] bg-[var(--navy)]" style={{ clipPath: "polygon(28% 0, 100% 0, 100% 100%, 0 100%)" }} />
         </div>
-        <div className="relative mx-auto grid w-full max-w-[var(--max-w)] items-center gap-8 px-5 pb-8 pt-12 lg:grid-cols-[1fr_0.9fr] lg:pb-10 lg:pt-16">
+        <div className="relative mx-auto grid w-full max-w-[var(--max-w)] items-center gap-6 px-4 pb-6 pt-8 sm:px-5 sm:pb-8 sm:pt-12 lg:grid-cols-[1fr_0.9fr] lg:pb-10 lg:pt-16">
           <div>
-            <p className="text-[13px] font-semibold tracking-wide text-[var(--primary)]">Find jobs faster. Build your career.</p>
-            <h1 className="mt-3 max-w-xl text-[26px] font-extrabold leading-[1.15] tracking-tight text-[var(--heading)] sm:text-[40px] md:text-[48px]">
+            <p className="text-[12px] font-semibold tracking-wide text-[var(--primary)] sm:text-[13px]">Find jobs faster. Build your career.</p>
+            <h1 className="mt-2 max-w-xl text-[28px] font-extrabold leading-[1.18] tracking-tight text-[var(--heading)] sm:mt-3 sm:text-[40px] md:text-[48px]">
               Find Your Next Opportunity
             </h1>
-            <p className="mt-4 max-w-md text-[16px] leading-relaxed text-[var(--text-secondary)]">
+            <p className="mt-3 max-w-md text-[15px] leading-relaxed text-[var(--text-secondary)] sm:mt-4 sm:text-[16px]">
               Government Jobs, Private Jobs & Career Growth — All in One Place.
             </p>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/courses/hero.jpg"
+              alt=""
+              className="mt-5 h-44 w-full rounded-2xl object-cover lg:hidden"
+            />
           </div>
           <div className="relative z-10 hidden justify-end lg:flex">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/courses/hero.jpg"
               alt="Asian Hawks careers"
-              className="relative h-[340px] w-[420px] rounded-2xl object-cover object-center drop-shadow-xl"
+              className="relative h-[340px] w-[420px] max-w-full rounded-2xl object-cover object-center drop-shadow-xl"
             />
           </div>
         </div>
       </section>
 
       {/* Search card — in flow so fields are not clipped */}
-      <div className="relative z-20 -mt-2 px-3 sm:-mt-4 sm:px-5">
+      <div className="relative z-20 px-4 sm:-mt-4 sm:px-5">
         <form
           onSubmit={search}
           className="mx-auto w-full max-w-[var(--max-w)] rounded-2xl border border-[var(--border)] bg-white p-4 shadow-[var(--shadow-md)] sm:p-5"
         >
-          <div className="flex flex-wrap gap-4 border-b border-[var(--border)] pb-3 text-[13px] font-semibold sm:gap-6 sm:text-[14px]">
+          <div className="flex gap-1 overflow-x-auto border-b border-[var(--border)] pb-0 text-[13px] font-semibold [-ms-overflow-style:none] [scrollbar-width:none] sm:gap-6 sm:text-[14px] [&::-webkit-scrollbar]:hidden">
             {(
               [
-                ["jobs", "Search Jobs"],
-                ["companies", "Search Companies"],
-                ["courses", "Search Courses"],
+                ["jobs", "Jobs"],
+                ["companies", "Companies"],
+                ["courses", "Courses"],
               ] as const
             ).map(([id, label]) => (
               <button
                 key={id}
                 type="button"
                 onClick={() => setTab(id)}
-                className={tab === id ? "text-[var(--primary)]" : "text-[var(--muted)]"}
+                className={
+                  tab === id
+                    ? "shrink-0 border-b-2 border-[var(--primary)] px-3 pb-2.5 text-[var(--primary)]"
+                    : "shrink-0 px-3 pb-2.5 text-[var(--muted)]"
+                }
               >
                 {label}
               </button>
             ))}
           </div>
-          <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_auto]">
+          <div className="mt-4 grid grid-cols-1 gap-3 lg:grid-cols-[1.4fr_1fr_1fr_auto]">
             <label className="flex items-center gap-2 rounded-lg border border-[var(--border)] px-3 py-2.5">
               <Search size={16} className="text-[var(--muted)]" />
               <input
@@ -139,11 +149,11 @@ export default function HomePage() {
               <option>Government</option>
               <option>Sales</option>
             </select>
-            <button type="submit" className="h-[46px] w-full rounded-lg bg-[var(--cta)] px-6 text-[14px] font-bold text-white hover:bg-[var(--cta-hover)] sm:col-span-2 lg:col-span-1 lg:w-auto">
-              Search Jobs
+            <button type="submit" className="h-12 w-full rounded-lg bg-[var(--cta)] px-6 text-[15px] font-bold text-white hover:bg-[var(--cta-hover)] lg:h-[46px] lg:w-auto lg:text-[14px]">
+              Search
             </button>
           </div>
-          <div className="mt-3 flex flex-wrap items-center gap-2">
+          <div className="mt-3 hidden flex-wrap items-center gap-2 sm:flex">
             <span className="text-[12px] text-[var(--muted)]">Popular Searches:</span>
             {QUICK_CATEGORIES.map((c) => (
               <Link
@@ -160,7 +170,7 @@ export default function HomePage() {
 
       {/* Category icons */}
       <section className="bg-white pt-8 pb-6">
-        <div className="mx-auto grid w-full max-w-[var(--max-w)] grid-cols-2 gap-3 px-5 sm:grid-cols-3 lg:grid-cols-5">
+        <div className="mx-auto grid w-full max-w-[var(--max-w)] grid-cols-1 gap-3 px-4 sm:grid-cols-2 sm:px-5 lg:grid-cols-5">
           {[
             {
               href: "/government-jobs",
@@ -221,27 +231,24 @@ export default function HomePage() {
             <Link
               key={label}
               href={href}
-              className="group relative overflow-hidden rounded-2xl border border-[var(--border)] bg-white shadow-[var(--shadow)] transition duration-200 hover:-translate-y-1 hover:shadow-[var(--shadow-md)]"
+              className="group flex items-center gap-3 overflow-hidden rounded-2xl border border-[var(--border)] bg-white p-2.5 shadow-[var(--shadow)] sm:flex-col sm:items-stretch sm:gap-0 sm:p-0 sm:hover:shadow-[var(--shadow-md)]"
             >
-              <div className="relative h-28 overflow-hidden">
+              <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl sm:h-28 sm:w-full sm:rounded-none">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={image}
-                  alt={label}
-                  className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
-                />
-                <div className={`absolute inset-0 bg-gradient-to-t ${accent} via-black/10 to-transparent`} />
-                <span className={`absolute left-3 top-3 rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${chipClass}`}>
+                <img src={image} alt="" className="h-full w-full object-cover" />
+                <div className={`absolute inset-0 hidden bg-gradient-to-t ${accent} via-black/10 to-transparent sm:block`} />
+                <span className={`absolute left-3 top-3 hidden rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide sm:inline ${chipClass}`}>
                   {chip}
                 </span>
               </div>
-              <div className="p-4 pb-3">
-                <span className="block text-[14px] font-extrabold leading-tight text-[var(--heading)]">{label}</span>
-                <span className="mt-1 block text-[11px] leading-relaxed text-[var(--text-secondary)]">{sub}</span>
+              <div className="min-w-0 flex-1 p-1 sm:p-4 sm:pb-3">
+                <span className="block text-[15px] font-extrabold leading-tight text-[var(--heading)] sm:text-[14px]">{label}</span>
+                <span className="mt-0.5 block text-[12px] leading-snug text-[var(--text-secondary)] sm:mt-1 sm:text-[11px]">{sub}</span>
               </div>
-              <span className={`inline-flex items-center gap-1 px-4 pb-4 text-[12px] font-semibold ${actionClass}`}>
-                {cta} <ChevronRight size={14} className="transition group-hover:translate-x-0.5" />
+              <span className={`hidden items-center gap-1 px-4 pb-4 text-[12px] font-semibold sm:inline-flex ${actionClass}`}>
+                {cta} <ChevronRight size={14} />
               </span>
+              <ChevronRight size={18} className="mr-1 shrink-0 text-[#94a3b8] sm:hidden" />
             </Link>
           ))}
         </div>
@@ -249,7 +256,7 @@ export default function HomePage() {
 
       {/* Jobs for you — Naukri-style wide listings */}
       <section className="bg-[#f8fafc] py-12">
-        <div className="mx-auto w-full max-w-[var(--max-w)] px-5">
+        <div className="mx-auto w-full max-w-[var(--max-w)] px-4 sm:px-5">
           <div className="flex flex-wrap items-end justify-between gap-3">
             <h2 className="text-[22px] font-extrabold tracking-tight text-[var(--heading)] sm:text-[26px]">Jobs for you</h2>
             <Link href={activeTrack.href} className="shrink-0 text-[14px] font-semibold text-[var(--primary)]">
@@ -257,7 +264,7 @@ export default function HomePage() {
             </Link>
           </div>
 
-          <div className="-mx-5 mt-5 flex gap-5 overflow-x-auto border-b border-[#e5eaf0] px-5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <div className="mt-4 flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mt-5 sm:gap-5 sm:border-b sm:border-[#e5eaf0]">
             {jobTracks.map((t) => (
               <button
                 key={t.id}
@@ -265,8 +272,8 @@ export default function HomePage() {
                 onClick={() => setJobsTrack(t.id)}
                 className={
                   jobsTrack === t.id
-                    ? "-mb-px shrink-0 border-b-2 border-[var(--primary)] pb-3 text-[14px] font-semibold text-[var(--primary)]"
-                    : "shrink-0 pb-3 text-[14px] font-medium text-[#64748b] hover:text-[var(--heading)]"
+                    ? "shrink-0 rounded-full bg-[#0f5daa] px-3.5 py-2 text-[13px] font-semibold text-white sm:rounded-none sm:bg-transparent sm:-mb-px sm:border-b-2 sm:border-[var(--primary)] sm:px-0 sm:pb-3 sm:text-[14px] sm:text-[var(--primary)]"
+                    : "shrink-0 rounded-full bg-white px-3.5 py-2 text-[13px] font-medium text-[#64748b] ring-1 ring-[#e8eef5] sm:rounded-none sm:bg-transparent sm:px-0 sm:pb-3 sm:text-[14px] sm:ring-0"
                 }
               >
                 {t.label}
@@ -320,7 +327,7 @@ export default function HomePage() {
 
       {/* Stats */}
       <section className="py-12">
-        <div className="mx-auto grid w-full max-w-[var(--max-w)] grid-cols-2 px-5 lg:grid-cols-5 lg:divide-x lg:divide-[var(--border)]">
+        <div className="mx-auto grid w-full max-w-[var(--max-w)] grid-cols-2 gap-2 px-4 sm:gap-3 sm:px-5 lg:grid-cols-5 lg:gap-0 lg:divide-x lg:divide-[var(--border)]">
           {[
             [Briefcase, `${PLATFORM_STATS.jobs.toLocaleString()}+`, "Jobs Available"],
             [Building2, "850+", "Companies"],
@@ -328,13 +335,13 @@ export default function HomePage() {
             [Landmark, `${PLATFORM_STATS.govJobs.toLocaleString()}+`, "Government jobs"],
             [GraduationCap, "120+", "Hiring partners"],
           ].map(([Icon, n, l]) => (
-            <div key={l as string} className="flex items-center gap-3 px-4 py-5">
-              <span className="grid h-10 w-10 place-items-center rounded-lg bg-[#eaf3fb] text-[var(--primary)]">
-                <Icon size={18} strokeWidth={1.7} />
+            <div key={l as string} className="flex flex-col gap-1 rounded-xl bg-[#f8fafc] px-3 py-3.5 sm:flex-row sm:items-center sm:gap-3 sm:bg-transparent sm:px-4 sm:py-5">
+              <span className="grid h-9 w-9 place-items-center rounded-lg bg-[#eaf3fb] text-[var(--primary)] sm:h-10 sm:w-10">
+                <Icon size={16} strokeWidth={1.7} />
               </span>
               <div>
-                <p className="text-[20px] font-extrabold text-[var(--heading)]">{n as string}</p>
-                <p className="text-[12px] text-[var(--muted)]">{l as string}</p>
+                <p className="text-[18px] font-extrabold text-[var(--heading)] sm:text-[20px]">{n as string}</p>
+                <p className="text-[11px] leading-snug text-[var(--muted)] sm:text-[12px]">{l as string}</p>
               </div>
             </div>
           ))}
@@ -342,7 +349,7 @@ export default function HomePage() {
       </section>
 
       <section className="bg-[#f4f7fb] py-12">
-        <div className="mx-auto w-full max-w-[var(--max-w)] px-5">
+        <div className="mx-auto w-full max-w-[var(--max-w)] px-4 sm:px-5">
           <div className="flex flex-wrap items-end justify-between gap-3">
             <div>
               <p className="text-[12px] font-semibold uppercase tracking-[0.16em] text-[#0f5daa]">Training</p>
@@ -362,7 +369,7 @@ export default function HomePage() {
 
       {/* Testimonials */}
       <section className="py-12">
-        <div className="mx-auto w-full max-w-[var(--max-w)] px-5">
+        <div className="mx-auto w-full max-w-[var(--max-w)] px-4 sm:px-5">
           <h2 className="mb-6 text-[22px] font-extrabold text-[var(--heading)]">What people say</h2>
           <div className="grid gap-4 md:grid-cols-3">
             {[
@@ -401,7 +408,7 @@ export default function HomePage() {
             e.preventDefault();
             setEmail("");
           }}
-          className="mx-auto flex w-full max-w-[var(--max-w)] flex-col items-center justify-between gap-4 px-5 sm:flex-row"
+          className="mx-auto flex w-full max-w-[var(--max-w)] flex-col items-stretch justify-between gap-3 px-4 sm:flex-row sm:items-center sm:px-5"
         >
           <div className="flex items-center gap-3">
             <Mail className="text-[var(--primary)]" size={22} />
@@ -443,18 +450,13 @@ function JobListing({
   logo?: string;
 }) {
   return (
-    <Link href={href} className="group flex gap-4 border-b border-[#e8eef5] py-5">
-      <CompanyLogo name={company} logo={logo} size={48} className="h-12 w-12" />
-      <span className="min-w-0">
-        <span className="block truncate text-[16px] font-semibold text-[#1f2937] group-hover:text-[var(--primary)]">{title}</span>
-        <span className="mt-0.5 block truncate text-[13px] text-[#64748b]">{company}</span>
-        <span className="mt-2 flex min-w-0 items-start gap-2 text-[13px] text-[#64748b]">
-          <MapPin size={13} className="mt-0.5 shrink-0" />
-          <span className="min-w-0 break-words">
-            {location}
-            <span className="mx-2 text-[#cbd5e1]">|</span>
-            {meta}
-          </span>
+    <Link href={href} className="group flex gap-3 border-b border-[#e8eef5] py-4 sm:gap-4 sm:py-5">
+      <CompanyLogo name={company} logo={logo} size={40} className="h-10 w-10 shrink-0 sm:h-12 sm:w-12" />
+      <span className="min-w-0 flex-1">
+        <span className="block text-[15px] font-semibold leading-snug text-[#1f2937] group-hover:text-[var(--primary)] sm:truncate sm:text-[16px]">{title}</span>
+        <span className="mt-0.5 block truncate text-[12px] text-[#64748b] sm:text-[13px]">{company}</span>
+        <span className="mt-1.5 block text-[12px] leading-snug text-[#64748b] sm:text-[13px]">
+          {location} · {meta}
         </span>
       </span>
     </Link>

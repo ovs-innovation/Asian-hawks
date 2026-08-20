@@ -8,17 +8,17 @@ export function CourseCard({ course }: { course: DemoCourse }) {
   return (
     <Link
       href={`/courses/${course.slug}`}
-      className="flex h-full flex-col overflow-hidden rounded-2xl border border-[#e6edf5] bg-white shadow-[0_1px_2px_rgba(3,34,76,0.04)] transition hover:-translate-y-0.5 hover:shadow-[0_12px_32px_rgba(3,34,76,0.1)]"
+      className="flex h-full flex-col overflow-hidden rounded-2xl border border-[#e6edf5] bg-white shadow-[0_1px_2px_rgba(3,34,76,0.04)] sm:hover:shadow-[0_12px_32px_rgba(3,34,76,0.1)]"
     >
       <div className="relative h-[148px] overflow-hidden">
         <SafeImage src={course.image} alt={course.title} className="h-full w-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#03224c]/80 via-transparent to-transparent" />
-        <p className="absolute bottom-3 left-4 text-[11px] font-semibold uppercase tracking-[0.12em] text-white/90">
+        <p className="absolute bottom-2 left-3 max-w-[55%] truncate text-[10px] font-semibold uppercase tracking-[0.1em] text-white/90 sm:bottom-3 sm:left-4 sm:max-w-none sm:text-[11px]">
           {course.category}
         </p>
-        <p className="absolute bottom-3 right-4 text-[18px] font-extrabold text-white">₹{course.price.toLocaleString()}</p>
+        <p className="absolute bottom-2 right-3 text-[16px] font-extrabold text-white sm:bottom-3 sm:right-4 sm:text-[18px]">₹{course.price.toLocaleString()}</p>
       </div>
-      <div className="flex flex-1 flex-col p-5">
+      <div className="flex flex-1 flex-col p-4 sm:p-5">
         <h3 className="text-[16px] font-bold leading-snug text-[#111827]">{course.title}</h3>
         <p className="mt-2 text-[13px] text-[#64748b]">
           {course.duration} · {course.mode}
