@@ -1,4 +1,5 @@
 import dotenv from "dotenv";
+import dns from "dns";
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 import User from "./models/User.js";
@@ -10,6 +11,12 @@ import Application from "./models/Application.js";
 import { Resume, Taxonomy, Subscription, Invoice, Notification } from "./models/Supporting.js";
 
 dotenv.config();
+
+try {
+  dns.setServers(["8.8.8.8", "1.1.1.1"]);
+} catch (_err) {
+  // Fallback if custom DNS fails
+}
 
 const categories = [
   "Software Development",

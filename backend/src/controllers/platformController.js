@@ -380,6 +380,7 @@ export async function createAdminJob(req, res) {
     seoTitle: req.body.seoTitle || `${title} at ${company.name}`,
     metaDescription: req.body.metaDescription || `${title} · ${req.body.location || company.location || "Pan India"}`,
     status,
+    publishedAt: status === "published" ? new Date() : undefined,
   });
 
   if (status === "published") {
@@ -400,6 +401,9 @@ export async function patchAdminJob(req, res) {
   const job = await Job.findById(req.params.id);
   if (!job) return res.status(404).json({ message: "Job not found" });
   const prevStatus = job.status;
+  if (updates.status === "published" && !job.publishedAt) {
+    updates.publishedAt = new Date();
+  }
   Object.assign(job, updates);
   await job.save();
   if (job.category !== undefined || prevStatus !== job.status) await syncCategoryCounts();

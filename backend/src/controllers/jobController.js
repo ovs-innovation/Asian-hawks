@@ -34,8 +34,8 @@ export async function listJobs(req, res) {
     req.query.sort === "salary"
       ? { maxSalary: -1 }
       : req.query.sort === "oldest"
-        ? { createdAt: 1 }
-        : { featured: -1, createdAt: -1 };
+        ? { publishedAt: 1, createdAt: 1 }
+        : { publishedAt: -1, createdAt: -1 };
 
   const [items, total] = await Promise.all([
     Job.find(filter)
@@ -64,12 +64,14 @@ export async function createJob(req, res) {
   const companyId = req.user.company?._id || req.user.company || req.body.company;
   if (!companyId) return res.status(400).json({ message: "Recruiter must belong to a company" });
   const base = slugify(req.body.title || "role", { lower: true, strict: true });
+  const status = req.body.status || "draft";
   const job = await Job.create({
     ...req.body,
     company: companyId,
     postedBy: req.user._id,
     slug: `${base}-${Date.now().toString(36)}`,
-    status: req.body.status || "draft",
+    status,
+    publishedAt: status === "published" ? new Date() : undefined,
   });
   await Company.findByIdAndUpdate(companyId, { $inc: { openPositions: job.status === "published" ? 1 : 0 } });
   res.status(201).json({ job });
@@ -81,6 +83,10 @@ export async function updateJob(req, res) {
   const isOwner = String(job.postedBy) === String(req.user._id) || req.user.role === "super_admin";
   if (!isOwner && req.user.role !== "hr_manager") {
     return res.status(403).json({ message: "Not allowed to edit this job" });
+  }
+  const nextStatus = req.body.status || job.status;
+  if (nextStatus === "published" && !job.publishedAt) {
+    req.body.publishedAt = new Date();
   }
   Object.assign(job, req.body);
   await job.save();

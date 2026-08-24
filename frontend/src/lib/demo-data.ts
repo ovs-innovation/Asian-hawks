@@ -61,6 +61,8 @@ export type DemoJob = {
   urgent: boolean;
   skills: string[];
   createdAt: string;
+  publishedAt?: string;
+  status?: string;
   applicationsCount: number;
   responsibilities: string;
   requirements: string;

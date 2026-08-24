@@ -39,6 +39,7 @@ const jobSchema = new mongoose.Schema(
       enum: ["draft", "published", "paused", "expired"],
       default: "draft",
     },
+    publishedAt: Date,
     seoTitle: String,
     metaDescription: String,
     keywords: [String],

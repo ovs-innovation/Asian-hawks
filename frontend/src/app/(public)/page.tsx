@@ -21,6 +21,7 @@ import { formatSalary, timeAgo } from "@/lib/utils";
 import { PHOTOS } from "@/lib/demo-data";
 import { CompanyLogo } from "@/components/company-logo";
 import { CourseCard } from "@/components/courses/course-card";
+import { ExclusiveOffer } from "@/components/platform/exclusive-offer";
 import {
   DEMO_COURSES,
   GOV_JOBS_PREVIEW,
@@ -47,12 +48,20 @@ export default function HomePage() {
     else router.push(`/jobs?${p.toString()}`);
   }
 
-  const privateJobs = jobs.slice(0, 6);
-  const openings = jobs.slice(0, 6);
+  const privateJobs = jobs.filter((j) => !j.status || j.status === "published").slice(0, 6);
+  const latestJobs = [...jobs]
+    .filter((j) => !j.status || j.status === "published")
+    .sort((a, b) => {
+      const timeA = new Date(a.publishedAt || a.createdAt || 0).getTime();
+      const timeB = new Date(b.publishedAt || b.createdAt || 0).getTime();
+      return timeB - timeA;
+    })
+    .slice(0, 6);
+
   const jobTracks = [
     { id: "gov" as const, label: "Government", href: "/government-jobs" },
     { id: "private" as const, label: "Private", href: "/private-jobs" },
-    { id: "latest" as const, label: "Latest", href: "/jobs" },
+    { id: "latest" as const, label: "Latest", href: "/jobs?sort=latest" },
   ];
   const activeTrack = jobTracks.find((t) => t.id === jobsTrack)!;
 
@@ -254,12 +263,15 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* NEW ₹99 EXCLUSIVE OFFER SECTION */}
+      <ExclusiveOffer />
+
       {/* Jobs for you — Naukri-style wide listings */}
       <section className="bg-[#f8fafc] py-8 sm:py-12">
         <div className="mx-auto w-full max-w-[var(--max-w)] px-4 sm:px-5">
           <div className="flex flex-wrap items-end justify-between gap-3">
             <h2 className="text-[22px] font-extrabold tracking-tight text-[var(--heading)] sm:text-[26px]">Jobs for you</h2>
-            <Link href={activeTrack.href} className="shrink-0 text-[14px] font-semibold text-[var(--primary)]">
+            <Link href={activeTrack.href} className="shrink-0 text-[14px] font-semibold text-[var(--primary)] hover:underline">
               View all
             </Link>
           </div>
@@ -298,7 +310,7 @@ export default function HomePage() {
             {jobsTrack === "private" &&
               privateJobs.map((j) => (
                 <JobListing
-                  key={j.slug}
+                  key={j._id || j.slug}
                   href={`/jobs/${j.slug}`}
                   title={j.title}
                   company={j.company?.name || "Asian Hawks"}
@@ -309,17 +321,30 @@ export default function HomePage() {
                 />
               ))}
             {jobsTrack === "latest" &&
-              openings.map((j) => (
-                <JobListing
-                  key={j.slug}
-                  href={`/jobs/${j.slug}`}
-                  title={j.title}
-                  company={j.company?.name || "Asian Hawks"}
-                  location={j.location}
-                  meta={`${j.workplace} · ${timeAgo(j.createdAt)}`}
-                  initial={(j.company?.name || "AH").slice(0, 2).toUpperCase()}
-                  logo={j.company?.logo || "/logo.png"}
-                />
+              (latestJobs.length > 0 ? (
+                latestJobs.map((j) => {
+                  const pubDate = j.publishedAt || j.createdAt;
+                  const isNew = isJobNew(pubDate);
+                  const postedStr = pubDate ? `Posted ${timeAgo(pubDate)}` : undefined;
+                  return (
+                    <JobListing
+                      key={j._id || j.slug}
+                      href={`/jobs/${j.slug}`}
+                      title={j.title}
+                      company={j.company?.name || "Asian Hawks"}
+                      location={j.location}
+                      meta={`${j.workplace || "Onsite"} · ${formatSalary(j.minSalary, j.maxSalary, j.currency)}`}
+                      initial={(j.company?.name || "AH").slice(0, 2).toUpperCase()}
+                      logo={j.company?.logo || "/logo.png"}
+                      isNew={isNew}
+                      postedDate={postedStr}
+                    />
+                  );
+                })
+              ) : (
+                <div className="col-span-2 py-8 text-center text-sm text-[#64748b]">
+                  No latest jobs available right now. Check back soon for new opportunities.
+                </div>
               ))}
           </div>
         </div>
@@ -433,6 +458,12 @@ export default function HomePage() {
   );
 }
 
+function isJobNew(date?: string | Date) {
+  if (!date) return false;
+  const diff = Date.now() - new Date(date).getTime();
+  return diff >= 0 && diff <= 3 * 86400000;
+}
+
 function shortPlace(location?: string) {
   if (!location) return "Pan India";
   const first = location.split(",")[0].trim();
@@ -447,6 +478,8 @@ function JobListing({
   location,
   meta,
   logo,
+  isNew,
+  postedDate,
 }: {
   href: string;
   title: string;
@@ -455,19 +488,34 @@ function JobListing({
   meta: string;
   initial: string;
   logo?: string;
+  isNew?: boolean;
+  postedDate?: string;
 }) {
   return (
     <Link href={href} className="group flex items-start gap-3 border-b border-[#e8eef5] py-3.5 sm:gap-4 sm:py-5">
       <CompanyLogo name={company} logo={logo} size={40} className="shrink-0" />
       <span className="min-w-0 flex-1">
-        <span className="line-clamp-1 text-[15px] font-semibold text-[#1f2937] group-hover:text-[var(--primary)] sm:text-[16px]">
-          {title}
+        <span className="flex items-center gap-2">
+          <span className="line-clamp-1 text-[15px] font-semibold text-[#1f2937] group-hover:text-[var(--primary)] sm:text-[16px]">
+            {title}
+          </span>
+          {isNew && (
+            <span className="shrink-0 rounded bg-emerald-100 px-1.5 py-0.5 text-[10px] font-bold text-emerald-800 uppercase tracking-wide">
+              NEW
+            </span>
+          )}
         </span>
         <span className="mt-0.5 block truncate text-[12px] text-[#64748b]">{company}</span>
         <span className="mt-1 flex flex-wrap gap-x-2 text-[12px] text-[#64748b]">
           <span className="truncate">{shortPlace(location)}</span>
           <span className="text-[#cbd5e1]">·</span>
           <span className="truncate">{meta}</span>
+          {postedDate && (
+            <>
+              <span className="text-[#cbd5e1]">·</span>
+              <span className="truncate font-medium text-[#0f5daa]">{postedDate}</span>
+            </>
+          )}
         </span>
       </span>
     </Link>
