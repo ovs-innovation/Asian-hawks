@@ -23,7 +23,11 @@ fs.mkdirSync(resumeDir, { recursive: true });
 
 const app = express();
 app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
-const allowedOrigins = [process.env.CLIENT_ORIGIN, "http://localhost:3000", "http://localhost:3001"].filter(Boolean);
+const allowedOrigins = [
+  ...(process.env.CLIENT_ORIGIN || "").split(",").map((s) => s.trim()).filter(Boolean),
+  "http://localhost:3000",
+  "http://localhost:3001",
+];
 const localhostOriginPattern = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i;
 
 app.use(

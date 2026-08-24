@@ -33,14 +33,13 @@ npm run dev
 - Web: http://localhost:3000
 - API: http://localhost:5000/api/health
 
-## Demo accounts
+## Local admin (from `backend/.env`)
 
 | Role | Email | Password |
 | --- | --- | --- |
-| Super Admin | admin@northline.com | Admin@12345 |
-| Recruiter | talent@helios-bank.com | Password@123 |
-| Candidate | maya@example.com | Password@123 |
-| Moderator | moderator@northline.com | Password@123 |
+| Super Admin | `ADMIN_EMAIL` | `ADMIN_PASSWORD` |
+
+Do not commit `backend/.env` or `frontend/.env.local`. Copy `backend/.env.example` and set your own JWT secret.
 
 ## Environment
 

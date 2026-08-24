@@ -331,11 +331,12 @@ async function run() {
   ]);
 
   const password = await bcrypt.hash("Password@123", 10);
+  const adminEmail = (process.env.ADMIN_EMAIL || "admin@asianhawks.in").toLowerCase();
   const adminPassword = await bcrypt.hash(process.env.ADMIN_PASSWORD || "Admin@12345", 10);
 
   const admin = await User.create({
-    name: "Amina Qureshi",
-    email: "admin@asianhawks.in",
+    name: "Asian Hawks Admin",
+    email: adminEmail,
     password: adminPassword,
     role: "super_admin",
     headline: "Platform administrator",
@@ -497,7 +498,7 @@ async function run() {
   });
 
   console.log("Seed complete.");
-  console.log("Admin:    admin@asianhawks.in / Admin@12345");
+  console.log(`Admin:    ${adminEmail} / (ADMIN_PASSWORD from .env)`);
   console.log("Recruiter: talent@helios-bank.com / Password@123");
   console.log("Candidate: maya@example.com / Password@123");
   await mongoose.disconnect();

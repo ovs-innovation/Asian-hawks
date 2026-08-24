@@ -17,8 +17,8 @@ function dest(role: AuthUser["role"]) {
 }
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("admin@northline.com");
-  const [password, setPassword] = useState("Admin@12345");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -41,7 +41,7 @@ export default function LoginPage() {
       <form onSubmit={onSubmit} className="w-full max-w-[440px] rounded-[14px] border border-slate-200 p-8 shadow-sm dark:border-slate-800">
         <p className="text-[13px] font-semibold uppercase tracking-[0.08em] text-blue-600">Welcome back</p>
         <h1 className="mt-2 text-3xl font-bold">Log in</h1>
-        <p className="mt-2 text-sm text-slate-500">Demo: maya@example.com, talent@helios-bank.com, or admin@northline.com — Password@123 / Admin@12345</p>
+        <p className="mt-2 text-sm text-slate-500">Use your HR / admin email. Password is not shown on this page.</p>
         <div className="mt-6 space-y-4">
           <div>
             <Label htmlFor="email">Work email</Label>
