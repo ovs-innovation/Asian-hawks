@@ -8,7 +8,7 @@ export function BrandLogo({
   height = 44,
 }: {
   className?: string;
-  href?: string;
+  href?: string | null;
   height?: number;
 }) {
   const img = (
@@ -23,8 +23,8 @@ export function BrandLogo({
     />
   );
 
-  if (!href) {
-    return <span className={cn("inline-flex items-center", className)} style={{ height }}>{img}</span>;
+  if (href === null || href === "") {
+    return <span className={cn("inline-flex shrink-0 items-center", className)} style={{ height }}>{img}</span>;
   }
 
   return (

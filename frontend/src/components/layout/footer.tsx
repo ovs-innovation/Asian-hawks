@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowUp, Globe, Mail, MapPin, Phone, Share2 } from "lucide-react";
+import { ArrowUp, Globe, Mail, MapPin, Share2 } from "lucide-react";
 import { BrandLogo } from "@/components/brand-logo";
 
 const cols = [
@@ -50,9 +50,6 @@ export function Footer() {
             Asian Hawks — your career growth platform. Find jobs. Learn skills. Build your future.
           </p>
           <div className="mt-4 space-y-2 text-[13px] text-white/70">
-            <a href="tel:6280698650" className="flex items-center gap-2 hover:text-white">
-              <Phone size={13} className="shrink-0" /> 6280698650
-            </a>
             <a href="mailto:asianhawksmanpower@gmail.com" className="flex items-start gap-2 break-all hover:text-white">
               <Mail size={13} className="mt-0.5 shrink-0" /> asianhawksmanpower@gmail.com
             </a>

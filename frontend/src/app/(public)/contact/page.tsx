@@ -1,4 +1,4 @@
-import { Mail, MessageCircle, Phone } from "lucide-react";
+import { Mail, MessageCircle } from "lucide-react";
 import { EnquiryForm } from "@/components/enquiry-form";
 
 export default function ContactPage() {
@@ -11,15 +11,9 @@ export default function ContactPage() {
             Contact us
           </h1>
           <p className="mt-3 max-w-lg text-[16px] leading-relaxed text-white/90">
-            Jobs, training, or interview help — call, WhatsApp, or send a message.
+            Jobs, training, or interview help — WhatsApp or send a message.
           </p>
           <div className="mt-7 flex w-full flex-col gap-3 sm:flex-row sm:flex-wrap">
-            <a
-              href="tel:6280698650"
-              className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-white px-5 text-[14px] font-semibold text-[#03224c] sm:h-11 sm:w-auto"
-            >
-              <Phone size={16} /> 6280698650
-            </a>
             <a
               href="https://wa.me/916280698650"
               target="_blank"
@@ -34,13 +28,6 @@ export default function ContactPage() {
 
       <div className="mx-auto grid w-full max-w-[var(--max-w)] gap-6 px-5 py-10 lg:grid-cols-[0.9fr_1.1fr]">
         <div className="space-y-4">
-          <div className="rounded-2xl border border-[#e6edf5] bg-white p-6">
-            <p className="text-[13px] font-semibold text-[#64748b]">Phone</p>
-            <a href="tel:6280698650" className="mt-1 block break-all text-[22px] font-bold text-[#0f5daa] sm:text-[24px]">
-              6280698650
-            </a>
-            <p className="mt-2 text-[14px] text-[#475569]">Monday – Friday, 9:00 am – 6:00 pm IST</p>
-          </div>
           <a
             href="mailto:asianhawksmanpower@gmail.com"
             className="flex gap-3 rounded-2xl border border-[#e6edf5] bg-white p-6"

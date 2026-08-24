@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import rateLimit from "express-rate-limit";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
+import dns from "dns";
 import multer from "multer";
 import fs from "fs";
 import path from "path";
@@ -16,6 +17,13 @@ import Enquiry from "./models/Enquiry.js";
 import Job from "./models/Job.js";
 
 dotenv.config();
+
+try {
+  dns.setDefaultResultOrder("ipv4first");
+  dns.setServers(["8.8.8.8", "8.8.4.4"]);
+} catch {
+  // Ignore DNS config fallback errors
+}
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const resumeDir = path.join(__dirname, "..", "uploads", "resumes");
