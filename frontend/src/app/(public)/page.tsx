@@ -22,7 +22,7 @@ import { PHOTOS } from "@/lib/demo-data";
 import { CompanyLogo } from "@/components/company-logo";
 import { CourseCard } from "@/components/courses/course-card";
 import { ExclusiveOffer } from "@/components/platform/exclusive-offer";
-import { LatestJobsSection } from "@/components/jobs/latest-jobs-section";
+import { ImmediateVacanciesPanel } from "@/components/jobs/latest-jobs-strip";
 import {
   DEMO_COURSES,
   GOV_JOBS_PREVIEW,
@@ -68,18 +68,18 @@ export default function HomePage() {
 
   return (
     <div id="top">
-      {/* Hero */}
+      {/* Hero — Zoomed-In High Impact with Generous Clearance */}
       <section className="relative bg-gradient-to-b from-[#eaf3fb] to-white">
         <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-[42%] overflow-hidden lg:block">
-          <div className="absolute inset-y-0 right-0 w-[86%] bg-[var(--navy)]" style={{ clipPath: "polygon(28% 0, 100% 0, 100% 100%, 0 100%)" }} />
+          <div className="absolute inset-y-0 right-0 w-[86%] bg-[#03224c]" style={{ clipPath: "polygon(28% 0, 100% 0, 100% 100%, 0 100%)" }} />
         </div>
-        <div className="relative mx-auto grid w-full max-w-[var(--max-w)] items-center gap-6 px-4 pb-6 pt-8 sm:px-5 sm:pb-8 sm:pt-12 lg:grid-cols-[1fr_0.9fr] lg:pb-10 lg:pt-16">
+        <div className="relative mx-auto grid w-full max-w-[var(--max-w)] items-center gap-8 px-4 pb-20 pt-10 sm:px-5 sm:pb-24 sm:pt-12 lg:grid-cols-[1.1fr_auto] lg:pb-24 lg:pt-12">
           <div>
-            <p className="text-[12px] font-semibold tracking-wide text-[var(--primary)] sm:text-[13px]">Find jobs faster. Build your career.</p>
-            <h1 className="mt-2 max-w-xl text-[28px] font-extrabold leading-[1.18] tracking-tight text-[var(--heading)] sm:mt-3 sm:text-[40px] md:text-[48px]">
+            <p className="text-[13px] font-bold tracking-wide text-[var(--primary)] sm:text-[14px]">Find jobs faster. Build your career.</p>
+            <h1 className="mt-2.5 max-w-xl text-[32px] font-black leading-[1.15] tracking-tight text-[var(--heading)] sm:mt-3 sm:text-[44px] md:text-[50px]">
               Find Your Next Opportunity
             </h1>
-            <p className="mt-3 max-w-md text-[15px] leading-relaxed text-[var(--text-secondary)] sm:mt-4 sm:text-[16px]">
+            <p className="mt-3.5 max-w-md text-[15px] leading-relaxed text-[var(--text-secondary)] sm:mt-4 sm:text-[16.5px]">
               Government Jobs, Private Jobs & Career Growth — All in One Place.
             </p>
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -89,18 +89,27 @@ export default function HomePage() {
               className="mt-5 h-44 w-full rounded-2xl object-cover lg:hidden"
             />
           </div>
-          <div className="relative z-10 hidden justify-end lg:flex">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/courses/hero.jpg"
-              alt="Asian Hawks careers"
-              className="relative h-[340px] w-[420px] max-w-full rounded-2xl object-cover object-center drop-shadow-xl"
-            />
+
+          {/* Right Cluster: Hero Workplace Image + Positioned Vacancy Panel */}
+          <div className="relative z-10 hidden justify-center pr-32 xl:pr-40 lg:flex">
+            <div className="relative">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/courses/hero.jpg"
+                alt="Asian Hawks careers"
+                className="relative h-[380px] w-[420px] max-w-full rounded-2xl object-cover object-center drop-shadow-2xl"
+              />
+
+              {/* Immediate Vacancies Panel Overlay (Finely shifted 6px left: ~28px right clearance) */}
+              <div className="pointer-events-auto absolute -right-[306px] -top-7 z-20 hidden xl:block">
+                <ImmediateVacanciesPanel variant="panel" />
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Search card — in flow so fields are not clipped */}
+      {/* Standalone Search Card */}
       <div className="relative z-20 px-4 sm:-mt-4 sm:px-5">
         <form
           onSubmit={search}
@@ -178,8 +187,13 @@ export default function HomePage() {
         </form>
       </div>
 
-      {/* Category icons */}
-      <section className="bg-white pt-8 pb-6">
+      {/* Mobile & Tablet Immediate Vacancies Strip (< lg screens) */}
+      <div className="mx-auto w-full max-w-[var(--max-w)] px-4 pt-4 lg:hidden sm:px-5">
+        <ImmediateVacanciesPanel variant="horizontal" />
+      </div>
+
+      {/* Category icons / Service cards */}
+      <section className="bg-white pb-6 pt-6 sm:pt-8">
         <div className="mx-auto grid w-full max-w-[var(--max-w)] grid-cols-1 gap-3 px-4 sm:grid-cols-2 sm:px-5 lg:grid-cols-5">
           {[
             {
@@ -263,9 +277,6 @@ export default function HomePage() {
           ))}
         </div>
       </section>
-
-      {/* LATEST JOBS SECTION BELOW CARDS */}
-      <LatestJobsSection />
 
       {/* NEW ₹99 EXCLUSIVE OFFER SECTION */}
       <ExclusiveOffer />
