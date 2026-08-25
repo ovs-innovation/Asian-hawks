@@ -22,6 +22,7 @@ import { PHOTOS } from "@/lib/demo-data";
 import { CompanyLogo } from "@/components/company-logo";
 import { CourseCard } from "@/components/courses/course-card";
 import { ExclusiveOffer } from "@/components/platform/exclusive-offer";
+import { LatestJobsSection } from "@/components/jobs/latest-jobs-section";
 import {
   DEMO_COURSES,
   GOV_JOBS_PREVIEW,
@@ -262,6 +263,9 @@ export default function HomePage() {
           ))}
         </div>
       </section>
+
+      {/* LATEST JOBS SECTION BELOW CARDS */}
+      <LatestJobsSection />
 
       {/* NEW ₹99 EXCLUSIVE OFFER SECTION */}
       <ExclusiveOffer />

@@ -20,13 +20,47 @@ export function formatSalary(min?: number, max?: number, currency = "USD") {
 }
 
 export function timeAgo(date: string | Date) {
-  const d = new Date(date).getTime();
-  const diff = Date.now() - d;
+  if (!date) return "Recently";
+  const jobTime = new Date(date).getTime();
+  if (isNaN(jobTime)) return "Recently";
+  const diff = Date.now() - jobTime;
+  if (diff < 0) return "Just now";
+
+  const minutes = Math.floor(diff / 60000);
+  const hours = Math.floor(diff / 3600000);
   const days = Math.floor(diff / 86400000);
-  if (days <= 0) return "Today";
-  if (days === 1) return "1d ago";
-  if (days < 14) return `${days}d ago`;
-  return `${Math.floor(days / 7)}w ago`;
+
+  const jobDate = new Date(date);
+  const today = new Date();
+
+  const isSameDay =
+    jobDate.getDate() === today.getDate() &&
+    jobDate.getMonth() === today.getMonth() &&
+    jobDate.getFullYear() === today.getFullYear();
+
+  const yesterday = new Date(today);
+  yesterday.setDate(today.getDate() - 1);
+  const isYesterday =
+    jobDate.getDate() === yesterday.getDate() &&
+    jobDate.getMonth() === yesterday.getMonth() &&
+    jobDate.getFullYear() === yesterday.getFullYear();
+
+  if (isSameDay) {
+    if (minutes < 5) return "Just now";
+    if (minutes < 60) return `${minutes}m ago`;
+    return `${hours}h ago`;
+  }
+
+  if (isYesterday || (hours >= 24 && hours < 48)) {
+    return "1d ago";
+  }
+
+  if (days < 14) {
+    return `${days}d ago`;
+  }
+
+  const weeks = Math.floor(days / 7);
+  return `${weeks}w ago`;
 }
 
 export const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";

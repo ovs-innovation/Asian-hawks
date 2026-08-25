@@ -19,9 +19,15 @@ function jobFilter(query) {
   if (query.urgent === "true") filter.urgent = true;
   if (query.skill) filter.skills = query.skill;
   if (query.minSalary) filter.maxSalary = { $gte: Number(query.minSalary) };
-  if (query.posted) {
+  if (query.posted && query.posted !== "any") {
     const days = Number(query.posted);
-    filter.createdAt = { $gte: new Date(Date.now() - days * 86400000) };
+    if (!isNaN(days) && days > 0) {
+      const sinceDate = new Date(Date.now() - days * 86400000);
+      filter.$or = [
+        { publishedAt: { $gte: sinceDate } },
+        { createdAt: { $gte: sinceDate } },
+      ];
+    }
   }
   return filter;
 }
@@ -61,8 +67,25 @@ export async function getJob(req, res) {
 }
 
 export async function createJob(req, res) {
-  const companyId = req.user.company?._id || req.user.company || req.body.company;
-  if (!companyId) return res.status(400).json({ message: "Recruiter must belong to a company" });
+  let companyId = req.user.company?._id || req.user.company || req.body.company;
+  if (!companyId) {
+    if (["super_admin", "admin", "moderator"].includes(req.user.role)) {
+      let defaultComp = await Company.findOne({ slug: "asian-hawks" });
+      if (!defaultComp) {
+        defaultComp = await Company.create({
+          name: "Asian Hawks",
+          slug: "asian-hawks",
+          industry: "Recruitment & Placement",
+          location: "India",
+          verified: true,
+          status: "approved",
+        });
+      }
+      companyId = defaultComp._id;
+    } else {
+      return res.status(400).json({ message: "Recruiter must belong to a company" });
+    }
+  }
   const base = slugify(req.body.title || "role", { lower: true, strict: true });
   const status = req.body.status || "draft";
   const job = await Job.create({
