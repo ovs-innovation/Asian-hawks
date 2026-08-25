@@ -1,4 +1,4 @@
-import { Mail, MessageCircle } from "lucide-react";
+import { Mail } from "lucide-react";
 import { EnquiryForm } from "@/components/enquiry-form";
 
 export default function ContactPage() {
@@ -11,16 +11,14 @@ export default function ContactPage() {
             Contact us
           </h1>
           <p className="mt-3 max-w-lg text-[16px] leading-relaxed text-white/90">
-            Jobs, training, or interview help — WhatsApp or send a message.
+            Jobs, training, or interview help — send us an email or submit an enquiry.
           </p>
           <div className="mt-7 flex w-full flex-col gap-3 sm:flex-row sm:flex-wrap">
             <a
-              href="https://wa.me/916280698650"
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-[#157347] px-5 text-[14px] font-semibold text-white sm:h-11 sm:w-auto"
+              href="mailto:Hr@asianhawksmanpower.com"
+              className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-white/10 border border-white/20 px-5 text-[14px] font-semibold text-white hover:bg-white/20 sm:h-11 sm:w-auto"
             >
-              <MessageCircle size={16} /> WhatsApp
+              <Mail size={16} /> Email HR Team
             </a>
           </div>
         </div>

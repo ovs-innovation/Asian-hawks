@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Briefcase, GraduationCap, Handshake, Phone, ShieldCheck, Users } from "lucide-react";
+import { Briefcase, GraduationCap, Handshake, Mail, ShieldCheck, Users } from "lucide-react";
 import { BrandLogo } from "@/components/brand-logo";
 
 const work = [
@@ -16,7 +16,7 @@ const work = [
   {
     icon: Handshake,
     title: "Placement",
-    text: "We place people on bank and BFSI projects across India, with HR support on call and WhatsApp.",
+    text: "We place people on bank and BFSI projects across India, with dedicated HR email support.",
   },
 ];
 
@@ -65,7 +65,7 @@ export default function AboutPage() {
           {[
             ["Pan India", "Roles across cities and field sites"],
             ["Banking focus", "Branch, ATM Mitra, KYC, CSA"],
-            ["Direct HR", "6280698650 · same-day reply"],
+            ["Direct HR", "Email support · same-day reply"],
           ].map(([n, l]) => (
             <div key={n} className="rounded-2xl border border-[#e6edf5] bg-white px-5 py-6">
               <p className="text-[18px] font-extrabold text-[#03224c]">{n}</p>
@@ -81,7 +81,7 @@ export default function AboutPage() {
               Asian Hawks Manpower Services Pvt. Ltd. is a staffing and training partner for banks and BFSI work. Candidates search openings, apply with a resume, and join training batches that match the jobs we fill.
             </p>
             <p className="mt-4 text-[15px] leading-7 text-[#475569]">
-              HR stays reachable — phone, WhatsApp, and email — so salary, location, and interview dates stay clear before you join.
+              HR stays reachable via email — so salary, location, and interview dates stay clear before you join.
             </p>
           </div>
           <div className="space-y-3">
@@ -103,7 +103,7 @@ export default function AboutPage() {
           {[
             [Users, "Candidates", "Apply without creating five accounts. Resume goes to HR with the role."],
             [ShieldCheck, "Verified listings", "Salary, type, and location on every job card before you apply."],
-            [Phone, "Human support", "Call 6280698650 or write to Hr@asianhawksmanpower.com."],
+            [Mail, "Direct support", "Write to Hr@asianhawksmanpower.com for quick response."],
           ].map(([Icon, title, text]) => (
             <div key={String(title)} className="rounded-2xl border border-[#e6edf5] bg-white p-6">
               <span className="grid h-10 w-10 place-items-center rounded-lg bg-[#eaf3fb] text-[#0f5daa]">

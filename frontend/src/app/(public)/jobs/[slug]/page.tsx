@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { BadgeCheck, Briefcase, Clock, MapPin, Phone, Mail, Wallet } from "lucide-react";
+import { BadgeCheck, Briefcase, Clock, MapPin, Mail, Wallet } from "lucide-react";
 import { ApplyForm } from "@/components/apply-form";
 import { CompanyLogo } from "@/components/company-logo";
 import { useJob } from "@/hooks/use-jobs";
@@ -83,14 +83,13 @@ export default function JobDetailPage() {
           )}
           <div className="mt-8 rounded-xl border border-[#e5e7eb] bg-[#f8fafc] p-4 text-sm text-[#445578]">
             <p className="font-semibold text-[#111827]">Hiring contact</p>
-            <p className="mt-2 flex items-start gap-2 break-all"><Phone size={14} className="mt-0.5 shrink-0" /> <a href="tel:6280698650" className="hover:text-[#0f5daa]">6280698650</a></p>
-            <p className="mt-1 flex items-start gap-2 break-all"><Mail size={14} className="mt-0.5 shrink-0" /> <a href="mailto:asianhawksmanpower@gmail.com" className="hover:text-[#0f5daa]">asianhawksmanpower@gmail.com</a></p>
+            <p className="mt-2 flex items-start gap-2 break-all"><Mail size={14} className="mt-0.5 shrink-0" /> <a href="mailto:asianhawksmanpower@gmail.com" className="hover:text-[#0f5daa]">asianhawksmanpower@gmail.com</a></p>
             <p className="mt-1 flex items-start gap-2 break-all"><Mail size={14} className="mt-0.5 shrink-0" /> <a href="mailto:Hr@asianhawksmanpower.com" className="hover:text-[#0f5daa]">Hr@asianhawksmanpower.com</a></p>
           </div>
         </article>
         <aside className="h-fit rounded-xl border border-[#e5e7eb] bg-white p-5 shadow-[0_1px_2px_rgba(17,24,39,0.05)] lg:sticky lg:top-24">
           <h2 className="text-base font-bold text-[#111827]">Apply with resume</h2>
-          <p className="mb-4 mt-1 text-xs text-[#64748b]">No login needed. Attach your CV and we will call you.</p>
+          <p className="mb-4 mt-1 text-xs text-[#64748b]">No login needed. Attach your CV and our HR team will review your application.</p>
           <ApplyForm jobTitle={job.title} jobSlug={job.slug} />
         </aside>
       </div>

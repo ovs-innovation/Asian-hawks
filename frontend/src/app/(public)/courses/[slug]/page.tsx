@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { BadgeCheck, Clock, GraduationCap, MapPin, Mail, Phone, Wallet } from "lucide-react";
+import { BadgeCheck, Clock, GraduationCap, MapPin, Mail, Wallet } from "lucide-react";
 import { DEMO_COURSES } from "@/lib/platform-data";
 import { EnquiryForm } from "@/components/enquiry-form";
 import { SafeImage } from "@/components/ui/safe-image";
@@ -49,14 +49,13 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ s
           </div>
           <div className="mt-8 rounded-xl border border-[#e5e7eb] bg-[#f8fafc] p-4 text-sm text-[#445578]">
             <p className="font-semibold text-[#111827]">Training contact</p>
-            <p className="mt-2 flex items-center gap-2"><Phone size={14} /> <a href="tel:6280698650" className="hover:text-[#0f5daa]">6280698650</a></p>
-            <p className="mt-1 flex items-center gap-2"><Mail size={14} /> <a href="mailto:asianhawksmanpower@gmail.com" className="hover:text-[#0f5daa]">asianhawksmanpower@gmail.com</a></p>
+            <p className="mt-2 flex items-center gap-2"><Mail size={14} /> <a href="mailto:asianhawksmanpower@gmail.com" className="hover:text-[#0f5daa]">asianhawksmanpower@gmail.com</a></p>
             <p className="mt-1 flex items-center gap-2"><Mail size={14} /> <a href="mailto:Hr@asianhawksmanpower.com" className="hover:text-[#0f5daa]">Hr@asianhawksmanpower.com</a></p>
           </div>
         </article>
         <aside className="h-fit rounded-xl border border-[#e5e7eb] bg-white p-5 shadow-[0_1px_2px_rgba(17,24,39,0.05)] lg:sticky lg:top-24">
           <h2 className="text-base font-bold text-[#111827]">Enquire to enrol</h2>
-          <p className="mb-4 mt-1 text-xs text-[#64748b]">No login needed. HR will confirm batch and fee on call.</p>
+          <p className="mb-4 mt-1 text-xs text-[#64748b]">No login needed. HR will confirm batch and fee details.</p>
           <EnquiryForm jobTitle={course.title} jobSlug={course.slug} />
         </aside>
       </div>
