@@ -4,12 +4,15 @@ import { FormEvent, Suspense, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { MapPin, Search } from "lucide-react";
 import { JobCard } from "@/components/jobs/job-card";
+import { DatePostedFilter, type DatePostedValue } from "@/components/jobs/date-posted-filter";
 import { useJobs } from "@/hooks/use-jobs";
 import { CATEGORIES } from "@/lib/demo-data";
 
 function JobsBrowser() {
   const params = useSearchParams();
-  const { data: jobs = [], isLoading } = useJobs();
+  const [datePosted, setDatePosted] = useState<DatePostedValue>("any");
+  const queryParam = datePosted !== "any" ? `?posted=${datePosted}` : "";
+  const { data: jobs = [], isLoading } = useJobs(queryParam);
   const [role, setRole] = useState(params.get("role") || params.get("keyword") || "");
   const [location, setLocation] = useState(params.get("location") || "");
   const [filter, setFilter] = useState(params.get("category") || "All");
@@ -27,14 +30,29 @@ function JobsBrowser() {
   }
 
   const filtered = useMemo(() => {
+    const now = Date.now();
     return jobs.filter((j) => {
       const hay = `${j.title} ${j.company?.name ?? ""} ${j.location ?? ""} ${j.category ?? ""} ${j.workplace ?? ""} ${(j.skills ?? []).join(" ")}`.toLowerCase();
       if (applied.role && !hay.includes(applied.role.toLowerCase())) return false;
       if (applied.location && !`${j.location} ${j.workplace}`.toLowerCase().includes(applied.location.toLowerCase())) return false;
       if (filter !== "All" && j.category !== filter && !hay.includes(filter.toLowerCase())) return false;
+
+      // Date posted filter logic
+      if (datePosted !== "any") {
+        const daysLimit = Number(datePosted);
+        if (!isNaN(daysLimit) && daysLimit > 0) {
+          const jobDateStr = j.publishedAt || j.createdAt;
+          if (jobDateStr) {
+            const jobTime = new Date(jobDateStr).getTime();
+            const diffDays = (now - jobTime) / 86400000;
+            if (diffDays > daysLimit) return false;
+          }
+        }
+      }
+
       return true;
     });
-  }, [jobs, applied, filter]);
+  }, [jobs, applied, filter, datePosted]);
 
   return (
     <section className="min-h-[70vh] bg-[#f7f9fc]">
@@ -73,6 +91,15 @@ function JobsBrowser() {
       </div>
 
       <div className="mx-auto w-full max-w-[1080px] px-4 py-6 sm:px-6 sm:py-8">
+        {/* LinkedIn-style Filter Pills */}
+        <div className="mb-4 flex flex-wrap items-center gap-2 border-b border-slate-200 pb-4">
+          <DatePostedFilter
+            value={datePosted}
+            onChange={setDatePosted}
+            resultCount={filtered.length}
+          />
+        </div>
+
         <div className="flex gap-2 overflow-x-auto pb-2">
           {chips.map((item) => (
             <button
@@ -100,7 +127,7 @@ function JobsBrowser() {
           ))}
           {!isLoading && filtered.length === 0 && (
             <p className="rounded-xl border border-[#e8eef5] bg-white px-5 py-10 text-center text-sm text-[#64748b]">
-              No jobs match these filters. Try another title or city.
+              No jobs match these filters. Try changing your date posted filter or search keyword.
             </p>
           )}
         </div>
