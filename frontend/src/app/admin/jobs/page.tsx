@@ -3,7 +3,7 @@
 import { FormEvent, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Briefcase, Building2, Plus, X, Search, CheckCircle2, Clock, Trash2, Eye } from "lucide-react";
+import { Building2, Plus, X, Search } from "lucide-react";
 import { PageHeader } from "@/components/layout/dashboard-shell";
 import { Button } from "@/components/ui/button";
 import { Input, Label, Textarea } from "@/components/ui/primitives";
@@ -158,7 +158,7 @@ export default function AdminJobsPage() {
               ) : (
                 <tr>
                   <td colSpan={6} className="px-5 py-8 text-center text-slate-500">
-                    No jobs found. Click <strong>"Post New Latest Job"</strong> to add your first job.
+                    No jobs found. Click <strong>&quot;Post New Latest Job&quot;</strong> to add your first job.
                   </td>
                 </tr>
               )}
