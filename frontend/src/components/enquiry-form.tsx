@@ -14,7 +14,7 @@ export function EnquiryForm({
   jobSlug?: string;
   large?: boolean;
 }) {
-  const [form, setForm] = useState({ name: "", email: "", phone: "", message: "" });
+  const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [sending, setSending] = useState(false);
   const field = large
     ? "mt-1.5 h-12 border-2 border-[#94a3b8] text-[16px] text-[#0f172a] placeholder:text-[#64748b] focus:border-[#0f5daa]"
@@ -33,10 +33,10 @@ export function EnquiryForm({
         body: JSON.stringify({ ...form, jobTitle, jobSlug }),
       });
       toast.success("Enquiry sent. We will get back to you shortly.");
-      setForm({ name: "", email: "", phone: "", message: "" });
+      setForm({ name: "", email: "", message: "" });
     } catch {
       toast.success("Enquiry received. We will get back to you shortly.");
-      setForm({ name: "", email: "", phone: "", message: "" });
+      setForm({ name: "", email: "", message: "" });
     } finally {
       setSending(false);
     }
@@ -52,10 +52,6 @@ export function EnquiryForm({
       <div>
         <Label htmlFor="email" className={label}>Email</Label>
         <Input id="email" type="email" required className={field} value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
-      </div>
-      <div>
-        <Label htmlFor="phone" className={label}>Phone</Label>
-        <Input id="phone" required className={field} value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder="10-digit mobile" />
       </div>
       <div>
         <Label htmlFor="message" className={label}>Message</Label>

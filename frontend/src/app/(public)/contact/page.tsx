@@ -58,7 +58,7 @@ export default function ContactPage() {
         <div className="rounded-2xl border border-[#e6edf5] bg-white p-6 sm:p-8">
           <h2 className="text-[20px] font-bold text-[#111827]">Send a message</h2>
           <p className="mt-1 mb-5 text-[14px] text-[#64748b]">
-            Name, number, and your query. Resume attach the job listing se karo.
+            Name, email, and your query. Resume attach the job listing se karo.
           </p>
           <EnquiryForm />
         </div>
