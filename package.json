@@ -2,6 +2,7 @@
   "name": "northline",
   "private": true,
   "scripts": {
+    "postinstall": "npm install --prefix frontend",
     "build": "npm run build --prefix frontend",
     "build:frontend": "npm run build --prefix frontend",
     "build:admin": "npm run build --prefix admin",
