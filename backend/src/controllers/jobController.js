@@ -166,3 +166,13 @@ export async function saveJob(req, res) {
   await req.user.save();
   res.json({ saved: !has, savedJobs: req.user.savedJobs });
 }
+
+export async function getSavedJobs(req, res) {
+  const User = (await import("../models/User.js")).default;
+  const user = await User.findById(req.user._id).populate({
+    path: "savedJobs",
+    populate: { path: "company", select: "name logo location" },
+  });
+  const items = (user?.savedJobs || []).filter(Boolean);
+  res.json({ items });
+}

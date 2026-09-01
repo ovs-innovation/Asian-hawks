@@ -25,6 +25,7 @@ router.get("/courses", courses.listCourses);
 router.get("/courses/:slug", courses.getCourse);
 
 router.get("/jobs", jobs.listJobs);
+router.get("/jobs/saved", protect, authorize("candidate"), jobs.getSavedJobs);
 router.get("/jobs/:slug", jobs.getJob);
 router.post("/jobs", protect, authorize(...recruiterRoles), jobs.createJob);
 router.patch("/jobs/:id", protect, authorize(...recruiterRoles), jobs.updateJob);

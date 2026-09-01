@@ -39,29 +39,101 @@ export async function myApplications(req, res) {
 
 export async function pipeline(req, res) {
   const companyId = req.user.company?._id || req.user.company;
-  const filter = { company: companyId };
+
+  // 1. Find all jobs posted by this recruiter OR belonging to their company
+  const Job = (await import("../models/Job.js")).default;
+  const recruiterJobs = await Job.find({
+    $or: [
+      { postedBy: req.user._id },
+      ...(companyId ? [{ company: companyId }] : []),
+    ],
+  }).select("_id slug title");
+
+  const jobIds = recruiterJobs.map((j) => j._id);
+  const jobSlugs = recruiterJobs.map((j) => j.slug).filter(Boolean);
+
+  // 2. Find Application records for any of those jobs or company
+  const filter = {
+    $or: [
+      { job: { $in: jobIds } },
+      ...(companyId ? [{ company: companyId }] : []),
+    ],
+  };
+
   if (req.query.job) filter.job = req.query.job;
   if (req.query.status) filter.status = req.query.status;
-  const items = await Application.find(filter)
-    .populate("candidate", "name email headline location skills avatar")
-    .populate("job", "title slug")
+
+  const accountApps = await Application.find(filter)
+    .populate("candidate", "name email phone headline location skills avatar resumeUrl")
+    .populate("job", "title slug company location")
     .sort({ createdAt: -1 });
+
+  // 3. Find Enquiry quick resume applications for recruiter's jobSlugs
+  const enquiries = jobSlugs.length
+    ? await Enquiry.find({ jobSlug: { $in: jobSlugs } }).sort({ createdAt: -1 })
+    : [];
+
+  const existingAppKeys = new Set(
+    accountApps.map((a) => `${(a.candidate?.email || "").toLowerCase()}_${a.job?.slug || ""}`)
+  );
+
+  const directApps = enquiries
+    .filter((e) => {
+      const msgUpper = (e.message || "").toUpperCase();
+      if (msgUpper.includes("PURCHASE REQUEST")) return false;
+      const key = `${(e.email || "").toLowerCase()}_${e.jobSlug || ""}`;
+      return !existingAppKeys.has(key);
+    })
+    .map((e) => ({
+      _id: e._id,
+      status: e.status || "applied",
+      createdAt: e.createdAt,
+      candidate: {
+        name: e.name,
+        email: e.email,
+        phone: e.phone,
+        headline: "Quick Resume Applicant",
+        resumeUrl: e.resumeUrl,
+      },
+      job: {
+        title: e.jobTitle || "Job Opening",
+        slug: e.jobSlug || "",
+      },
+      isDirect: true,
+    }));
+
+  const items = [...accountApps, ...directApps].sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  );
+
   res.json({ items });
 }
 
 export async function updateApplication(req, res) {
-  const application = await Application.findById(req.params.id);
-  if (!application) return res.status(404).json({ message: "Application not found" });
+  let application = await Application.findById(req.params.id);
+  if (!application) {
+    const enquiry = await Enquiry.findById(req.params.id);
+    if (enquiry) {
+      if (req.body.status) enquiry.status = req.body.status;
+      await enquiry.save();
+      return res.json({ application: enquiry });
+    }
+    return res.status(404).json({ message: "Application not found" });
+  }
+
   if (req.body.status) application.status = req.body.status;
   if (req.body.notes !== undefined) application.notes = req.body.notes;
   if (req.body.offerLetterUrl) application.offerLetterUrl = req.body.offerLetterUrl;
   await application.save();
-  await Notification.create({
-    user: application.candidate,
-    title: "Application update",
-    body: `Your application is now ${application.status}.`,
-    link: "/candidate/applied",
-  });
+
+  if (application.candidate) {
+    await Notification.create({
+      user: application.candidate,
+      title: "Application update",
+      body: `Your application status is now ${application.status}.`,
+      link: "/candidate/applied",
+    });
+  }
   res.json({ application });
 }
 

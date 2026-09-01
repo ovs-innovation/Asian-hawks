@@ -15,6 +15,9 @@ import routes from "./routes/index.js";
 import { protect } from "./middleware/auth.js";
 import Enquiry from "./models/Enquiry.js";
 import Job from "./models/Job.js";
+import Application from "./models/Application.js";
+import User from "./models/User.js";
+import { Notification } from "./models/Supporting.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: path.join(__dirname, "..", ".env") });
@@ -36,47 +39,28 @@ const allowedOrigins = [
   "http://localhost:3000",
   "http://localhost:3001",
 ];
-const localhostOriginPattern = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i;
 
-app.use(
-  cors({
-    origin(origin, callback) {
-      if (!origin || allowedOrigins.includes(origin) || localhostOriginPattern.test(origin)) {
-        return callback(null, true);
-      }
-      return callback(new Error("Not allowed by CORS"));
-    },
-    credentials: true,
-  })
-);
-app.use(express.json({ limit: "2mb" }));
+app.use(cors({ origin: allowedOrigins.length ? allowedOrigins : true, credentials: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(rateLimit({ windowMs: 60_000, max: 300 }));
+app.use("/uploads", express.static(path.join(__dirname, "..", "uploads")));
 
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
+const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 200 });
+app.use("/api", limiter);
 
-const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 8 * 1024 * 1024 } });
-const resumeUpload = multer({
-  storage: multer.diskStorage({
-    destination: resumeDir,
-    filename(_req, file, cb) {
-      const safe = String(file.originalname || "resume").replace(/[^\w.\-]+/g, "_");
-      cb(null, `${Date.now()}-${safe}`);
-    },
-  }),
-  limits: { fileSize: 5 * 1024 * 1024 },
-  fileFilter(_req, file, cb) {
-    const ok = /pdf|msword|officedocument.wordprocessingml.document/i.test(file.mimetype) || /\.(pdf|doc|docx)$/i.test(file.originalname);
-    if (!ok) return cb(new Error("Upload a PDF or Word resume"));
-    cb(null, true);
+const storage = multer.memoryStorage();
+const upload = multer({ storage, limits: { fileSize: 10 * 1024 * 1024 } });
+
+const resumeStorage = multer.diskStorage({
+  destination: (_req, _file, cb) => cb(null, resumeDir),
+  filename: (_req, file, cb) => {
+    const ext = path.extname(file.originalname);
+    const safeBase = path.basename(file.originalname, ext).replace(/[^a-z0-9]/gi, "_");
+    cb(null, `${Date.now()}_${safeBase}${ext}`);
   },
 });
-
-app.use("/uploads", express.static(path.join(__dirname, "..", "uploads")));
+const resumeUpload = multer({ storage: resumeStorage, limits: { fileSize: 10 * 1024 * 1024 } });
 
 app.get("/api/health", (_req, res) => res.json({ ok: true, service: "northline-api" }));
 app.use("/api", routes);
@@ -94,19 +78,55 @@ app.post("/api/apply", resumeUpload.single("resume"), async (req, res) => {
   if (!req.file) return res.status(400).json({ message: "Please attach your resume (PDF or Word)" });
 
   const resumeUrl = `/uploads/resumes/${req.file.filename}`;
+
+  // 1. Find target job
+  let job = null;
+  if (jobSlug) {
+    job = await Job.findOne({ slug: jobSlug });
+  }
+
+  // 2. Find candidate user account if exists
+  const candidateUser = await User.findOne({ email });
+
+  // 3. Create Enquiry record
   await Enquiry.create({
     name,
     email,
     phone,
     message: message || `Application for ${jobTitle || "open role"}`,
-    jobTitle,
-    jobSlug,
+    jobTitle: jobTitle || job?.title,
+    jobSlug: jobSlug || job?.slug,
     resumeUrl,
     resumeName: req.file.originalname,
   });
-  if (jobSlug) {
-    await Job.findOneAndUpdate({ slug: jobSlug }, { $inc: { applicationsCount: 1 } });
+
+  // 4. Create Application record if job exists
+  if (job) {
+    const existingApp = candidateUser ? await Application.findOne({ job: job._id, candidate: candidateUser._id }) : null;
+    if (!existingApp) {
+      await Application.create({
+        job: job._id,
+        candidate: candidateUser?._id,
+        company: job.company,
+        resumeUrl,
+        coverLetter: message,
+        status: "applied",
+      });
+      job.applicationsCount += 1;
+      await job.save();
+    }
   }
+
+  // 5. Create Notification for candidate if user account exists
+  if (candidateUser) {
+    await Notification.create({
+      user: candidateUser._id,
+      title: "Application Submitted",
+      body: `Your application for ${jobTitle || job?.title || "job opening"} has been received.`,
+      link: "/candidate/applied",
+    });
+  }
+
   res.status(201).json({ ok: true, message: "Application received. Our HR team will contact you." });
 });
 

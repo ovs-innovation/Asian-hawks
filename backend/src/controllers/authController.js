@@ -13,9 +13,30 @@ function publicUser(user) {
     avatar: user.avatar,
     headline: user.headline,
     location: user.location,
+    city: user.city,
+    country: user.country,
+    phone: user.phone,
+    bio: user.bio,
+    skills: user.skills || [],
+    website: user.website,
+    linkedin: user.linkedin,
+    github: user.github,
+    experienceLevel: user.experienceLevel,
+    currentSalary: user.currentSalary,
+    expectedSalary: user.expectedSalary,
+    noticePeriod: user.noticePeriod,
+    languages: user.languages || [],
+    preferredLocations: user.preferredLocations || [],
+    preferredJobTypes: user.preferredJobTypes || [],
+    workExperience: user.workExperience || [],
+    education: user.education || [],
+    certifications: user.certifications || [],
+    resumeUrl: user.resumeUrl,
     company: user.company,
-    profileCompletion: user.profileCompletion,
+    savedJobs: (user.savedJobs || []).map(String),
+    profileCompletion: user.profileCompletion || 20,
     status: user.status,
+    privacy: user.privacy,
   };
 }
 
@@ -107,6 +128,7 @@ export async function resetPassword(req, res) {
 export async function updateMe(req, res) {
   const fields = [
     "name",
+    "avatar",
     "phone",
     "headline",
     "location",
@@ -116,11 +138,39 @@ export async function updateMe(req, res) {
     "skills",
     "website",
     "linkedin",
+    "github",
+    "experienceLevel",
+    "currentSalary",
+    "expectedSalary",
+    "noticePeriod",
+    "languages",
+    "preferredLocations",
+    "preferredJobTypes",
+    "workExperience",
+    "education",
+    "certifications",
+    "resumeUrl",
     "privacy",
   ];
   fields.forEach((key) => {
     if (req.body[key] !== undefined) req.user[key] = req.body[key];
   });
+
+  // Calculate dynamic profile completion percentage
+  let score = 20; // base signup
+  if (req.user.avatar) score += 10;
+  if (req.user.phone) score += 10;
+  if (req.user.headline) score += 10;
+  if (req.user.location) score += 5;
+  if (req.user.bio) score += 5;
+  if (req.user.skills?.length) score += 10;
+  if (req.user.experienceLevel) score += 5;
+  if (req.user.expectedSalary) score += 5;
+  if (req.user.noticePeriod) score += 5;
+  if (req.user.workExperience?.length) score += 10;
+  if (req.user.education?.length) score += 5;
+
+  req.user.profileCompletion = Math.min(100, score);
   await req.user.save();
   res.json({ user: publicUser(req.user) });
 }

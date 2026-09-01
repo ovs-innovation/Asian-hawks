@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Bell,
@@ -58,6 +58,7 @@ export function DashboardShell({
   area: "candidate" | "recruiter" | "admin";
   children: ReactNode;
 }) {
+  const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
   const user = useSelector((s: RootState) => s.auth.user);
   const hydrated = useSelector((s: RootState) => s.auth.hydrated);
@@ -67,17 +68,18 @@ export function DashboardShell({
   const isAdmin = area === "admin";
 
   useEffect(() => {
+    setMounted(true);
     if (!hydrated) {
       dispatch(hydrate());
     }
   }, [hydrated, dispatch]);
 
   useEffect(() => {
-    if (!hydrated) return;
+    if (!mounted || !hydrated) return;
     if (!user) router.replace("/login");
-  }, [hydrated, user, router]);
+  }, [mounted, hydrated, user, router]);
 
-  if (!hydrated || !user) {
+  if (!mounted || !hydrated || !user) {
     return (
       <div className="grid min-h-screen place-items-center bg-[#f8fafc] text-sm font-medium text-slate-500">
         <div className="flex items-center gap-3 rounded-full bg-white px-5 py-2.5 shadow-xs border border-slate-200">

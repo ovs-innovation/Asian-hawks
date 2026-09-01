@@ -11,6 +11,7 @@ import {
   CheckCircle2,
   FileText,
   MapPin,
+  Phone,
   Sparkles,
   TrendingUp,
 } from "lucide-react";
@@ -36,7 +37,16 @@ type AppliedJobItem = {
 export default function CandidateHome() {
   const user = useSelector((s: RootState) => s.auth.user);
   const { data: jobs = [] } = useJobs();
-  const pct = user?.profileCompletion || 20;
+
+  // Fetch fresh profile data
+  const { data: userData } = useQuery({
+    queryKey: ["auth-me"],
+    queryFn: () => api<{ user: any }>("/auth/me"),
+    initialData: { user },
+  });
+
+  const currentUser = userData?.user || user;
+  const pct = currentUser?.profileCompletion || 20;
 
   const { data: appsData } = useQuery<{ items: AppliedJobItem[] }>({
     queryKey: ["my-apps"],
@@ -45,20 +55,115 @@ export default function CandidateHome() {
 
   const myApplications = appsData?.items ?? [];
 
+  // Extract current company/role from work experience
+  const workList = currentUser?.workExperience || [];
+  const currentJob = workList.find((w: any) => w.current) || workList[0];
+  const currentCompany = currentJob ? `${currentJob.title ? currentJob.title + " at " : ""}${currentJob.company}` : null;
+
+  const { data: savedData } = useQuery<{ items: any[] }>({
+    queryKey: ["saved-jobs"],
+    queryFn: () => api<{ items: any[] }>("/jobs/saved"),
+  });
+
+  const savedCount = savedData?.items?.length ?? currentUser?.savedJobs?.length ?? 0;
+
   return (
     <div className="space-y-8">
-      <PageHeader
-        title={`Welcome back, ${user?.name?.split(" ")[0] || "Candidate"} 👋`}
-        body="Track your application status, saved roles, and discover recommended openings."
-        action={
-          <Button asChild className="bg-[#0f5daa] hover:bg-[#0c4d8c] text-white shadow-xs rounded-xl px-5 h-11 font-semibold">
-            <Link href="/jobs" className="flex items-center gap-2">
-              <Briefcase size={16} />
-              <span>Browse All Jobs</span>
+      {/* LinkedIn-style Top Profile Header Banner */}
+      <Card className="relative overflow-hidden border-slate-200/90 bg-white p-6 shadow-[0_2px_12px_rgba(15,93,170,0.06)]">
+        {/* Subtle background glow */}
+        <div className="absolute -right-10 -top-10 h-36 w-36 rounded-full bg-blue-50/70 blur-2xl pointer-events-none" />
+
+        <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="flex items-center gap-5">
+            {/* Candidate Avatar */}
+            <div className="flex h-16 w-16 sm:h-20 sm:w-20 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-[#0f5daa] via-blue-600 to-[#03224c] text-2xl font-bold text-white shadow-md border-2 border-white">
+              {currentUser?.avatar ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={currentUser.avatar} alt={currentUser.name} className="h-full w-full object-cover" />
+              ) : (
+                <span>{currentUser?.name?.[0]?.toUpperCase() || "C"}</span>
+              )}
+            </div>
+
+            <div className="space-y-1">
+              <div className="flex items-center gap-2.5 flex-wrap">
+                <h1 className="text-xl sm:text-2xl font-bold text-slate-900">
+                  {currentUser?.name || "Candidate"}
+                </h1>
+                {currentUser?.experienceLevel ? (
+                  <span className="inline-flex items-center rounded-full bg-blue-50 px-3 py-0.5 text-xs font-bold text-[#0f5daa] border border-blue-200/60">
+                    {currentUser.experienceLevel} Exp
+                  </span>
+                ) : null}
+              </div>
+
+              {/* Professional Headline */}
+              <p className="text-sm font-semibold text-[#0f5daa]">
+                {currentUser?.headline || "Add your professional headline in Profile"}
+              </p>
+
+              {/* Company & Location Details Row */}
+              <div className="flex items-center gap-4 text-xs font-medium text-slate-500 pt-0.5 flex-wrap">
+                {currentCompany ? (
+                  <span className="flex items-center gap-1 text-slate-800 font-bold">
+                    <Building2 size={13} className="text-[#0f5daa]" /> {currentCompany}
+                  </span>
+                ) : null}
+
+                {currentUser?.location ? (
+                  <span className="flex items-center gap-1">
+                    <MapPin size={13} className="text-slate-400" /> {currentUser.location}
+                  </span>
+                ) : null}
+
+                {currentUser?.phone ? (
+                  <span className="flex items-center gap-1">
+                    <Phone size={13} className="text-slate-400" /> {currentUser.phone}
+                  </span>
+                ) : null}
+              </div>
+
+              {/* Skills Chips Preview */}
+              {currentUser?.skills?.length ? (
+                <div className="mt-2 flex flex-wrap gap-1.5 pt-0.5">
+                  {currentUser.skills.slice(0, 5).map((skill: string) => (
+                    <span
+                      key={skill}
+                      className="rounded-md bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-600"
+                    >
+                      {skill}
+                    </span>
+                  ))}
+                  {currentUser.skills.length > 5 ? (
+                    <span className="text-[11px] font-semibold text-slate-400 self-center">
+                      +{currentUser.skills.length - 5} more
+                    </span>
+                  ) : null}
+                </div>
+              ) : null}
+            </div>
+          </div>
+
+          {/* Quick Actions & Edit Profile Button */}
+          <div className="flex flex-col sm:flex-row md:flex-col items-stretch md:items-end gap-2.5 shrink-0">
+            <Button asChild className="bg-[#0f5daa] hover:bg-[#0c4d8c] text-white shadow-xs rounded-xl px-5 h-10 font-semibold text-xs">
+              <Link href="/jobs" className="flex items-center justify-center gap-2">
+                <Briefcase size={15} />
+                <span>Browse All Jobs</span>
+              </Link>
+            </Button>
+
+            <Link
+              href="/candidate/profile"
+              className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-slate-300 bg-slate-50 px-4 text-xs font-bold text-slate-700 hover:bg-slate-100 transition"
+            >
+              <span>Edit Profile Details</span>
+              <ArrowRight size={13} />
             </Link>
-          </Button>
-        }
-      />
+          </div>
+        </div>
+      </Card>
 
       {/* Top Stat Cards Grid */}
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -70,7 +175,7 @@ export default function CandidateHome() {
               <h3 className="mt-2 text-3xl font-black text-slate-900">{pct}%</h3>
             </div>
             <div className="grid h-10 w-10 place-items-center rounded-xl bg-blue-50 text-[#0f5daa]">
-              <Sparkles size={20} />
+              <CheckCircle2 size={20} />
             </div>
           </div>
           <div className="mt-4">
@@ -122,13 +227,15 @@ export default function CandidateHome() {
           <div className="flex items-start justify-between">
             <div>
               <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Saved Roles</p>
-              <h3 className="mt-2 text-3xl font-black text-slate-900">0</h3>
+              <h3 className="mt-2 text-3xl font-black text-slate-900">{savedCount}</h3>
             </div>
             <div className="grid h-10 w-10 place-items-center rounded-xl bg-amber-50 text-amber-600">
               <Bookmark size={20} />
             </div>
           </div>
-          <p className="mt-3 text-xs font-medium text-slate-500">Save roles to review or apply later</p>
+          <p className="mt-3 text-xs font-medium text-slate-500">
+            {savedCount === 1 ? "1 role bookmarked" : `${savedCount} roles bookmarked for review`}
+          </p>
           <Link
             href="/candidate/saved"
             className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold text-[#0f5daa] hover:text-[#0c4d8c] transition-colors"
