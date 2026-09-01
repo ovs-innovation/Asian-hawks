@@ -32,9 +32,14 @@ function getDashboardUrl(role?: string) {
 export function Navbar() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const user = useSelector((s: RootState) => s.auth.user);
   const hydrated = useSelector((s: RootState) => s.auth.hydrated);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     setOpen(false);
@@ -70,7 +75,7 @@ export function Navbar() {
         </nav>
 
         <div className="hidden items-center gap-3 lg:flex">
-          {hydrated && user ? (
+          {mounted && hydrated && user ? (
             <>
               <Link
                 href={dashboardUrl}
@@ -143,7 +148,7 @@ export function Navbar() {
             </Link>
           ))}
 
-          {hydrated && user ? (
+          {mounted && hydrated && user ? (
             <div className="mt-5 space-y-3 border-t border-slate-100 pt-4">
               <div className="flex items-center gap-3 rounded-xl bg-slate-50 p-3 border border-slate-200/80">
                 <div className="grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br from-[#0f5daa] to-[#03224c] text-xs font-bold text-white shadow-2xs">

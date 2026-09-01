@@ -7,6 +7,8 @@ import { protect, authorize, recruiterRoles, adminRoles } from "../middleware/au
 import { Resume } from "../models/Supporting.js";
 import * as modules from "../controllers/modulesController.js";
 import * as courses from "../controllers/courseController.js";
+import * as resume from "../controllers/resumeController.js";
+import { resumeUpload } from "../middleware/upload.js";
 
 const router = Router();
 
@@ -53,20 +55,11 @@ router.get("/blogs", platform.blogs.list);
 router.get("/blogs/:slug", platform.blogs.get);
 router.get("/taxonomies", platform.taxonomies);
 
-router.get("/resume", protect, async (req, res) => {
-  const item = await Resume.findOne({ user: req.user._id });
-  res.json({ item });
-});
-router.put("/resume", protect, async (req, res) => {
-  const item = await Resume.findOneAndUpdate(
-    { user: req.user._id },
-    { ...req.body, user: req.user._id },
-    { upsert: true, new: true }
-  );
-  req.user.profileCompletion = 86;
-  await req.user.save();
-  res.json({ item });
-});
+router.get("/resume", protect, resume.getResume);
+router.put("/resume", protect, resume.saveResume);
+router.post("/resume/upload", protect, resumeUpload.single("file"), resume.uploadAndParseResume);
+router.get("/resume/sync-profile", protect, resume.syncWithProfile);
+router.post("/resume/sync-profile", protect, resume.syncWithProfile);
 
 router.get("/recruiter/analytics", protect, authorize(...recruiterRoles), platform.recruiterAnalytics);
 router.get("/billing", protect, authorize(...recruiterRoles, ...adminRoles), platform.billing);
