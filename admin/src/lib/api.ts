@@ -1,6 +1,6 @@
 import { API_URL } from "./utils";
 
-const API_TIMEOUT_MS = 8000; // admin can afford a longer timeout
+const API_TIMEOUT_MS = 20000;
 export class ApiError extends Error {
   status: number;
   constructor(status: number, message: string) {
@@ -37,7 +37,14 @@ export async function api<T>(path: string, options: RequestInit = {}): Promise<T
       signal: controller.signal,
     });
     const data = await res.json().catch(() => ({}));
-    if (!res.ok) throw new ApiError(res.status, data.message || "Request failed");
+    if (!res.ok) {
+      if (res.status === 401 && typeof window !== "undefined" && !path.startsWith("/auth/")) {
+        localStorage.removeItem("northline_token");
+        localStorage.removeItem("northline_user");
+        window.location.replace("/login");
+      }
+      throw new ApiError(res.status, data.message || "Request failed");
+    }
     return data as T;
   } catch (err) {
     if (err instanceof ApiError) throw err;

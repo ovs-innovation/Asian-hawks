@@ -337,9 +337,14 @@ async function run() {
     Notification.deleteMany({}),
   ]);
 
-  const password = await bcrypt.hash("Password@123", 10);
+  const seedPassword = process.env.SEED_PASSWORD || process.env.ADMIN_PASSWORD;
+  const adminPasswordPlain = process.env.ADMIN_PASSWORD;
+  if (!adminPasswordPlain) {
+    throw new Error("Set ADMIN_PASSWORD in backend/.env before seeding.");
+  }
+  const password = await bcrypt.hash(seedPassword || adminPasswordPlain, 10);
   const adminEmail = (process.env.ADMIN_EMAIL || "admin@asianhawks.in").toLowerCase();
-  const adminPassword = await bcrypt.hash(process.env.ADMIN_PASSWORD || "Admin@12345", 10);
+  const adminPassword = await bcrypt.hash(adminPasswordPlain, 10);
 
   const admin = await User.create({
     name: "Asian Hawks Admin",
@@ -504,10 +509,7 @@ async function run() {
     link: "/candidate/applied",
   });
 
-  console.log("Seed complete.");
-  console.log(`Admin:    ${adminEmail} / (ADMIN_PASSWORD from .env)`);
-  console.log("Recruiter: talent@helios-bank.com / Password@123");
-  console.log("Candidate: maya@example.com / Password@123");
+  console.log("Seed complete. Admin email:", adminEmail, "(password from backend/.env)");
   await mongoose.disconnect();
 }
 

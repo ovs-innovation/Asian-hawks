@@ -16,16 +16,15 @@ import { protect } from "./middleware/auth.js";
 import Enquiry from "./models/Enquiry.js";
 import Job from "./models/Job.js";
 
-dotenv.config();
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: path.join(__dirname, "..", ".env") });
 
 try {
   dns.setDefaultResultOrder?.("ipv4first");
-  dns.setServers(["8.8.8.8", "1.1.1.1"]);
 } catch {
   // Ignore DNS config fallback errors
 }
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const resumeDir = path.join(__dirname, "..", "uploads", "resumes");
 fs.mkdirSync(resumeDir, { recursive: true });
 
@@ -131,7 +130,7 @@ app.use((err, _req, res, _next) => {
   res.status(500).json({ message: err.message || "Unexpected server error" });
 });
 
-const port = process.env.PORT || 5000;
+const port = Number(process.env.PORT || 5000);
 const uri = process.env.MONGODB_URI;
 
 if (!uri) {
@@ -140,16 +139,23 @@ if (!uri) {
 }
 
 mongoose.set("strictQuery", true);
-mongoose
-  .connect(uri, {
-    dbName: "jobportal",
-    serverSelectionTimeoutMS: 20000,
-  })
-  .then(() => {
+
+app.listen(port, "0.0.0.0", () => {
+  console.log(`Northline API running on http://127.0.0.1:${port}`);
+});
+
+async function connectMongo(attempt = 1) {
+  try {
+    await mongoose.connect(uri, {
+      dbName: "jobportal",
+      serverSelectionTimeoutMS: 20000,
+    });
     console.log("Connected to MongoDB Atlas (jobportal)");
-    app.listen(port, () => console.log(`Northline API running on :${port}`));
-  })
-  .catch((err) => {
-    console.error("MongoDB connection failed:", err.message);
-    process.exit(1);
-  });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.error(`MongoDB connection failed (attempt ${attempt}):`, message);
+    setTimeout(() => connectMongo(attempt + 1), Math.min(5000 * attempt, 30000));
+  }
+}
+
+connectMongo();

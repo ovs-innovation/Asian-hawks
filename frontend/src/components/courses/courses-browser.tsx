@@ -1,15 +1,31 @@
 "use client";
 
 import { FormEvent, useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { CourseCard } from "@/components/courses/course-card";
-import { DEMO_COURSES } from "@/lib/platform-data";
+import { api } from "@/lib/api";
+import { CLASS_FORMAT_LABEL, type TrainingCourse } from "@/lib/courses";
 
-const FILTERS = ["All", "Banking Operations", "Field Banking", "Bank Exams", "Compliance"];
+const FILTERS = ["All", "Live online", "Recorded", "Classroom", "Hybrid"];
+
+function matchesFormat(course: TrainingCourse, filter: string) {
+  if (filter === "All") return true;
+  if (filter === "Live online") return course.classFormat === "live_online";
+  if (filter === "Recorded") return course.classFormat === "recorded";
+  if (filter === "Classroom") return course.classFormat === "classroom";
+  if (filter === "Hybrid") return course.classFormat === "hybrid";
+  return true;
+}
 
 export function CoursesBrowser() {
   const [title, setTitle] = useState("");
   const [filter, setFilter] = useState("All");
   const [q, setQ] = useState("");
+
+  const { data, isLoading, isError } = useQuery<{ items: TrainingCourse[] }>({
+    queryKey: ["training-courses"],
+    queryFn: () => api("/courses"),
+  });
 
   function onSearch(e: FormEvent) {
     e.preventDefault();
@@ -17,13 +33,12 @@ export function CoursesBrowser() {
   }
 
   const filtered = useMemo(() => {
-    return DEMO_COURSES.filter((c) => {
-      const hay = `${c.title} ${c.category} ${c.mode} ${c.placement}`.toLowerCase();
+    return (data?.items ?? []).filter((c) => {
+      const hay = `${c.title} ${c.category} ${c.mode} ${c.placement} ${CLASS_FORMAT_LABEL[c.classFormat || ""]}`.toLowerCase();
       if (q && !hay.includes(q.toLowerCase())) return false;
-      if (filter !== "All" && c.category !== filter) return false;
-      return true;
+      return matchesFormat(c, filter);
     });
-  }, [q, filter]);
+  }, [data, q, filter]);
 
   return (
     <section className="min-h-[70vh] bg-[#f4f7fb]">
@@ -32,7 +47,7 @@ export function CoursesBrowser() {
           <p className="text-[12px] font-semibold uppercase tracking-[0.16em] text-white/70">Training</p>
           <h1 className="mt-2 text-[26px] font-extrabold tracking-tight !text-white sm:text-[32px]">Banking courses</h1>
           <p className="mt-2 max-w-lg text-[15px] text-white/75">
-            Classroom, field, and exam batches — separate from job openings.
+            Live online, recorded, classroom, and hybrid batches — managed from admin.
           </p>
           <form onSubmit={onSearch} className="mt-6 flex w-full max-w-lg flex-col gap-2 sm:flex-row">
             <input
@@ -63,14 +78,30 @@ export function CoursesBrowser() {
             </button>
           ))}
         </div>
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          {filtered.map((course) => (
-            <CourseCard key={course.slug} course={course} />
-          ))}
-        </div>
-        {filtered.length === 0 && (
-          <p className="rounded-xl bg-white px-5 py-10 text-center text-sm text-[#64748b]">No courses found.</p>
-        )}
+        {isLoading ? (
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="h-72 animate-pulse rounded-2xl bg-white" />
+            ))}
+          </div>
+        ) : null}
+        {isError ? (
+          <p className="rounded-xl bg-white px-5 py-10 text-center text-sm text-[#64748b]">
+            Could not load courses. Make sure the API is running.
+          </p>
+        ) : null}
+        {!isLoading && !isError ? (
+          <>
+            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+              {filtered.map((course) => (
+                <CourseCard key={course.slug} course={course} />
+              ))}
+            </div>
+            {filtered.length === 0 ? (
+              <p className="rounded-xl bg-white px-5 py-10 text-center text-sm text-[#64748b]">No courses found.</p>
+            ) : null}
+          </>
+        ) : null}
       </div>
     </section>
   );

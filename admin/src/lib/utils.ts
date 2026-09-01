@@ -61,5 +61,8 @@ export function timeAgo(date: string | Date) {
   return `${weeks}w ago`;
 }
 
-// Backend API URL — can be overridden via .env.local
-export const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+// Windows often hangs on localhost (IPv6). Always hit IPv4.
+export const API_URL = (process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:5000/api").replace(
+  "://localhost",
+  "://127.0.0.1"
+);

@@ -1,8 +1,6 @@
 import { API_URL } from "./utils";
 
-const API_TIMEOUT_MS = 12000;
-const API_COOLDOWN_MS = 30_000;
-let apiUnavailableUntil = 0;
+const API_TIMEOUT_MS = 20000;
 
 export class ApiError extends Error {
   status: number;
@@ -18,10 +16,6 @@ export function getToken() {
 }
 
 export async function api<T>(path: string, options: RequestInit = {}): Promise<T> {
-  if (Date.now() < apiUnavailableUntil) {
-    throw new ApiError(0, "API unavailable");
-  }
-
   const token = getToken();
   const headers: Record<string, string> = {
     ...(options.body instanceof FormData ? {} : { "Content-Type": "application/json" }),
@@ -43,14 +37,12 @@ export async function api<T>(path: string, options: RequestInit = {}): Promise<T
       credentials: "include",
       signal: controller.signal,
     });
-    apiUnavailableUntil = 0;
     const data = await res.json().catch(() => ({}));
     if (!res.ok) throw new ApiError(res.status, data.message || "Request failed");
     return data as T;
   } catch (err) {
     if (err instanceof ApiError) throw err;
-    apiUnavailableUntil = Date.now() + API_COOLDOWN_MS;
-    throw new ApiError(0, "API unavailable");
+    throw new ApiError(0, "API unavailable — start backend with npm run start in /backend");
   } finally {
     clearTimeout(timeout);
   }

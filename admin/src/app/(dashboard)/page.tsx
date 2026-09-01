@@ -24,11 +24,11 @@ type Job = {
 };
 
 export default function DashboardPage() {
-  const { data, isLoading } = useQuery<Overview>({
+  const { data, isLoading, isError, error, refetch } = useQuery<Overview>({
     queryKey: ["admin-overview"],
     queryFn: () => api("/admin/overview"),
   });
-  const { data: jobsData } = useQuery<{ items: Job[] }>({
+  const { data: jobsData, isError: jobsError, refetch: refetchJobs } = useQuery<{ items: Job[] }>({
     queryKey: ["admin-jobs-recent"],
     queryFn: () => api("/admin/jobs?limit=6"),
   });
@@ -55,6 +55,15 @@ export default function DashboardPage() {
           Create job
         </Link>
       </div>
+
+      {isError ? (
+        <div className="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+          Could not load dashboard: {error instanceof Error ? error.message : "Request failed"}.
+          <button type="button" className="ml-2 font-semibold underline" onClick={() => { refetch(); refetchJobs(); }}>
+            Retry
+          </button>
+        </div>
+      ) : null}
 
       {isLoading ? (
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
@@ -103,9 +112,11 @@ export default function DashboardPage() {
               <Link href={`/jobs/${job._id}/edit`} className="text-xs font-medium text-[#0f5daa]">Edit</Link>
             </div>
           ))}
-          {!jobsData?.items?.length && (
+          {jobsError ? (
+            <p className="px-5 py-8 text-center text-sm text-red-600">Could not load jobs.</p>
+          ) : !jobsData?.items?.length ? (
             <p className="px-5 py-8 text-center text-sm text-[#9ca3af]">No jobs yet.</p>
-          )}
+          ) : null}
         </div>
       </div>
     </div>

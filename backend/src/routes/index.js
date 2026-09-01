@@ -6,6 +6,7 @@ import * as platform from "../controllers/platformController.js";
 import { protect, authorize, recruiterRoles, adminRoles } from "../middleware/auth.js";
 import { Resume } from "../models/Supporting.js";
 import * as modules from "../controllers/modulesController.js";
+import * as courses from "../controllers/courseController.js";
 
 const router = Router();
 
@@ -20,8 +21,8 @@ router.delete("/auth/me", protect, auth.deleteMe);
 
 router.get("/tenders", modules.listTenders);
 router.get("/tenders/:slug", modules.getTender);
-router.get("/courses", modules.listCourses);
-router.get("/courses/:slug", modules.getCourse);
+router.get("/courses", courses.listCourses);
+router.get("/courses/:slug", courses.getCourse);
 
 router.get("/jobs", jobs.listJobs);
 router.get("/jobs/:slug", jobs.getJob);
@@ -68,6 +69,12 @@ router.put("/resume", protect, async (req, res) => {
 
 router.get("/recruiter/analytics", protect, authorize(...recruiterRoles), platform.recruiterAnalytics);
 router.get("/billing", protect, authorize(...recruiterRoles, ...adminRoles), platform.billing);
+
+router.get("/admin/courses", protect, authorize(...adminRoles), courses.adminListCourses);
+router.post("/admin/courses", protect, authorize(...adminRoles), courses.adminCreateCourse);
+router.get("/admin/courses/:id", protect, authorize(...adminRoles), courses.adminGetCourse);
+router.patch("/admin/courses/:id", protect, authorize(...adminRoles), courses.adminUpdateCourse);
+router.delete("/admin/courses/:id", protect, authorize(...adminRoles), courses.adminDeleteCourse);
 
 router.get("/admin/applications", protect, authorize(...adminRoles), platform.adminApplications);
 router.get("/admin/overview", protect, authorize(...adminRoles), platform.adminOverview);
