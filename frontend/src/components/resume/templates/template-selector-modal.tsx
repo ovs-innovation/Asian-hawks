@@ -1,8 +1,7 @@
 "use client";
 
 import React from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { Badge } from "@/components/ui/primitives";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Badge } from "@/components/ui/primitives";
 import { Button } from "@/components/ui/button";
 import { Check, Sparkles } from "lucide-react";
 import { TEMPLATES_META, type TemplateId } from "@/types/resume";

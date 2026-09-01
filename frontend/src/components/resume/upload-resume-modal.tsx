@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/primitives";
 import { Button } from "@/components/ui/button";
 import { FileUp, Upload, AlertTriangle, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
