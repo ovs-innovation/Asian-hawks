@@ -35,11 +35,17 @@ const authSlice = createSlice({
     },
     hydrate(state) {
       if (typeof window === "undefined") return;
-      const token = localStorage.getItem("northline_token");
-      const raw = localStorage.getItem("northline_user");
-      state.token = token;
-      state.user = raw ? JSON.parse(raw) : null;
-      state.hydrated = true;
+      try {
+        const token = localStorage.getItem("northline_token");
+        const raw = localStorage.getItem("northline_user");
+        state.token = token;
+        state.user = raw ? JSON.parse(raw) : null;
+      } catch {
+        state.token = null;
+        state.user = null;
+      } finally {
+        state.hydrated = true;
+      }
     },
     logout(state) {
       state.user = null;

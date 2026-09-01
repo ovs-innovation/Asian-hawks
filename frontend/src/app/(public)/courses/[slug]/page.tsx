@@ -46,7 +46,7 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ s
               <BadgeCheck size={12} /> {CLASS_FORMAT_LABEL[course.classFormat || ""] || mode}
             </span>
           </p>
-          <SafeImage src={course.image} alt={course.title} className="mt-5 h-48 w-full rounded-xl object-cover sm:h-56" />
+          <SafeImage src={course.image || "/courses/bank-branch.jpg"} alt={course.title} className="mt-5 h-48 w-full rounded-xl object-cover sm:h-56" />
           <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-sm text-[#64748b]">
             <span className="inline-flex items-center gap-1.5"><GraduationCap size={15} /> {mode}</span>
             <span className="inline-flex items-center gap-1.5"><Wallet size={15} /> ₹{(course.price || 0).toLocaleString("en-IN")}</span>

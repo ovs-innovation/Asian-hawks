@@ -2,20 +2,29 @@
 
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { FormEvent, useState, Suspense } from "react";
-import { useDispatch } from "react-redux";
+import { FormEvent, useEffect, useState, Suspense } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input, Label } from "@/components/ui/primitives";
 import { api } from "@/lib/api";
 import { setCredentials, type AuthUser } from "@/store/authSlice";
+import type { RootState } from "@/store";
 
 function SignupForm() {
   const searchParams = useSearchParams();
   const offer = searchParams.get("offer");
   const [form, setForm] = useState({ name: "", email: "", password: "", role: "candidate", companyName: "" });
+  const user = useSelector((s: RootState) => s.auth.user);
+  const hydrated = useSelector((s: RootState) => s.auth.hydrated);
   const dispatch = useDispatch();
   const router = useRouter();
+
+  useEffect(() => {
+    if (hydrated && user) {
+      router.replace(user.role === "candidate" ? "/candidate" : "/recruiter");
+    }
+  }, [hydrated, user, router]);
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();

@@ -16,7 +16,7 @@ import {
   Settings,
   Users,
 } from "lucide-react";
-import { logout } from "@/store/authSlice";
+import { logout, hydrate } from "@/store/authSlice";
 import type { RootState } from "@/store";
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
@@ -65,6 +65,12 @@ export function DashboardShell({
   const router = useRouter();
   const items = menus[area];
   const isAdmin = area === "admin";
+
+  useEffect(() => {
+    if (!hydrated) {
+      dispatch(hydrate());
+    }
+  }, [hydrated, dispatch]);
 
   useEffect(() => {
     if (!hydrated) return;

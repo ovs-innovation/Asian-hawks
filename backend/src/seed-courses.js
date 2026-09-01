@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
+import dns from "dns";
 import path from "path";
 import { fileURLToPath } from "url";
-import dns from "dns";
 import mongoose from "mongoose";
 import Course from "./models/Course.js";
 
@@ -9,9 +9,10 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: path.join(__dirname, "..", ".env") });
 
 try {
-  dns.setServers(["8.8.8.8", "1.1.1.1"]);
+  dns.setServers?.(["8.8.8.8", "1.1.1.1", "8.8.4.4"]);
+  dns.setDefaultResultOrder?.("ipv4first");
 } catch {
-  // Ignore DNS fallback errors
+  // Ignore DNS config fallback errors
 }
 
 const courses = [

@@ -5,6 +5,7 @@ import { Provider } from "react-redux";
 import { useState } from "react";
 import { Toaster } from "sonner";
 import { store } from "@/store";
+import { AuthHydrator } from "@/components/auth-hydrator";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const [client] = useState(
@@ -21,6 +22,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
   );
   return (
     <Provider store={store}>
+      <AuthHydrator />
       <QueryClientProvider client={client}>
         {children}
         <Toaster position="top-right" />

@@ -25,7 +25,7 @@ export function CourseCard({ course }: { course: CourseCardCourse }) {
       className="flex h-full flex-col overflow-hidden rounded-2xl border border-[#e6edf5] bg-white shadow-[0_1px_2px_rgba(3,34,76,0.04)] sm:hover:shadow-[0_12px_32px_rgba(3,34,76,0.1)]"
     >
       <div className="relative h-[148px] overflow-hidden">
-        <SafeImage src={course.image} alt={course.title} className="h-full w-full object-cover" />
+        <SafeImage src={course.image || "/courses/bank-branch.jpg"} alt={course.title} className="h-full w-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#03224c]/80 via-transparent to-transparent" />
         <p className="absolute bottom-2 left-3 max-w-[85%] truncate text-[10px] font-semibold uppercase tracking-[0.1em] text-white/90 sm:bottom-3 sm:left-4 sm:text-[11px]">
           {course.category}
