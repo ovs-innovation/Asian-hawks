@@ -73,15 +73,27 @@ export default function AdminApplicationsPage() {
   });
 
   const portalApps = appsData?.items ?? [];
+  const portalEmailsAndSlugs = new Set(
+    portalApps.map((a) => `${(a.candidate?.email || "").toLowerCase()}_${a.job?.slug || ""}`)
+  );
+
   const quickApplies = (enquiriesData?.items ?? []).filter((i) => {
-    const msg = (i.message || "").toLowerCase();
     const msgUpper = (i.message || "").toUpperCase();
     
     // Exclude course purchase requests
     if (msgUpper.includes("PURCHASE REQUEST")) return false;
 
-    // Must have a resumeUrl attached OR be an explicit job application
-    if (i.resumeUrl) return true;
+    // Exclude candidate profile file uploads
+    if (msgUpper.includes("CANDIDATE PROFILE RESUME ATTACHMENT")) return false;
+
+    // Must have a valid job title, job slug, or explicit job application message
+    if (i.jobTitle || i.jobSlug) {
+      const key = `${(i.email || "").toLowerCase()}_${i.jobSlug || ""}`;
+      if (i.jobSlug && portalEmailsAndSlugs.has(key)) return false;
+      return true;
+    }
+
+    const msg = (i.message || "").toLowerCase();
     if (msg.includes("application for") && !msg.includes("course")) return true;
 
     return false;
@@ -109,7 +121,7 @@ export default function AdminApplicationsPage() {
       email: q.email,
       phone: q.phone || "—",
       headline: "Quick Applicant",
-      jobTitle: q.jobTitle || "Job Quick Apply",
+      jobTitle: q.jobTitle || "Job Application",
       companyName: "Asian Hawks",
       status: (q as any).status || "applied",
       details: q.message,
@@ -137,7 +149,7 @@ export default function AdminApplicationsPage() {
   const isLoading = appsLoading || enquiriesLoading;
 
   return (
-    <div className="p-6">
+    <div className="p-3 sm:p-6">
       <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#0f5daa]">Recruitment</p>
@@ -154,8 +166,8 @@ export default function AdminApplicationsPage() {
         </div>
       </div>
 
-      <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-2 rounded-xl border border-[#e5e7eb] bg-white p-1">
+      <div className="mb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center gap-1.5 rounded-xl border border-[#e5e7eb] bg-white p-1">
           <button
             type="button"
             onClick={() => setActiveTab("all")}
@@ -185,7 +197,7 @@ export default function AdminApplicationsPage() {
           </button>
         </div>
 
-        <div className="relative w-full max-w-xs">
+        <div className="relative w-full sm:max-w-xs">
           <Search className="absolute left-3 top-2.5 h-4 w-4 text-[#9ca3af]" />
           <input
             type="text"
@@ -204,8 +216,8 @@ export default function AdminApplicationsPage() {
           ))}
         </div>
       ) : (
-        <div className="overflow-hidden rounded-xl border border-[#e5e7eb] bg-white shadow-sm">
-          <table className="w-full text-sm">
+        <div className="overflow-x-auto rounded-xl border border-[#e5e7eb] bg-white shadow-sm">
+          <table className="w-full min-w-[750px] text-sm">
             <thead className="border-b border-[#e5e7eb] bg-[#f9fafb]">
               <tr>
                 <th className="px-4 py-3 text-left font-semibold text-[#4b5563]">Candidate / Student</th>

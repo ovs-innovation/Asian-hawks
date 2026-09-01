@@ -1,6 +1,13 @@
 import React from "react";
 import type { ResumeData } from "@/types/resume";
 
+function formatUrl(url?: string) {
+  if (!url) return "";
+  const trimmed = url.trim();
+  if (/^https?:\/\//i.test(trimmed)) return trimmed;
+  return `https://${trimmed}`;
+}
+
 export function MinimalTemplate({ data }: { data: ResumeData }) {
   const p = data.personalInfo || {};
   const hasExp = !data.isFresher && data.experience && data.experience.length > 0;
@@ -9,15 +16,16 @@ export function MinimalTemplate({ data }: { data: ResumeData }) {
   const hasProjects = data.projects && data.projects.length > 0;
   const hasCerts = data.certificates && data.certificates.length > 0;
   const hasLangs = data.languages && data.languages.length > 0;
+  const hasAch = data.achievements && data.achievements.length > 0;
 
-  const contactList = [
-    p.email,
-    p.phone,
-    p.location || p.city,
-    p.linkedin && "LinkedIn",
-    p.github && "GitHub",
-    p.portfolio && "Portfolio",
-  ].filter(Boolean);
+  const contacts: { label: string; href?: string }[] = [
+    p.email ? { label: p.email, href: `mailto:${p.email}` } : null,
+    p.phone ? { label: p.phone } : null,
+    (p.location || p.city) ? { label: p.location || p.city } : null,
+    p.linkedin ? { label: "LinkedIn", href: formatUrl(p.linkedin) } : null,
+    p.github ? { label: "GitHub", href: formatUrl(p.github) } : null,
+    p.portfolio ? { label: "Portfolio", href: formatUrl(p.portfolio) } : null,
+  ].filter(Boolean) as { label: string; href?: string }[];
 
   return (
     <div
@@ -36,10 +44,21 @@ export function MinimalTemplate({ data }: { data: ResumeData }) {
           </p>
         )}
         <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-zinc-400 font-light">
-          {contactList.map((item, idx) => (
+          {contacts.map((c, idx) => (
             <React.Fragment key={idx}>
               {idx > 0 && <span>/</span>}
-              <span className="text-zinc-600">{item}</span>
+              {c.href ? (
+                <a
+                  href={c.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-zinc-800 underline hover:text-[#0f5daa]"
+                >
+                  {c.label}
+                </a>
+              ) : (
+                <span className="text-zinc-600">{c.label}</span>
+              )}
             </React.Fragment>
           ))}
         </div>
@@ -137,6 +156,26 @@ export function MinimalTemplate({ data }: { data: ResumeData }) {
           </section>
         )}
       </div>
+
+      {/* Achievements */}
+      {hasAch && (
+        <section className="mt-8">
+          <h2 className="text-[11px] font-semibold uppercase tracking-[0.25em] text-zinc-400 mb-3">
+            Honors & Achievements
+          </h2>
+          <div className="space-y-3">
+            {data.achievements.map((ach, idx) => (
+              <div key={idx} className="text-xs">
+                <div className="flex justify-between items-baseline">
+                  <span className="font-semibold text-zinc-900">{ach.title}</span>
+                  {ach.date && <span className="text-[11px] text-zinc-400 font-light">{ach.date}</span>}
+                </div>
+                {ach.description && <p className="mt-1 text-zinc-600 text-[12px]">{ach.description}</p>}
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Certifications & Languages */}
       {(hasCerts || hasLangs) && (

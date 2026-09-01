@@ -42,6 +42,7 @@ export type ProjectItem = {
   githubUrl?: string;
   liveUrl?: string;
   url?: string;
+  link?: string;
   startDate?: string;
   endDate?: string;
 };

@@ -12,10 +12,18 @@ export async function myApplications(req, res) {
     userEmail ? Enquiry.find({ email: userEmail }).sort({ createdAt: -1 }) : [],
   ]);
 
+  // Track job slugs already present in accountApps
+  const existingJobSlugs = new Set(
+    accountApps.map((a) => a.job?.slug).filter(Boolean)
+  );
+
   const jobEnquiries = enquiries.filter((e) => {
     const msgUpper = (e.message || "").toUpperCase();
     if (msgUpper.includes("PURCHASE REQUEST")) return false;
-    return e.resumeUrl || e.jobTitle || e.jobSlug;
+    if (msgUpper.includes("CANDIDATE PROFILE RESUME ATTACHMENT")) return false;
+    if (!e.jobTitle && !e.jobSlug) return false;
+    if (e.jobSlug && existingJobSlugs.has(e.jobSlug)) return false;
+    return true;
   });
 
   const directApps = jobEnquiries.map((e) => ({

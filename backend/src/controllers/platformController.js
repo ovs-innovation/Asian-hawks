@@ -112,15 +112,35 @@ export async function stats(_req, res) {
 }
 
 export async function adminOverview(_req, res) {
-  const [users, companies, jobs, applications, tickets] = await Promise.all([
+  const [users, companies, jobs, portalAppsCount, enquiries, tickets] = await Promise.all([
     User.countDocuments(),
     Company.countDocuments(),
     Job.countDocuments(),
     Application.countDocuments(),
+    Enquiry.find({
+      message: { $not: /PURCHASE REQUEST|CANDIDATE PROFILE RESUME ATTACHMENT/i },
+      $or: [
+        { jobTitle: { $exists: true, $ne: "" } },
+        { jobSlug: { $exists: true, $ne: "" } },
+        { message: /application for/i },
+      ],
+    }).select("email jobSlug"),
     Ticket.countDocuments({ status: "open" }),
   ]);
+
+  const portalApps = await Application.find().populate({ path: "job", select: "slug" }).populate({ path: "candidate", select: "email" });
+  const portalSet = new Set(
+    portalApps.map((a) => `${(a.candidate?.email || "").toLowerCase()}_${a.job?.slug || ""}`)
+  );
+
+  const uniqueEnquiries = enquiries.filter((e) => {
+    const key = `${(e.email || "").toLowerCase()}_${e.jobSlug || ""}`;
+    return !e.jobSlug || !portalSet.has(key);
+  });
+
+  const totalApplications = portalAppsCount + uniqueEnquiries.length;
   const byRole = await User.aggregate([{ $group: { _id: "$role", count: { $sum: 1 } } }]);
-  res.json({ users, companies, jobs, applications, tickets, byRole });
+  res.json({ users, companies, jobs, applications: totalApplications, tickets, byRole });
 }
 
 export async function adminAnalytics(_req, res) {

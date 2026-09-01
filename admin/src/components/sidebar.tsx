@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 import {
   LayoutDashboard, Briefcase, Users, Building2, FileText,
   Tags, BarChart2, AlertCircle, CreditCard,
-  ShieldCheck, Settings, LogOut, ChevronDown, ChevronRight, Plus, GraduationCap, ShoppingBag,
+  ShieldCheck, Settings, LogOut, ChevronDown, ChevronRight, Plus, GraduationCap, ShoppingBag, X,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -75,7 +75,7 @@ const nav: NavItem[] = [
   { label: "Settings", href: "/settings", icon: Settings },
 ];
 
-export function Sidebar() {
+export function Sidebar({ onCloseMobile }: { onCloseMobile?: () => void }) {
   const pathname = usePathname();
   const router = useRouter();
   const dispatch = useDispatch();
@@ -89,8 +89,18 @@ export function Sidebar() {
 
   return (
     <aside className="flex h-screen w-64 shrink-0 flex-col border-r border-[#e5e7eb] bg-white">
-      <div className="flex h-16 items-center border-b border-[#e5e7eb] px-4">
-        <Image src="/logo.png" alt="Asian Hawks" width={160} height={44} className="h-9 w-auto" />
+      <div className="flex h-16 items-center justify-between border-b border-[#e5e7eb] px-4">
+        <Image src="/logo.png" alt="Asian Hawks" width={220} height={56} className="h-11 w-auto max-w-[190px] object-contain" />
+        {onCloseMobile && (
+          <button
+            type="button"
+            onClick={onCloseMobile}
+            className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-100 hover:text-slate-900 md:hidden"
+            title="Close sidebar"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        )}
       </div>
 
       <div className="p-3">

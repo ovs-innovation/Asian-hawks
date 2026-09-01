@@ -285,8 +285,8 @@ export default function CandidateProfilePage() {
       if (!res.ok) throw new Error(data.message || "Failed to upload resume");
 
       // Set resume link
-      const fakeUrl = `/uploads/resumes/${file.name}`;
-      setForm((prev) => ({ ...prev, resumeUrl: fakeUrl }));
+      const realUrl = data.resumeUrl || `/uploads/resumes/${file.name}`;
+      setForm((prev) => ({ ...prev, resumeUrl: realUrl }));
       toast.success("Resume file attached successfully!");
     } catch (err: any) {
       toast.error(err.message || "Could not upload resume");

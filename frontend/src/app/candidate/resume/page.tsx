@@ -226,8 +226,8 @@ export default function CandidateResumeDashboard() {
               </Link>
             </div>
 
-            <div className="relative rounded-3xl border border-slate-200 bg-slate-100/80 p-3 overflow-hidden shadow-xs">
-              <div className="transform scale-[0.65] origin-top-left -mr-[50%] -mb-[50%] pointer-events-none select-none">
+            <div id="resume-print-area" className="relative rounded-3xl border border-slate-200 bg-slate-100/80 p-3 overflow-hidden shadow-xs">
+              <div className="transform scale-[0.65] origin-top-left -mr-[50%] -mb-[50%] pointer-events-none select-none print:transform-none print:m-0 print:p-0 print:pointer-events-auto print:select-text">
                 <TemplateRenderer data={resume} />
               </div>
             </div>

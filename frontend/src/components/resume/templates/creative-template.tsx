@@ -2,6 +2,13 @@ import React from "react";
 import type { ResumeData } from "@/types/resume";
 import { Sparkles, Mail, Phone, MapPin, Globe, Award, Briefcase, GraduationCap } from "lucide-react";
 
+function formatUrl(url?: string) {
+  if (!url) return "";
+  const trimmed = url.trim();
+  if (/^https?:\/\//i.test(trimmed)) return trimmed;
+  return `https://${trimmed}`;
+}
+
 export function CreativeTemplate({ data }: { data: ResumeData }) {
   const p = data.personalInfo || {};
   const hasExp = !data.isFresher && data.experience && data.experience.length > 0;
@@ -10,6 +17,7 @@ export function CreativeTemplate({ data }: { data: ResumeData }) {
   const hasProjects = data.projects && data.projects.length > 0;
   const hasCerts = data.certificates && data.certificates.length > 0;
   const hasLangs = data.languages && data.languages.length > 0;
+  const hasAch = data.achievements && data.achievements.length > 0;
 
   return (
     <div
@@ -34,9 +42,12 @@ export function CreativeTemplate({ data }: { data: ResumeData }) {
             )}
           </div>
           <div className="text-xs text-slate-600 space-y-1 sm:text-right">
-            {p.email && <p className="flex sm:justify-end items-center gap-1.5"><Mail size={12} className="text-indigo-500" /> {p.email}</p>}
+            {p.email && <a href={`mailto:${p.email}`} className="flex sm:justify-end items-center gap-1.5 hover:text-indigo-600 underline"><Mail size={12} className="text-indigo-500" /> {p.email}</a>}
             {p.phone && <p className="flex sm:justify-end items-center gap-1.5"><Phone size={12} className="text-indigo-500" /> {p.phone}</p>}
             {(p.location || p.city) && <p className="flex sm:justify-end items-center gap-1.5"><MapPin size={12} className="text-indigo-500" /> {p.location || p.city}</p>}
+            {p.linkedin && <a href={formatUrl(p.linkedin)} target="_blank" rel="noreferrer" className="flex sm:justify-end items-center gap-1.5 text-indigo-600 font-bold hover:underline">LinkedIn</a>}
+            {p.github && <a href={formatUrl(p.github)} target="_blank" rel="noreferrer" className="flex sm:justify-end items-center gap-1.5 text-indigo-600 font-bold hover:underline">GitHub</a>}
+            {p.portfolio && <a href={formatUrl(p.portfolio)} target="_blank" rel="noreferrer" className="flex sm:justify-end items-center gap-1.5 text-indigo-600 font-bold hover:underline">Portfolio</a>}
           </div>
         </header>
 
@@ -140,8 +151,24 @@ export function CreativeTemplate({ data }: { data: ResumeData }) {
             </section>
           )}
 
-          {(hasCerts || hasLangs) && (
+          {(hasCerts || hasLangs || hasAch) && (
             <section className="bg-white p-4 rounded-xl border border-slate-200/80 shadow-2xs space-y-3">
+              {hasAch && (
+                <div>
+                  <h2 className="text-xs font-bold uppercase tracking-wider text-slate-900 mb-1.5 flex items-center gap-1.5">
+                    <Award size={13} className="text-indigo-600" /> Honors & Achievements
+                  </h2>
+                  <div className="space-y-2 text-xs">
+                    {data.achievements.map((ach, idx) => (
+                      <div key={idx}>
+                        <p className="font-bold text-slate-900">{ach.title}</p>
+                        {ach.description && <p className="text-slate-600 text-[11px]">{ach.description}</p>}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {hasCerts && (
                 <div>
                   <h2 className="text-xs font-bold uppercase tracking-wider text-slate-900 mb-1 flex items-center gap-1.5">

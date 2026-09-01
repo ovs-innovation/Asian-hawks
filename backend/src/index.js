@@ -41,8 +41,8 @@ const allowedOrigins = [
 ];
 
 app.use(cors({ origin: allowedOrigins.length ? allowedOrigins : true, credentials: true }));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: "15mb" }));
+app.use(express.urlencoded({ limit: "15mb", extended: true }));
 app.use(cookieParser());
 app.use("/uploads", express.static(path.join(__dirname, "..", "uploads")));
 
@@ -127,7 +127,7 @@ app.post("/api/apply", resumeUpload.single("resume"), async (req, res) => {
     });
   }
 
-  res.status(201).json({ ok: true, message: "Application received. Our HR team will contact you." });
+  res.status(201).json({ ok: true, resumeUrl, message: "Application received. Our HR team will contact you." });
 });
 
 app.post("/api/upload", protect, upload.single("file"), async (req, res) => {

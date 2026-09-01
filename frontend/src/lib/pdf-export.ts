@@ -1,53 +1,90 @@
+import { toast } from "sonner";
+
 export function printResume(fileName = "Resume") {
   if (typeof window === "undefined") return;
 
-  const originalTitle = document.title;
-  document.title = fileName.replace(/\.[^/.]+$/, "");
+  // 1. Find printable resume content
+  const targetEl =
+    document.querySelector(".resume-document") ||
+    document.getElementById("resume-print-area");
 
-  const styleId = "resume-print-styles";
+  if (!targetEl) {
+    toast.error("Resume document preview not found. Please try again.");
+    return;
+  }
+
+  // 2. Set PDF document filename title
+  const originalTitle = document.title;
+  const cleanName = fileName.replace(/\.[^/.]+$/, "").replace(/[^a-z0-9_\-]/gi, "_");
+  document.title = cleanName;
+
+  // 3. Inject global print CSS styles
+  const styleId = "resume-global-print-styles";
   let styleEl = document.getElementById(styleId);
   if (!styleEl) {
     styleEl = document.createElement("style");
     styleEl.id = styleId;
     styleEl.innerHTML = `
+      #global-print-portal {
+        display: none;
+      }
       @media print {
-        body * {
-          visibility: hidden !important;
+        body > *:not(#global-print-portal) {
+          display: none !important;
         }
-        #resume-print-area, #resume-print-area * {
-          visibility: visible !important;
-        }
-        #resume-print-area {
+        #global-print-portal {
+          display: block !important;
           position: absolute !important;
           left: 0 !important;
           top: 0 !important;
           width: 100% !important;
-          max-width: 100% !important;
           margin: 0 !important;
           padding: 0 !important;
-          box-shadow: none !important;
-          border: none !important;
           background: white !important;
+          color: black !important;
         }
-        .resume-document {
+        #global-print-portal * {
+          -webkit-print-color-adjust: exact !important;
+          print-color-adjust: exact !important;
+        }
+        #global-print-portal .resume-document {
           box-shadow: none !important;
           border: none !important;
-          padding: 20px !important;
+          margin: 0 !important;
+          padding: 0 !important;
+          width: 100% !important;
           max-width: 100% !important;
           min-height: auto !important;
+          background: white !important;
         }
         @page {
           size: A4 portrait;
-          margin: 12mm 15mm 15mm 15mm;
+          margin: 8mm 10mm 10mm 10mm;
         }
       }
     `;
     document.head.appendChild(styleEl);
   }
 
-  window.print();
+  // 4. Populate top-level print portal directly under document.body
+  let portalEl = document.getElementById("global-print-portal");
+  if (!portalEl) {
+    portalEl = document.createElement("div");
+    portalEl.id = "global-print-portal";
+    document.body.appendChild(portalEl);
+  }
+
+  // If target element is wrapped inside a container, grab the outer HTML or container HTML
+  const outerContainer = targetEl.closest(".resume-document") || targetEl;
+  portalEl.innerHTML = outerContainer.outerHTML || outerContainer.innerHTML;
+
+  toast.info("Opening print preview… Select 'Save as PDF' to download.");
 
   setTimeout(() => {
-    document.title = originalTitle;
-  }, 1000);
+    window.print();
+    setTimeout(() => {
+      document.title = originalTitle;
+      if (portalEl) portalEl.innerHTML = "";
+    }, 1000);
+  }, 150);
 }

@@ -81,7 +81,7 @@ export default function CourseEnquiriesPage() {
   const totalPurchases = items.filter((i) => i.message?.toUpperCase().includes("PURCHASE REQUEST")).length;
 
   return (
-    <div className="p-6">
+    <div className="p-3 sm:p-6">
       <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#0f5daa]">Training & Admissions</p>
@@ -91,18 +91,18 @@ export default function CourseEnquiriesPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
-          <div className="rounded-xl border border-[#c7d7ea] bg-[#f0f7ff] px-4 py-2 text-xs font-semibold text-[#0f5daa]">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+          <div className="rounded-xl border border-[#c7d7ea] bg-[#f0f7ff] px-3.5 py-1.5 sm:px-4 sm:py-2 text-xs font-semibold text-[#0f5daa]">
             Total Received: <span className="text-sm font-bold">{items.length}</span>
           </div>
-          <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-2 text-xs font-semibold text-emerald-700">
+          <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-3.5 py-1.5 sm:px-4 sm:py-2 text-xs font-semibold text-emerald-700">
             Purchases: <span className="text-sm font-bold">{totalPurchases}</span>
           </div>
         </div>
       </div>
 
-      <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-2 rounded-xl border border-[#e5e7eb] bg-white p-1">
+      <div className="mb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center gap-1.5 rounded-xl border border-[#e5e7eb] bg-white p-1">
           <button
             type="button"
             onClick={() => setFilterType("all")}
@@ -115,8 +115,8 @@ export default function CourseEnquiriesPage() {
           <button
             type="button"
             onClick={() => setFilterType("purchases")}
-            className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition ${
-              filterType === "purchases" ? "bg-[#16a34a] text-white" : "text-[#4b5563] hover:text-[#111827]"
+            className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition ${
+              filterType === "purchases" ? "bg-emerald-600 text-white" : "text-emerald-700 hover:bg-emerald-50"
             }`}
           >
             <ShoppingCart size={13} /> Course Purchases ({totalPurchases})
@@ -124,15 +124,15 @@ export default function CourseEnquiriesPage() {
           <button
             type="button"
             onClick={() => setFilterType("enquiries")}
-            className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition ${
-              filterType === "enquiries" ? "bg-[#0f5daa] text-white" : "text-[#4b5563] hover:text-[#111827]"
+            className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition ${
+              filterType === "enquiries" ? "bg-blue-600 text-white" : "text-blue-700 hover:bg-blue-50"
             }`}
           >
             <MessageSquare size={13} /> Course Enquiries ({items.length - totalPurchases})
           </button>
         </div>
 
-        <div className="relative w-full max-w-xs">
+        <div className="relative w-full sm:max-w-xs">
           <Search className="absolute left-3 top-2.5 h-4 w-4 text-[#9ca3af]" />
           <input
             type="text"
@@ -160,8 +160,8 @@ export default function CourseEnquiriesPage() {
           ))}
         </div>
       ) : (
-        <div className="overflow-hidden rounded-xl border border-[#e5e7eb] bg-white shadow-sm">
-          <table className="w-full text-sm">
+        <div className="overflow-x-auto rounded-xl border border-[#e5e7eb] bg-white shadow-sm">
+          <table className="w-full min-w-[680px] text-sm">
             <thead className="border-b border-[#e5e7eb] bg-[#f9fafb]">
               <tr>
                 <th className="px-4 py-3 text-left font-semibold text-[#4b5563]">Student / Applicant</th>

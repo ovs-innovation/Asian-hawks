@@ -5,7 +5,14 @@ import { Providers } from "@/components/providers";
 export const metadata: Metadata = {
   title: "Admin — Asian Hawks",
   description: "Super-admin panel for Asian Hawks Manpower Services",
-  icons: { icon: "/favicon.ico", apple: "/logo.png" },
+  icons: {
+    icon: [
+      { url: "/logo.png", type: "image/png" },
+      { url: "/icon.png", type: "image/png" },
+    ],
+    shortcut: "/logo.png",
+    apple: "/logo.png",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

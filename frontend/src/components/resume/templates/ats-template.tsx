@@ -1,6 +1,13 @@
 import React from "react";
 import type { ResumeData } from "@/types/resume";
 
+function formatUrl(url?: string) {
+  if (!url) return "";
+  const trimmed = url.trim();
+  if (/^https?:\/\//i.test(trimmed)) return trimmed;
+  return `https://${trimmed}`;
+}
+
 export function AtsTemplate({ data }: { data: ResumeData }) {
   const p = data.personalInfo || {};
   const hasExp = !data.isFresher && data.experience && data.experience.length > 0;
@@ -11,14 +18,14 @@ export function AtsTemplate({ data }: { data: ResumeData }) {
   const hasLangs = data.languages && data.languages.length > 0;
   const hasAch = data.achievements && data.achievements.length > 0;
 
-  const contactItems = [
-    p.email,
-    p.phone,
-    p.location || p.city,
-    p.linkedin && "LinkedIn",
-    p.github && "GitHub",
-    p.portfolio && "Portfolio",
-  ].filter(Boolean);
+  const contacts: { label: string; href?: string }[] = [
+    p.email ? { label: p.email, href: `mailto:${p.email}` } : null,
+    p.phone ? { label: p.phone } : null,
+    (p.location || p.city) ? { label: p.location || p.city } : null,
+    p.linkedin ? { label: "LinkedIn", href: formatUrl(p.linkedin) } : null,
+    p.github ? { label: "GitHub", href: formatUrl(p.github) } : null,
+    p.portfolio ? { label: "Portfolio", href: formatUrl(p.portfolio) } : null,
+  ].filter(Boolean) as { label: string; href?: string }[];
 
   return (
     <div
@@ -36,10 +43,21 @@ export function AtsTemplate({ data }: { data: ResumeData }) {
           </p>
         )}
         <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs text-neutral-700 mt-2">
-          {contactItems.map((item, idx) => (
+          {contacts.map((c, idx) => (
             <React.Fragment key={idx}>
               {idx > 0 && <span>•</span>}
-              <span>{item}</span>
+              {c.href ? (
+                <a
+                  href={c.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-black font-medium underline hover:text-[#0f5daa]"
+                >
+                  {c.label}
+                </a>
+              ) : (
+                <span>{c.label}</span>
+              )}
             </React.Fragment>
           ))}
         </div>
@@ -122,7 +140,18 @@ export function AtsTemplate({ data }: { data: ResumeData }) {
             {data.projects.map((proj, idx) => (
               <div key={idx} className="text-xs">
                 <div className="flex justify-between items-baseline font-bold text-black">
-                  <span>{proj.name}</span>
+                  {proj.link ? (
+                    <a
+                      href={formatUrl(proj.link)}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="underline hover:text-[#0f5daa]"
+                    >
+                      {proj.name}
+                    </a>
+                  ) : (
+                    <span>{proj.name}</span>
+                  )}
                   {proj.startDate && (
                     <span className="font-medium text-neutral-600">
                       {proj.startDate} {proj.endDate ? `– ${proj.endDate}` : ""}
@@ -173,8 +202,30 @@ export function AtsTemplate({ data }: { data: ResumeData }) {
         </section>
       )}
 
+      {/* Key Achievements & Honors */}
+      {hasAch && (
+        <section className="mt-5">
+          <h2 className="text-xs font-bold uppercase tracking-widest border-b border-black pb-0.5 text-black">
+            Awards & Key Achievements
+          </h2>
+          <div className="mt-3 space-y-2">
+            {data.achievements.map((ach, idx) => (
+              <div key={idx} className="text-xs">
+                <div className="flex justify-between items-baseline font-bold text-black">
+                  <span>{ach.title}</span>
+                  {ach.date && <span className="font-semibold text-neutral-700 text-[11px]">{ach.date}</span>}
+                </div>
+                {ach.description && (
+                  <p className="mt-0.5 text-neutral-700 leading-normal text-[11px] whitespace-pre-line">{ach.description}</p>
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
       {/* Certifications & Languages */}
-      {(hasCerts || hasLangs || hasAch) && (
+      {(hasCerts || hasLangs) && (
         <section className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
           {hasCerts && (
             <div>

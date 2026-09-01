@@ -57,7 +57,7 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-50 border-b border-[var(--border)] bg-white">
       <div className="mx-auto flex h-16 w-full max-w-[var(--max-w)] items-center justify-between gap-3 px-4 sm:h-[72px] sm:px-5">
-        <BrandLogo className="shrink-0" height={40} />
+        <BrandLogo className="shrink-0" height={50} />
 
         <nav className="hidden items-center lg:flex">
           {links.map((l) => (

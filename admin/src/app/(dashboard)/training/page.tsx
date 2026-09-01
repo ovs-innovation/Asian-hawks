@@ -42,7 +42,7 @@ export default function TrainingCoursesPage() {
   });
 
   return (
-    <div className="p-6">
+    <div className="p-3 sm:p-6">
       <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#0f5daa]">Training</p>
@@ -71,8 +71,8 @@ export default function TrainingCoursesPage() {
           ))}
         </div>
       ) : (
-        <div className="overflow-hidden rounded-xl border border-[#e5e7eb] bg-white">
-          <table className="w-full text-sm">
+        <div className="overflow-x-auto rounded-xl border border-[#e5e7eb] bg-white shadow-sm">
+          <table className="w-full min-w-[640px] text-sm">
             <thead className="border-b border-[#e5e7eb] bg-[#f9fafb]">
               <tr>
                 <th className="px-4 py-3 text-left font-medium text-[#6b7280]">Course</th>

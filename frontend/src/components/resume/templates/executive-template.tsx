@@ -1,6 +1,13 @@
 import React from "react";
 import type { ResumeData } from "@/types/resume";
 
+function formatUrl(url?: string) {
+  if (!url) return "";
+  const trimmed = url.trim();
+  if (/^https?:\/\//i.test(trimmed)) return trimmed;
+  return `https://${trimmed}`;
+}
+
 export function ExecutiveTemplate({ data }: { data: ResumeData }) {
   const p = data.personalInfo || {};
   const hasExp = !data.isFresher && data.experience && data.experience.length > 0;
@@ -9,14 +16,16 @@ export function ExecutiveTemplate({ data }: { data: ResumeData }) {
   const hasProjects = data.projects && data.projects.length > 0;
   const hasCerts = data.certificates && data.certificates.length > 0;
   const hasLangs = data.languages && data.languages.length > 0;
+  const hasAch = data.achievements && data.achievements.length > 0;
 
-  const contactList = [
-    p.email,
-    p.phone,
-    p.location || p.city,
-    p.linkedin && "LinkedIn Profile",
-    p.portfolio && "Portfolio",
-  ].filter(Boolean);
+  const contacts: { label: string; href?: string }[] = [
+    p.email ? { label: p.email, href: `mailto:${p.email}` } : null,
+    p.phone ? { label: p.phone } : null,
+    (p.location || p.city) ? { label: p.location || p.city } : null,
+    p.linkedin ? { label: "LinkedIn", href: formatUrl(p.linkedin) } : null,
+    p.github ? { label: "GitHub", href: formatUrl(p.github) } : null,
+    p.portfolio ? { label: "Portfolio", href: formatUrl(p.portfolio) } : null,
+  ].filter(Boolean) as { label: string; href?: string }[];
 
   return (
     <div
@@ -34,10 +43,21 @@ export function ExecutiveTemplate({ data }: { data: ResumeData }) {
           </p>
         )}
         <div className="mt-3 flex flex-wrap justify-center gap-x-4 gap-y-1 text-xs text-[#64748b] font-sans">
-          {contactList.map((item, idx) => (
+          {contacts.map((c, idx) => (
             <React.Fragment key={idx}>
               {idx > 0 && <span>|</span>}
-              <span>{item}</span>
+              {c.href ? (
+                <a
+                  href={c.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-[#0f294a] font-semibold underline hover:text-[#0f5daa]"
+                >
+                  {c.label}
+                </a>
+              ) : (
+                <span>{c.label}</span>
+              )}
             </React.Fragment>
           ))}
         </div>
@@ -143,6 +163,26 @@ export function ExecutiveTemplate({ data }: { data: ResumeData }) {
                   <p className="text-[#64748b] italic text-[11px]">{edu.school}</p>
                 </div>
                 <span className="font-sans font-semibold text-[#475569] text-[11px]">{edu.year}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Achievements */}
+      {hasAch && (
+        <section className="mt-6">
+          <h2 className="text-xs font-bold uppercase tracking-[0.18em] text-[#0f294a] font-sans border-b border-[#cbd5e1] pb-1">
+            Honors & Key Achievements
+          </h2>
+          <div className="mt-3 space-y-2.5 text-xs">
+            {data.achievements.map((ach, idx) => (
+              <div key={idx}>
+                <div className="flex justify-between items-baseline font-sans font-bold text-[#0f294a]">
+                  <span>{ach.title}</span>
+                  {ach.date && <span className="font-normal text-[#64748b] text-[11px]">{ach.date}</span>}
+                </div>
+                {ach.description && <p className="mt-0.5 text-[#334155] leading-normal">{ach.description}</p>}
               </div>
             ))}
           </div>

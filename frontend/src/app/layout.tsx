@@ -14,6 +14,14 @@ export const metadata: Metadata = {
     template: "%s · Asian Hawks",
   },
   description: "Government jobs, private jobs, and career growth in one place. Asian Hawks Manpower Services Pvt. Ltd.",
+  icons: {
+    icon: [
+      { url: "/logo.png", type: "image/png" },
+      { url: "/icon.png", type: "image/png" },
+    ],
+    shortcut: "/logo.png",
+    apple: "/logo.png",
+  },
 };
 
 export const viewport = {

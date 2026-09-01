@@ -52,7 +52,7 @@ function TaxonomyContent() {
   });
 
   return (
-    <div className="p-6">
+    <div className="p-3 sm:p-6">
       <h2 className="mb-1 text-xl font-bold text-[#111827]">Taxonomy</h2>
       <p className="mb-5 text-sm text-[#6b7280]">Manage skills, industries, and locations used in job postings.</p>
 
@@ -98,7 +98,7 @@ function TaxonomyContent() {
           {[...Array(5)].map((_, i) => <div key={i} className="h-10 animate-pulse rounded-lg bg-[#f3f4f6]" />)}
         </div>
       ) : (
-        <div className="overflow-hidden rounded-xl border border-[#e5e7eb] bg-white">
+        <div className="overflow-x-auto rounded-xl border border-[#e5e7eb] bg-white">
           <table className="w-full text-sm">
             <thead className="border-b border-[#e5e7eb] bg-[#f9fafb]">
               <tr>

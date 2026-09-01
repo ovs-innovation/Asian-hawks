@@ -40,7 +40,7 @@ export default function CategoriesPage() {
   });
 
   return (
-    <div className="p-6">
+    <div className="p-3 sm:p-6">
       <div className="mb-5 flex items-center gap-3">
         <h2 className="flex-1 text-xl font-bold text-[#111827]">Categories</h2>
         <Link
@@ -78,8 +78,8 @@ export default function CategoriesPage() {
           {[...Array(6)].map((_, i) => <div key={i} className="h-10 rounded-lg bg-[#f3f4f6] animate-pulse" />)}
         </div>
       ) : (
-        <div className="overflow-hidden rounded-xl border border-[#e5e7eb] bg-white">
-          <table className="w-full text-sm">
+        <div className="overflow-x-auto rounded-xl border border-[#e5e7eb] bg-white">
+          <table className="w-full min-w-[500px] text-sm">
             <thead className="bg-[#f9fafb] border-b border-[#e5e7eb]">
               <tr>
                 <th className="px-4 py-3 text-left font-medium text-[#6b7280]">Name</th>

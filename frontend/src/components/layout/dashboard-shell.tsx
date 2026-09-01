@@ -5,6 +5,8 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState, type ReactNode } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  Menu,
+  X,
   Bell,
   Briefcase,
   Building2,
@@ -59,6 +61,7 @@ export function DashboardShell({
   children: ReactNode;
 }) {
   const [mounted, setMounted] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const pathname = usePathname();
   const user = useSelector((s: RootState) => s.auth.user);
   const hydrated = useSelector((s: RootState) => s.auth.hydrated);
@@ -79,6 +82,13 @@ export function DashboardShell({
     if (!user) router.replace("/login");
   }, [mounted, hydrated, user, router]);
 
+  useEffect(() => {
+    // Auto-close overlay on mobile route changes
+    if (window.innerWidth < 768) {
+      setSidebarOpen(false);
+    }
+  }, [pathname]);
+
   if (!mounted || !hydrated || !user) {
     return (
       <div className="grid min-h-screen place-items-center bg-[#f8fafc] text-sm font-medium text-slate-500">
@@ -94,17 +104,41 @@ export function DashboardShell({
 
   return (
     <div className="min-h-screen bg-[#f8fafc]">
+      {/* Mobile Backdrop Overlay */}
+      {sidebarOpen && (
+        <div
+          onClick={() => setSidebarOpen(false)}
+          className="fixed inset-0 z-40 bg-slate-900/40 backdrop-blur-xs md:hidden"
+        />
+      )}
+
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 hidden w-64 flex-col p-5 md:flex z-30",
-          isAdmin ? "bg-[#03224c] text-white" : "border-r border-slate-200/80 bg-white"
+          "fixed inset-y-0 left-0 z-50 flex w-64 flex-col p-5 transition-transform duration-300 ease-in-out",
+          isAdmin ? "bg-[#03224c] text-white" : "border-r border-slate-200/80 bg-white",
+          sidebarOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
-        <BrandLogo
-          href="/"
-          height={38}
-          className={cn("transition-opacity hover:opacity-90", isAdmin && "bg-white px-3.5 py-2 rounded-xl shadow-xs")}
-        />
+        <div className="flex items-center justify-between gap-2">
+          <BrandLogo
+            href="/"
+            height={48}
+            className={cn("transition-opacity hover:opacity-90", isAdmin && "bg-white px-3.5 py-2 rounded-xl shadow-xs")}
+          />
+          <button
+            type="button"
+            onClick={() => setSidebarOpen(false)}
+            className={cn(
+              "flex h-8 w-8 items-center justify-center rounded-lg border transition-colors md:hidden",
+              isAdmin
+                ? "border-white/20 text-white/80 hover:bg-white/10 hover:text-white"
+                : "border-slate-200 text-slate-500 hover:bg-slate-100 hover:text-slate-900"
+            )}
+            title="Close sidebar"
+          >
+            <X size={16} />
+          </button>
+        </div>
 
         <p className={cn("mt-7 px-3 text-[11px] font-bold uppercase tracking-[0.18em]", isAdmin ? "text-white/45" : "text-slate-400")}>
           {isAdmin ? "Admin Portal" : `${area} Workspace`}
@@ -152,10 +186,19 @@ export function DashboardShell({
         </div>
       </aside>
 
-      <div className="md:pl-64 flex flex-col min-h-screen">
+      <div className={cn("flex flex-col min-h-screen transition-all duration-300", sidebarOpen ? "md:pl-64" : "md:pl-0")}>
         <header className="sticky top-0 z-20 border-b border-slate-200/80 bg-white/90 backdrop-blur-md">
           <div className="flex h-16 items-center justify-between gap-4 px-4 sm:px-8">
             <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={() => setSidebarOpen((prev) => !prev)}
+                className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 hover:text-[#0f5daa] transition-all shadow-2xs"
+                title={sidebarOpen ? "Close sidebar" : "Open sidebar"}
+                aria-label="Toggle Sidebar"
+              >
+                <Menu size={18} />
+              </button>
               <div className="grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br from-[#0f5daa] to-[#03224c] text-xs font-bold text-white shadow-xs">
                 {userInitial}
               </div>

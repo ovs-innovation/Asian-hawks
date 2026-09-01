@@ -2,6 +2,13 @@ import React from "react";
 import type { ResumeData } from "@/types/resume";
 import { Mail, Phone, MapPin, Globe, Link2, Code2, Award, Briefcase, GraduationCap } from "lucide-react";
 
+function formatUrl(url?: string) {
+  if (!url) return "";
+  const trimmed = url.trim();
+  if (/^https?:\/\//i.test(trimmed)) return trimmed;
+  return `https://${trimmed}`;
+}
+
 export function ModernTemplate({ data }: { data: ResumeData }) {
   const p = data.personalInfo || {};
   const hasExp = !data.isFresher && data.experience && data.experience.length > 0;
@@ -10,6 +17,7 @@ export function ModernTemplate({ data }: { data: ResumeData }) {
   const hasProjects = data.projects && data.projects.length > 0;
   const hasCerts = data.certificates && data.certificates.length > 0;
   const hasLangs = data.languages && data.languages.length > 0;
+  const hasAch = data.achievements && data.achievements.length > 0;
 
   return (
     <div
@@ -23,10 +31,10 @@ export function ModernTemplate({ data }: { data: ResumeData }) {
 
         <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-xs text-blue-100 border-t border-white/15 pt-3">
           {p.email && (
-            <span className="flex items-center gap-1.5">
+            <a href={`mailto:${p.email}`} className="flex items-center gap-1.5 hover:text-white underline">
               <Mail size={13} className="text-blue-300" />
               {p.email}
-            </span>
+            </a>
           )}
           {p.phone && (
             <span className="flex items-center gap-1.5">
@@ -41,16 +49,37 @@ export function ModernTemplate({ data }: { data: ResumeData }) {
             </span>
           )}
           {p.linkedin && (
-            <span className="flex items-center gap-1.5">
+            <a
+              href={formatUrl(p.linkedin)}
+              target="_blank"
+              rel="noreferrer"
+              className="flex items-center gap-1.5 hover:text-white underline"
+            >
               <Link2 size={13} className="text-blue-300" />
               LinkedIn
-            </span>
+            </a>
           )}
           {p.github && (
-            <span className="flex items-center gap-1.5">
+            <a
+              href={formatUrl(p.github)}
+              target="_blank"
+              rel="noreferrer"
+              className="flex items-center gap-1.5 hover:text-white underline"
+            >
               <Code2 size={13} className="text-blue-300" />
               GitHub
-            </span>
+            </a>
+          )}
+          {p.portfolio && (
+            <a
+              href={formatUrl(p.portfolio)}
+              target="_blank"
+              rel="noreferrer"
+              className="flex items-center gap-1.5 hover:text-white underline"
+            >
+              <Globe size={13} className="text-blue-300" />
+              Portfolio
+            </a>
           )}
         </div>
       </header>
@@ -148,6 +177,26 @@ export function ModernTemplate({ data }: { data: ResumeData }) {
                   <p className="text-slate-600">{edu.school}</p>
                 </div>
                 <span className="font-semibold text-slate-500">{edu.year}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Key Achievements */}
+      {hasAch && (
+        <section className="mt-6">
+          <h2 className="text-xs font-bold uppercase tracking-wider text-[#0f5daa] flex items-center gap-2 border-b border-slate-200 pb-1.5">
+            <Award size={14} /> Awards & Achievements
+          </h2>
+          <div className="mt-3 space-y-2">
+            {data.achievements.map((ach, idx) => (
+              <div key={idx} className="p-3 rounded-xl border border-blue-100 bg-blue-50/40">
+                <div className="flex justify-between items-baseline">
+                  <h3 className="text-xs font-bold text-slate-900">{ach.title}</h3>
+                  {ach.date && <span className="text-[11px] font-semibold text-[#0f5daa]">{ach.date}</span>}
+                </div>
+                {ach.description && <p className="mt-1 text-xs text-slate-600 leading-normal">{ach.description}</p>}
               </div>
             ))}
           </div>

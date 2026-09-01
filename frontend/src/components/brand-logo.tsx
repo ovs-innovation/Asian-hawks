@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 export function BrandLogo({
   className,
   href = "/",
-  height = 44,
+  height = 54,
 }: {
   className?: string;
   href?: string | null;
@@ -15,10 +15,10 @@ export function BrandLogo({
     <Image
       src="/logo.png"
       alt="Asian Hawks Manpower Services Private Limited"
-      width={280}
-      height={72}
+      width={340}
+      height={90}
       priority
-      className="h-full w-auto max-w-[170px] object-contain object-left sm:max-w-[210px] lg:max-w-[240px]"
+      className="h-full w-auto max-w-[210px] object-contain object-left sm:max-w-[260px] lg:max-w-[300px]"
       unoptimized
     />
   );
