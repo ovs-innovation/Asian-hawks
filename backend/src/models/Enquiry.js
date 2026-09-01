@@ -10,6 +10,7 @@ const enquirySchema = new mongoose.Schema(
     jobSlug: String,
     resumeUrl: String,
     resumeName: String,
+    status: { type: String, default: "applied" },
   },
   { timestamps: true }
 );

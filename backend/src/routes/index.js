@@ -77,6 +77,9 @@ router.patch("/admin/courses/:id", protect, authorize(...adminRoles), courses.ad
 router.delete("/admin/courses/:id", protect, authorize(...adminRoles), courses.adminDeleteCourse);
 
 router.get("/admin/applications", protect, authorize(...adminRoles), platform.adminApplications);
+router.get("/admin/enquiries", protect, authorize(...adminRoles), platform.adminEnquiries);
+router.patch("/admin/enquiries/:id", protect, authorize(...adminRoles), platform.patchAdminEnquiry);
+router.delete("/admin/enquiries/:id", protect, authorize(...adminRoles), platform.deleteAdminEnquiry);
 router.get("/admin/overview", protect, authorize(...adminRoles), platform.adminOverview);
 router.get("/admin/users", protect, authorize(...adminRoles), platform.adminUsers);
 router.patch("/admin/users/:id", protect, authorize("super_admin"), platform.patchUser);

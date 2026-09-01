@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 import {
   LayoutDashboard, Briefcase, Users, Building2, FileText,
   Tags, BarChart2, AlertCircle, CreditCard,
-  ShieldCheck, Settings, LogOut, ChevronDown, ChevronRight, Plus, GraduationCap,
+  ShieldCheck, Settings, LogOut, ChevronDown, ChevronRight, Plus, GraduationCap, ShoppingBag,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -27,6 +27,7 @@ const nav: NavItem[] = [
     label: "Jobs", icon: Briefcase,
     children: [
       { label: "All Jobs", href: "/jobs" },
+      { label: "Applications", href: "/applications" },
       { label: "Create Job", href: "/jobs/new" },
       { label: "Drafts", href: "/jobs?status=draft" },
       { label: "Featured", href: "/jobs?featured=true" },
@@ -47,8 +48,10 @@ const nav: NavItem[] = [
     children: [
       { label: "All courses", href: "/training" },
       { label: "Create course", href: "/training/new" },
+      { label: "Course Purchases", href: "/training/enquiries" },
     ],
   },
+  { label: "Enquiries & Purchases", href: "/training/enquiries", icon: ShoppingBag },
   {
     label: "Taxonomy", icon: Tags,
     children: [

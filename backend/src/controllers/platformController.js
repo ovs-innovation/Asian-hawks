@@ -599,7 +599,30 @@ export async function recruiterAnalytics(req, res) {
   res.json({ jobs, applications, hired, pipeline });
 }
 
-export async function adminApplications(req, res) {
-  const items = await Enquiry.find().sort({ createdAt: -1 }).limit(200);
+export async function adminApplications(_req, res) {
+  const items = await Application.find()
+    .populate({ path: "job", select: "title slug company", populate: { path: "company", select: "name" } })
+    .populate("candidate", "name email phone headline avatar skills")
+    .sort({ createdAt: -1 })
+    .limit(200);
   res.json({ items, total: items.length });
+}
+
+export async function adminEnquiries(_req, res) {
+  const items = await Enquiry.find().sort({ createdAt: -1 });
+  res.json({ items, total: items.length });
+}
+
+export async function deleteAdminEnquiry(req, res) {
+  const item = await Enquiry.findByIdAndDelete(req.params.id);
+  if (!item) return res.status(404).json({ message: "Enquiry not found" });
+  res.json({ ok: true, message: "Enquiry deleted" });
+}
+
+export async function patchAdminEnquiry(req, res) {
+  const item = await Enquiry.findById(req.params.id);
+  if (!item) return res.status(404).json({ message: "Enquiry not found" });
+  if (req.body.status) item.status = req.body.status;
+  await item.save();
+  res.json({ item });
 }

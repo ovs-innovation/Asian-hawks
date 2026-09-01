@@ -20,6 +20,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: path.join(__dirname, "..", ".env") });
 
 try {
+  dns.setServers(["8.8.8.8", "1.1.1.1"]);
   dns.setDefaultResultOrder?.("ipv4first");
 } catch {
   // Ignore DNS config fallback errors

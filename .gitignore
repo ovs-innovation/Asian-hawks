@@ -13,3 +13,4 @@ frontend/.next
 frontend/node_modules
 backend/node_modules
 backend/uploads
+*.tsbuildinfo

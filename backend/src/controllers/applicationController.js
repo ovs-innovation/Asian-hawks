@@ -1,10 +1,39 @@
 import Application from "../models/Application.js";
+import Enquiry from "../models/Enquiry.js";
 import { Interview, Message, Notification } from "../models/Supporting.js";
 
 export async function myApplications(req, res) {
-  const items = await Application.find({ candidate: req.user._id })
-    .populate({ path: "job", populate: { path: "company", select: "name slug logo" } })
-    .sort({ createdAt: -1 });
+  const userEmail = (req.user.email || "").toLowerCase();
+
+  const [accountApps, enquiries] = await Promise.all([
+    Application.find({ candidate: req.user._id })
+      .populate({ path: "job", populate: { path: "company", select: "name slug logo" } })
+      .sort({ createdAt: -1 }),
+    userEmail ? Enquiry.find({ email: userEmail }).sort({ createdAt: -1 }) : [],
+  ]);
+
+  const jobEnquiries = enquiries.filter((e) => {
+    const msgUpper = (e.message || "").toUpperCase();
+    if (msgUpper.includes("PURCHASE REQUEST")) return false;
+    return e.resumeUrl || e.jobTitle || e.jobSlug;
+  });
+
+  const directApps = jobEnquiries.map((e) => ({
+    _id: e._id,
+    status: e.status || "applied",
+    createdAt: e.createdAt,
+    job: {
+      title: e.jobTitle || "Job Application",
+      slug: e.jobSlug || "",
+      company: { name: "Asian Hawks" },
+    },
+    isDirect: true,
+  }));
+
+  const items = [...accountApps, ...directApps].sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  );
+
   res.json({ items });
 }
 

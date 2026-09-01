@@ -27,22 +27,26 @@ export function CourseCard({ course }: { course: CourseCardCourse }) {
       <div className="relative h-[148px] overflow-hidden">
         <SafeImage src={course.image} alt={course.title} className="h-full w-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#03224c]/80 via-transparent to-transparent" />
-        <p className="absolute bottom-2 left-3 max-w-[55%] truncate text-[10px] font-semibold uppercase tracking-[0.1em] text-white/90 sm:bottom-3 sm:left-4 sm:max-w-none sm:text-[11px]">
+        <p className="absolute bottom-2 left-3 max-w-[85%] truncate text-[10px] font-semibold uppercase tracking-[0.1em] text-white/90 sm:bottom-3 sm:left-4 sm:text-[11px]">
           {course.category}
-        </p>
-        <p className="absolute bottom-2 right-3 text-[16px] font-extrabold text-white sm:bottom-3 sm:right-4 sm:text-[18px]">
-          ₹{price.toLocaleString("en-IN")}
         </p>
       </div>
       <div className="flex flex-1 flex-col p-4 sm:p-5">
-        <h3 className="text-[16px] font-bold leading-snug text-[#111827]">{course.title}</h3>
+        <div className="flex items-start justify-between gap-2.5">
+          <h3 className="text-[16px] font-bold leading-snug text-[#111827] flex-1">{course.title}</h3>
+          <span className="shrink-0 text-[16px] font-extrabold text-[#0f5daa] sm:text-[18px]">
+            ₹{price.toLocaleString("en-IN")}
+          </span>
+        </div>
         <p className="mt-2 text-[13px] text-[#64748b]">
           {course.duration} · {mode}
         </p>
         {course.placement ? <p className="mt-1 text-[13px] text-[#64748b]">For {course.placement}</p> : null}
-        <span className="mt-5 inline-flex h-10 w-full items-center justify-center rounded-lg bg-[#0f5daa] text-[13px] font-semibold text-white">
-          View course
-        </span>
+        <div className="mt-auto pt-4">
+          <span className="inline-flex h-10 w-full items-center justify-center rounded-lg bg-[#0f5daa] text-[13px] font-semibold text-white">
+            View course
+          </span>
+        </div>
       </div>
     </Link>
   );

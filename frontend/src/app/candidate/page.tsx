@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useSelector } from "react-redux";
+import { useQuery } from "@tanstack/react-query";
 import {
   ArrowRight,
   Bookmark,
@@ -18,11 +19,31 @@ import { Badge, Card } from "@/components/ui/primitives";
 import { Button } from "@/components/ui/button";
 import type { RootState } from "@/store";
 import { useJobs } from "@/hooks/use-jobs";
+import { api } from "@/lib/api";
+import { timeAgo } from "@/lib/utils";
+
+type AppliedJobItem = {
+  _id: string;
+  status: string;
+  createdAt?: string;
+  job?: {
+    title: string;
+    slug?: string;
+    company?: { name: string };
+  };
+};
 
 export default function CandidateHome() {
   const user = useSelector((s: RootState) => s.auth.user);
   const { data: jobs = [] } = useJobs();
   const pct = user?.profileCompletion || 20;
+
+  const { data: appsData } = useQuery<{ items: AppliedJobItem[] }>({
+    queryKey: ["my-apps"],
+    queryFn: () => api<{ items: AppliedJobItem[] }>("/applications/me"),
+  });
+
+  const myApplications = appsData?.items ?? [];
 
   return (
     <div className="space-y-8">
@@ -78,13 +99,15 @@ export default function CandidateHome() {
           <div className="flex items-start justify-between">
             <div>
               <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Applications</p>
-              <h3 className="mt-2 text-3xl font-black text-slate-900">1</h3>
+              <h3 className="mt-2 text-3xl font-black text-slate-900">{myApplications.length}</h3>
             </div>
             <div className="grid h-10 w-10 place-items-center rounded-xl bg-emerald-50 text-emerald-600">
               <Briefcase size={20} />
             </div>
           </div>
-          <p className="mt-3 text-xs font-medium text-slate-500">1 active application in review</p>
+          <p className="mt-3 text-xs font-medium text-slate-500">
+            {myApplications.length === 1 ? "1 active application in process" : `${myApplications.length} active applications in process`}
+          </p>
           <Link
             href="/candidate/applied"
             className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold text-[#0f5daa] hover:text-[#0c4d8c] transition-colors"
@@ -181,6 +204,23 @@ export default function CandidateHome() {
         <h2 className="text-lg font-bold text-slate-900">Recent Activity</h2>
         <Card className="p-6">
           <ol className="relative border-l border-slate-200 ml-3 space-y-6">
+            {myApplications.slice(0, 5).map((app) => (
+              <li key={app._id} className="ml-6">
+                <span className="absolute -left-3 flex h-6 w-6 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 ring-4 ring-white">
+                  <FileText size={14} />
+                </span>
+                <p className="text-xs font-bold text-slate-400">
+                  {app.createdAt ? timeAgo(app.createdAt) : "Recent"}
+                </p>
+                <p className="text-sm font-semibold text-slate-800 mt-0.5">
+                  Application Submitted — <span className="text-[#0f5daa]">{app.job?.title || "Job Role"}</span>
+                </p>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Applied to {app.job?.title || "role"} at {app.job?.company?.name || "Asian Hawks Manpower"}. Status: <span className="font-semibold text-slate-700 capitalize">{app.status || "applied"}</span>
+                </p>
+              </li>
+            ))}
+
             <li className="ml-6">
               <span className="absolute -left-3 flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 text-[#0f5daa] ring-4 ring-white">
                 <CheckCircle2 size={14} />
@@ -188,14 +228,6 @@ export default function CandidateHome() {
               <p className="text-xs font-bold text-slate-400">Today</p>
               <p className="text-sm font-semibold text-slate-800 mt-0.5">Workspace session started</p>
               <p className="text-xs text-slate-500 mt-0.5">Logged into Asian Hawks Candidate Portal</p>
-            </li>
-            <li className="ml-6">
-              <span className="absolute -left-3 flex h-6 w-6 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 ring-4 ring-white">
-                <FileText size={14} />
-              </span>
-              <p className="text-xs font-bold text-slate-400">Recent</p>
-              <p className="text-sm font-semibold text-slate-800 mt-0.5">Application Submitted</p>
-              <p className="text-xs text-slate-500 mt-0.5">Applied to Data Entry Operator role with resume attached</p>
             </li>
           </ol>
         </Card>

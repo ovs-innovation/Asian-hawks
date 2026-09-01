@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BadgeCheck, Clock, GraduationCap, MapPin, Mail, Wallet, Video, MonitorPlay } from "lucide-react";
 import { EnquiryForm } from "@/components/enquiry-form";
+import { CoursePurchaseSection } from "@/components/courses/course-purchase";
 import { SafeImage } from "@/components/ui/safe-image";
 import { API_URL } from "@/lib/utils";
 import { CLASS_FORMAT_LABEL, courseModeLabel, youtubeEmbedUrl, type TrainingCourse } from "@/lib/courses";
@@ -125,6 +126,7 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ s
           </div>
         </article>
         <aside className="h-fit rounded-xl border border-[#e5e7eb] bg-white p-5 shadow-[0_1px_2px_rgba(17,24,39,0.05)] lg:sticky lg:top-24">
+          <CoursePurchaseSection course={course} />
           <h2 className="text-base font-bold text-[#111827]">Enquire to enrol</h2>
           <p className="mb-4 mt-1 text-xs text-[#64748b]">No login needed. HR will confirm batch and fee details.</p>
           <EnquiryForm jobTitle={course.title} jobSlug={course.slug} />

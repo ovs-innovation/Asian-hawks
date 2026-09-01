@@ -1,4 +1,5 @@
 import dotenv from "dotenv";
+import dns from "dns";
 import mongoose from "mongoose";
 import Category from "./models/Category.js";
 import Company from "./models/Company.js";
@@ -7,6 +8,12 @@ import Blog from "./models/Blog.js";
 import User from "./models/User.js";
 
 dotenv.config();
+
+try {
+  dns.setServers(["8.8.8.8", "1.1.1.1"]);
+} catch {
+  // Ignore DNS fallback errors
+}
 
 const categories = [
   "Banking Jobs",

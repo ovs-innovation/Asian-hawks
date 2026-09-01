@@ -9,12 +9,12 @@ export function SafeImage({
   className,
   fallback = "/courses/office.jpg",
 }: {
-  src: string;
+  src?: string;
   alt: string;
   className?: string;
   fallback?: string;
 }) {
-  const [current, setCurrent] = useState(src);
+  const [current, setCurrent] = useState(src || fallback);
 
   return (
     // eslint-disable-next-line @next/next/no-img-element

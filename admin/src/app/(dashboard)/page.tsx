@@ -35,7 +35,7 @@ export default function DashboardPage() {
 
   const stats = [
     { label: "Total Jobs", value: data?.jobs ?? "—", href: "/jobs", icon: Briefcase, color: "bg-blue-50 text-blue-600" },
-    { label: "Applications", value: data?.applications ?? "—", href: "/jobs", icon: TrendingUp, color: "bg-green-50 text-green-600" },
+    { label: "Applications", value: data?.applications ?? "—", href: "/applications", icon: TrendingUp, color: "bg-green-50 text-green-600" },
     { label: "Users", value: data?.users ?? "—", href: "/users", icon: Users, color: "bg-purple-50 text-purple-600" },
     { label: "Companies", value: data?.companies ?? "—", href: "/companies", icon: Building2, color: "bg-orange-50 text-orange-600" },
   ];
