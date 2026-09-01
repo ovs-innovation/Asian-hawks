@@ -69,6 +69,7 @@ export function ResumePreview({
       <TemplateSelectorModal
         open={selectorOpen}
         onOpenChange={setSelectorOpen}
+        data={resume}
         activeTemplate={resume.template}
         onSelect={onChangeTemplate}
       />
