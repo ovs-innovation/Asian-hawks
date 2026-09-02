@@ -70,14 +70,14 @@ export default function CandidateHome() {
   return (
     <div className="space-y-8">
       {/* LinkedIn-style Top Profile Header Banner */}
-      <Card className="relative overflow-hidden border-slate-200/90 bg-white p-6 shadow-[0_2px_12px_rgba(15,93,170,0.06)]">
+      <Card className="relative overflow-hidden border-slate-200/90 bg-white p-4 sm:p-6 shadow-[0_2px_12px_rgba(15,93,170,0.06)]">
         {/* Subtle background glow */}
         <div className="absolute -right-10 -top-10 h-36 w-36 rounded-full bg-blue-50/70 blur-2xl pointer-events-none" />
 
-        <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="flex items-center gap-5">
+        <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-5 sm:gap-6">
+          <div className="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-4 sm:gap-5">
             {/* Candidate Avatar */}
-            <div className="flex h-16 w-16 sm:h-20 sm:w-20 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-[#0f5daa] via-blue-600 to-[#03224c] text-2xl font-bold text-white shadow-md border-2 border-white">
+            <div className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-[#0f5daa] via-blue-600 to-[#03224c] text-2xl font-bold text-white shadow-md border-2 border-white mx-auto sm:mx-0">
               {currentUser?.avatar ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={currentUser.avatar} alt={currentUser.name} className="h-full w-full object-cover" />
@@ -86,47 +86,50 @@ export default function CandidateHome() {
               )}
             </div>
 
-            <div className="space-y-1">
-              <div className="flex items-center gap-2.5 flex-wrap">
+            <div className="space-y-1.5 w-full">
+              <div className="flex items-center justify-center sm:justify-start gap-2 flex-wrap">
                 <h1 className="text-xl sm:text-2xl font-bold text-slate-900">
                   {currentUser?.name || "Candidate"}
                 </h1>
                 {currentUser?.experienceLevel ? (
-                  <span className="inline-flex items-center rounded-full bg-blue-50 px-3 py-0.5 text-xs font-bold text-[#0f5daa] border border-blue-200/60">
+                  <span className="inline-flex items-center rounded-full bg-blue-50 px-2.5 py-0.5 text-xs font-bold text-[#0f5daa] border border-blue-200/60">
                     {currentUser.experienceLevel} Exp
                   </span>
                 ) : null}
               </div>
 
               {/* Professional Headline */}
-              <p className="text-sm font-semibold text-[#0f5daa]">
+              <p className="text-xs sm:text-sm font-semibold text-[#0f5daa]">
                 {currentUser?.headline || "Add your professional headline in Profile"}
               </p>
 
               {/* Company & Location Details Row */}
-              <div className="flex items-center gap-4 text-xs font-medium text-slate-500 pt-0.5 flex-wrap">
+              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-3 gap-y-1 text-xs font-medium text-slate-500 pt-0.5">
                 {currentCompany ? (
                   <span className="flex items-center gap-1 text-slate-800 font-bold">
-                    <Building2 size={13} className="text-[#0f5daa]" /> {currentCompany}
+                    <Building2 size={13} className="text-[#0f5daa] shrink-0" />
+                    <span>{currentCompany}</span>
                   </span>
                 ) : null}
 
                 {currentUser?.location ? (
                   <span className="flex items-center gap-1">
-                    <MapPin size={13} className="text-slate-400" /> {currentUser.location}
+                    <MapPin size={13} className="text-slate-400 shrink-0" />
+                    <span>{currentUser.location}</span>
                   </span>
                 ) : null}
 
                 {currentUser?.phone ? (
                   <span className="flex items-center gap-1">
-                    <Phone size={13} className="text-slate-400" /> {currentUser.phone}
+                    <Phone size={13} className="text-slate-400 shrink-0" />
+                    <span>{currentUser.phone}</span>
                   </span>
                 ) : null}
               </div>
 
               {/* Skills Chips Preview */}
               {currentUser?.skills?.length ? (
-                <div className="mt-2 flex flex-wrap gap-1.5 pt-0.5">
+                <div className="mt-2 flex flex-wrap items-center justify-center sm:justify-start gap-1.5 pt-0.5">
                   {currentUser.skills.slice(0, 5).map((skill: string) => (
                     <span
                       key={skill}
@@ -146,8 +149,8 @@ export default function CandidateHome() {
           </div>
 
           {/* Quick Actions & Edit Profile Button */}
-          <div className="flex flex-col sm:flex-row md:flex-col items-stretch md:items-end gap-2.5 shrink-0">
-            <Button asChild className="bg-[#0f5daa] hover:bg-[#0c4d8c] text-white shadow-xs rounded-xl px-5 h-10 font-semibold text-xs">
+          <div className="flex flex-col sm:flex-row md:flex-col items-stretch sm:items-center md:items-end gap-2.5 shrink-0 w-full md:w-auto pt-2 md:pt-0">
+            <Button asChild className="bg-[#0f5daa] hover:bg-[#0c4d8c] text-white shadow-xs rounded-xl px-5 h-10 font-bold text-xs w-full sm:w-auto justify-center">
               <Link href="/jobs" className="flex items-center justify-center gap-2">
                 <Briefcase size={15} />
                 <span>Browse All Jobs</span>
@@ -156,7 +159,7 @@ export default function CandidateHome() {
 
             <Link
               href="/candidate/profile"
-              className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-slate-300 bg-slate-50 px-4 text-xs font-bold text-slate-700 hover:bg-slate-100 transition"
+              className="inline-flex h-10 items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-slate-50 px-4 text-xs font-bold text-slate-700 hover:bg-slate-100 transition w-full sm:w-auto"
             >
               <span>Edit Profile Details</span>
               <ArrowRight size={13} />
