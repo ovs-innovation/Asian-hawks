@@ -191,7 +191,17 @@ export function CreativeTemplate({ data }: { data: ResumeData }) {
                     Languages
                   </h2>
                   <p className="text-xs text-slate-600">
-                    {data.languages.map((l) => `${l.language} (${l.proficiency})`).join(", ")}
+                    {data.languages
+                      .map((l) => {
+                        const name = typeof l === "string" ? l : l.language || "";
+                        const prof =
+                          typeof l === "object" && l.proficiency && l.proficiency !== "Proficient"
+                            ? ` (${l.proficiency})`
+                            : "";
+                        return `${name}${prof}`;
+                      })
+                      .filter(Boolean)
+                      .join(", ")}
                   </p>
                 </div>
               )}

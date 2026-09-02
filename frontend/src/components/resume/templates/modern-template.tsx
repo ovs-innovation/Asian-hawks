@@ -228,11 +228,18 @@ export function ModernTemplate({ data }: { data: ResumeData }) {
                 <Globe size={13} className="text-[#0f5daa]" /> Languages
               </h3>
               <div className="mt-2 flex flex-wrap gap-2 text-xs">
-                {data.languages.map((l, idx) => (
-                  <span key={idx} className="bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-medium">
-                    {l.language} ({l.proficiency})
-                  </span>
-                ))}
+                {data.languages.map((l, idx) => {
+                  const name = typeof l === "string" ? l : l.language || "";
+                  const prof =
+                    typeof l === "object" && l.proficiency && l.proficiency !== "Proficient"
+                      ? ` (${l.proficiency})`
+                      : "";
+                  return (
+                    <span key={idx} className="bg-slate-100 text-slate-700 px-2.5 py-1 rounded-lg font-medium">
+                      {name}{prof}
+                    </span>
+                  );
+                })}
               </div>
             </div>
           )}

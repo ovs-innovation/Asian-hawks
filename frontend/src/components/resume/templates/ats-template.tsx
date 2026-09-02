@@ -250,12 +250,20 @@ export function AtsTemplate({ data }: { data: ResumeData }) {
                 Languages
               </h2>
               <div className="mt-2 flex flex-wrap gap-2 text-xs text-neutral-800">
-                {data.languages.map((l, idx) => (
-                  <span key={idx}>
-                    <strong className="font-semibold">{l.language}</strong> ({l.proficiency})
-                    {idx < data.languages.length - 1 ? " •" : ""}
-                  </span>
-                ))}
+                {data.languages.map((l, idx) => {
+                  const name = typeof l === "string" ? l : l.language || "";
+                  const prof =
+                    typeof l === "object" && l.proficiency && l.proficiency !== "Proficient"
+                      ? ` (${l.proficiency})`
+                      : "";
+                  return (
+                    <span key={idx}>
+                      <strong className="font-semibold">{name}</strong>
+                      {prof}
+                      {idx < data.languages.length - 1 ? " •" : ""}
+                    </span>
+                  );
+                })}
               </div>
             </div>
           )}

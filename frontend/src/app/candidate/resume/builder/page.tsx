@@ -119,7 +119,6 @@ function ResumeBuilderContent() {
       });
       if (applyRes.item) {
         setResume(applyRes.item);
-        triggerAutosave(applyRes.item);
         toast.success("Synchronized profile changes to resume!");
       }
     } catch {
