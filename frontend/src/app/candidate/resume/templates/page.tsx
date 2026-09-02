@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -21,8 +21,162 @@ import {
 } from "@/types/resume";
 import { TemplatePreviewCard } from "@/components/resume/templates/template-preview-card";
 import { TemplateRenderer } from "@/components/resume/templates/template-renderer";
+import { cn } from "@/lib/utils";
 
 const ALL_TEMPLATES: TemplateId[] = ["ats", "modern", "minimal", "creative", "executive"];
+
+function ScaledTemplateModalContent({
+  zoomTemplateId,
+  resume,
+  selectingId,
+  onClose,
+  onSelectTemplate,
+}: {
+  zoomTemplateId: TemplateId;
+  resume: ResumeData;
+  selectingId: TemplateId | null;
+  onClose: () => void;
+  onSelectTemplate: (id: TemplateId) => void;
+}) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState<number>(0.5);
+  const [fitMode, setFitMode] = useState<"fit" | "full">("fit");
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const updateScale = () => {
+      if (containerRef.current) {
+        const { clientWidth, clientHeight } = containerRef.current;
+        const padX = 24;
+        const padY = 24;
+        const availW = Math.max(200, clientWidth - padX);
+        const availH = Math.max(200, clientHeight - padY);
+
+        const scaleW = availW / 800;
+        const scaleH = availH / 1130;
+        const fitScale = Math.min(scaleW, scaleH);
+
+        setScale(Math.max(0.15, fitScale));
+      }
+    };
+
+    updateScale();
+
+    const observer = new ResizeObserver(updateScale);
+    observer.observe(containerRef.current);
+
+    return () => observer.disconnect();
+  }, [zoomTemplateId, fitMode]);
+
+  return (
+    <>
+      {/* Dialog Header */}
+      <div className="p-4 sm:p-5 border-b border-slate-200/80 bg-white flex items-center justify-between gap-4 shrink-0 z-10 shadow-xs">
+        <div>
+          <DialogTitle className="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
+            <span>{TEMPLATES_META[zoomTemplateId]?.name}</span>
+            {TEMPLATES_META[zoomTemplateId]?.isRecommended && (
+              <Badge tone="blue" className="bg-[#0f5daa] text-white text-[10px] font-bold">
+                ATS Friendly
+              </Badge>
+            )}
+          </DialogTitle>
+          <DialogDescription className="text-xs text-slate-500 mt-0.5">
+            {TEMPLATES_META[zoomTemplateId]?.description}
+          </DialogDescription>
+        </div>
+
+        <div className="flex items-center gap-2.5 pr-8 sm:pr-10">
+          {/* Fit / Full Mode Switcher */}
+          <div className="hidden sm:flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200/80 mr-1">
+            <button
+              type="button"
+              onClick={() => setFitMode("fit")}
+              className={cn(
+                "px-2.5 py-1 text-xs font-bold rounded-lg transition-all",
+                fitMode === "fit" ? "bg-white text-[#0f5daa] shadow-xs" : "text-slate-500 hover:text-slate-800"
+              )}
+            >
+              Fit View
+            </button>
+            <button
+              type="button"
+              onClick={() => setFitMode("full")}
+              className={cn(
+                "px-2.5 py-1 text-xs font-bold rounded-lg transition-all",
+                fitMode === "full" ? "bg-white text-[#0f5daa] shadow-xs" : "text-slate-500 hover:text-slate-800"
+              )}
+            >
+              100% Zoom
+            </button>
+          </div>
+
+          {resume.template === zoomTemplateId ? (
+            <Button
+              disabled
+              size="sm"
+              className="rounded-xl bg-emerald-600 text-white font-bold text-xs h-9 gap-1.5"
+            >
+              <Check size={14} /> Currently Selected
+            </Button>
+          ) : (
+            <Button
+              size="sm"
+              disabled={selectingId === zoomTemplateId}
+              onClick={() => {
+                onClose();
+                onSelectTemplate(zoomTemplateId);
+              }}
+              className="rounded-xl bg-[#0f5daa] hover:bg-[#0c4d8c] text-white font-bold text-xs h-9 gap-1.5 shadow-xs"
+            >
+              <span>Use This Template</span>
+              <ArrowRight size={14} />
+            </Button>
+          )}
+        </div>
+      </div>
+
+      {/* Preview Viewport Container */}
+      <div
+        ref={containerRef}
+        className={cn(
+          "flex-1 min-h-0 bg-slate-100/90 flex items-center justify-center p-3 sm:p-4 overflow-hidden relative select-none",
+          fitMode === "full" && "overflow-y-auto block p-6"
+        )}
+      >
+        {fitMode === "fit" ? (
+          <div
+            style={{
+              width: `${800 * scale}px`,
+              height: `${1130 * scale}px`,
+              position: "relative",
+            }}
+          >
+            <div
+              style={{
+                width: "800px",
+                minHeight: "1130px",
+                transform: `scale(${scale})`,
+                transformOrigin: "top left",
+                position: "absolute",
+                top: 0,
+                left: 0,
+              }}
+              className="bg-white shadow-2xl rounded-xl overflow-hidden pointer-events-none"
+            >
+              <TemplateRenderer data={{ ...resume, template: zoomTemplateId }} />
+            </div>
+          </div>
+        ) : (
+          <div className="mx-auto max-w-[800px] shadow-lg rounded-xl overflow-hidden bg-white my-2 sm:my-4">
+            <TemplateRenderer data={{ ...resume, template: zoomTemplateId }} />
+          </div>
+        )}
+      </div>
+    </>
+  );
+}
 
 export default function ResumeTemplateGalleryPage() {
   const router = useRouter();
@@ -252,58 +406,15 @@ export default function ResumeTemplateGalleryPage() {
 
       {/* Full-Screen Zoom Inspection Dialog */}
       <Dialog open={!!zoomTemplateId} onOpenChange={(open) => !open && setZoomTemplateId(null)}>
-        <DialogContent className="max-w-4xl h-[88vh] max-h-[88vh] flex flex-col p-0 overflow-hidden rounded-2xl sm:rounded-3xl border border-slate-200 shadow-2xl">
+        <DialogContent className="max-w-4xl h-[90vh] max-h-[90vh] flex flex-col p-0 overflow-hidden rounded-2xl sm:rounded-3xl border border-slate-200 shadow-2xl">
           {zoomTemplateId && (
-            <>
-              {/* Dialog Header */}
-              <div className="p-4 sm:p-5 border-b border-slate-200/80 bg-white flex items-center justify-between gap-4 shrink-0 z-10 shadow-xs">
-                <div>
-                  <DialogTitle className="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
-                    <span>{TEMPLATES_META[zoomTemplateId]?.name}</span>
-                    {TEMPLATES_META[zoomTemplateId]?.isRecommended && (
-                      <Badge tone="blue" className="bg-[#0f5daa] text-white text-[10px] font-bold">
-                        ATS Friendly
-                      </Badge>
-                    )}
-                  </DialogTitle>
-                  <DialogDescription className="text-xs text-slate-500 mt-0.5">
-                    {TEMPLATES_META[zoomTemplateId]?.description}
-                  </DialogDescription>
-                </div>
-
-                <div className="flex items-center gap-2 pr-8 sm:pr-10">
-                  {resume.template === zoomTemplateId ? (
-                    <Button
-                      disabled
-                      size="sm"
-                      className="rounded-xl bg-emerald-600 text-white font-bold text-xs h-9 gap-1.5"
-                    >
-                      <Check size={14} /> Currently Selected
-                    </Button>
-                  ) : (
-                    <Button
-                      size="sm"
-                      disabled={selectingId === zoomTemplateId}
-                      onClick={() => {
-                        setZoomTemplateId(null);
-                        handleSelectTemplate(zoomTemplateId);
-                      }}
-                      className="rounded-xl bg-[#0f5daa] hover:bg-[#0c4d8c] text-white font-bold text-xs h-9 gap-1.5 shadow-xs"
-                    >
-                      <span>Use This Template</span>
-                      <ArrowRight size={14} />
-                    </Button>
-                  )}
-                </div>
-              </div>
-
-              {/* Printable Zoom Container */}
-              <div className="flex-1 min-h-0 overflow-y-auto bg-slate-100/90 p-4 sm:p-6 block">
-                <div className="mx-auto max-w-[800px] shadow-lg rounded-xl overflow-hidden bg-white my-2 sm:my-4">
-                  <TemplateRenderer data={{ ...resume, template: zoomTemplateId }} />
-                </div>
-              </div>
-            </>
+            <ScaledTemplateModalContent
+              zoomTemplateId={zoomTemplateId}
+              resume={resume}
+              selectingId={selectingId}
+              onClose={() => setZoomTemplateId(null)}
+              onSelectTemplate={handleSelectTemplate}
+            />
           )}
         </DialogContent>
       </Dialog>
