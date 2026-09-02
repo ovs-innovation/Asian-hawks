@@ -89,8 +89,13 @@ export function Navbar() {
                   href={dashboardUrl}
                   className="flex items-center gap-2 rounded-xl px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-100 transition-colors"
                 >
-                  <div className="grid h-7 w-7 place-items-center rounded-full bg-gradient-to-br from-[#0f5daa] to-[#03224c] text-[11px] font-bold text-white shadow-2xs">
-                    {(user.name || "U")[0].toUpperCase()}
+                  <div className="flex h-7 w-7 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-[#0f5daa] to-[#03224c] text-[11px] font-bold text-white shadow-2xs border border-slate-200/60">
+                    {user.avatar ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={user.avatar} alt={user.name} className="h-full w-full object-cover" />
+                    ) : (
+                      <span>{(user.name || "U")[0].toUpperCase()}</span>
+                    )}
                   </div>
                   <span className="max-w-[110px] truncate">{user.name?.split(" ")[0] || "Account"}</span>
                 </Link>
@@ -151,8 +156,13 @@ export function Navbar() {
           {mounted && hydrated && user ? (
             <div className="mt-5 space-y-3 border-t border-slate-100 pt-4">
               <div className="flex items-center gap-3 rounded-xl bg-slate-50 p-3 border border-slate-200/80">
-                <div className="grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br from-[#0f5daa] to-[#03224c] text-xs font-bold text-white shadow-2xs">
-                  {(user.name || "U")[0].toUpperCase()}
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-[#0f5daa] to-[#03224c] text-xs font-bold text-white shadow-2xs border border-slate-200/60">
+                  {user.avatar ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={user.avatar} alt={user.name} className="h-full w-full object-cover" />
+                  ) : (
+                    <span>{(user.name || "U")[0].toUpperCase()}</span>
+                  )}
                 </div>
                 <div className="leading-tight">
                   <p className="text-sm font-bold text-slate-900">{user.name}</p>

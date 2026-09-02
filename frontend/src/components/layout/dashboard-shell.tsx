@@ -199,8 +199,13 @@ export function DashboardShell({
               >
                 <Menu size={18} />
               </button>
-              <div className="grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br from-[#0f5daa] to-[#03224c] text-xs font-bold text-white shadow-xs">
-                {userInitial}
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-[#0f5daa] to-[#03224c] text-xs font-bold text-white shadow-xs border border-slate-200/60">
+                {user.avatar ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={user.avatar} alt={user.name} className="h-full w-full object-cover" />
+                ) : (
+                  <span>{userInitial}</span>
+                )}
               </div>
               <div className="leading-tight">
                 <p className="text-sm font-bold text-slate-900">{user.name}</p>

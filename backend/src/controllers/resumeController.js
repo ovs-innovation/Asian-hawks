@@ -121,48 +121,212 @@ export async function saveResume(req, res) {
 export async function syncWithProfile(req, res) {
   try {
     const u = await User.findById(req.user._id);
-    const resume = await Resume.findOne({ user: req.user._id });
-
     if (!u) return res.status(404).json({ message: "User not found" });
 
-    const p = resume?.personalInfo || {};
+    let resume = await Resume.findOne({ user: req.user._id });
+
+    // If resume document does not exist yet in MongoDB, create an initial draft
+    if (!resume) {
+      const initialLanguages = (u.languages || ["English", "Hindi"]).map((l) =>
+        typeof l === "string" ? { language: l, proficiency: "Proficient" } : l
+      );
+      resume = new Resume({
+        user: u._id,
+        title: `${u.name ? u.name.split(" ")[0] : "My"} Resume`,
+        headline: u.headline || "",
+        summary: u.bio || "",
+        personalInfo: {
+          fullName: u.name || "",
+          email: u.email || "",
+          phone: u.phone || "",
+          location: u.location || u.city || "",
+          city: u.city || "",
+          country: u.country || "India",
+          headline: u.headline || "",
+          linkedin: u.linkedin || "",
+          github: u.github || "",
+          portfolio: u.website || "",
+        },
+        experience: (u.workExperience || []).map((w) => ({
+          company: w.company || "",
+          title: w.title || "",
+          location: "",
+          start: w.start || "",
+          end: w.end || "",
+          current: !!w.current,
+          description: w.description || "",
+          highlights: [],
+        })),
+        education: (u.education || []).map((e) => ({
+          school: e.school || "",
+          degree: e.degree || "",
+          field: e.field || "",
+          year: e.year || "",
+          grade: "",
+          description: "",
+        })),
+        skills: u.skills && u.skills.length > 0 ? u.skills : ["Communication", "Problem Solving"],
+        certificates: (u.certifications || []).map((c) => ({
+          name: c.name || "",
+          issuer: c.issuer || "",
+          year: c.year || "",
+        })),
+        projects: [],
+        languages: initialLanguages,
+        achievements: [],
+        isFresher: !u.workExperience || u.workExperience.length === 0,
+        template: "ats",
+        source: "profile",
+        status: "draft",
+      });
+      resume.completeness = calculateCompleteness(resume);
+      await resume.save();
+    }
+
+    if (!resume.personalInfo) {
+      resume.personalInfo = {};
+    }
+
+    const p = resume.personalInfo;
     const diffs = [];
 
     if (u.name && u.name !== p.fullName) {
       diffs.push({ field: "Full Name", path: "personalInfo.fullName", profileValue: u.name, resumeValue: p.fullName || "" });
     }
+    if (u.email && u.email !== p.email) {
+      diffs.push({ field: "Email", path: "personalInfo.email", profileValue: u.email, resumeValue: p.email || "" });
+    }
     if (u.phone && u.phone !== p.phone) {
       diffs.push({ field: "Phone", path: "personalInfo.phone", profileValue: u.phone, resumeValue: p.phone || "" });
     }
-    if (u.headline && u.headline !== p.headline) {
-      diffs.push({ field: "Headline", path: "personalInfo.headline", profileValue: u.headline, resumeValue: p.headline || "" });
+    if (u.headline && (u.headline !== p.headline || u.headline !== resume.headline)) {
+      diffs.push({ field: "Headline / Title", path: "personalInfo.headline", profileValue: u.headline, resumeValue: p.headline || "" });
     }
     if (u.location && u.location !== p.location) {
       diffs.push({ field: "Location", path: "personalInfo.location", profileValue: u.location, resumeValue: p.location || "" });
     }
-    if (u.bio && u.bio !== resume?.summary) {
-      diffs.push({ field: "Professional Summary", path: "summary", profileValue: u.bio, resumeValue: resume?.summary || "" });
+    if (u.linkedin && u.linkedin !== p.linkedin) {
+      diffs.push({ field: "LinkedIn URL", path: "personalInfo.linkedin", profileValue: u.linkedin, resumeValue: p.linkedin || "" });
     }
-    if (u.skills && JSON.stringify(u.skills) !== JSON.stringify(resume?.skills)) {
-      diffs.push({ field: "Skills", path: "skills", profileValue: u.skills, resumeValue: resume?.skills || [] });
+    if (u.github && u.github !== p.github) {
+      diffs.push({ field: "GitHub URL", path: "personalInfo.github", profileValue: u.github, resumeValue: p.github || "" });
+    }
+    if (u.website && u.website !== p.portfolio) {
+      diffs.push({ field: "Portfolio / Website", path: "personalInfo.portfolio", profileValue: u.website, resumeValue: p.portfolio || "" });
+    }
+    if (u.bio && u.bio !== resume.summary) {
+      diffs.push({ field: "Professional Summary", path: "summary", profileValue: u.bio, resumeValue: resume.summary || "" });
+    }
+    if (u.skills && JSON.stringify(u.skills) !== JSON.stringify(resume.skills)) {
+      diffs.push({ field: "Skills", path: "skills", profileValue: u.skills, resumeValue: resume.skills || [] });
     }
 
-    if (req.method === "POST" && req.body.applyDiffs) {
-      if (!resume) {
-        return res.status(400).json({ message: "No resume to sync" });
-      }
-      const appliedFields = req.body.applyDiffs; // array of paths to update
+    // Work Experience sync
+    const mappedWork = (u.workExperience || []).map((w) => ({
+      company: w.company || "",
+      title: w.title || "",
+      location: "",
+      start: w.start || "",
+      end: w.end || "",
+      current: !!w.current,
+      description: w.description || "",
+      highlights: [],
+    }));
+    if (
+      u.workExperience &&
+      JSON.stringify(mappedWork) !==
+        JSON.stringify(
+          (resume.experience || []).map((e) => ({
+            company: e.company || "",
+            title: e.title || "",
+            location: e.location || "",
+            start: e.start || "",
+            end: e.end || "",
+            current: !!e.current,
+            description: e.description || "",
+            highlights: e.highlights || [],
+          }))
+        )
+    ) {
+      diffs.push({ field: "Work Experience", path: "experience", profileValue: mappedWork, resumeValue: resume.experience || [] });
+    }
+
+    // Education sync
+    const mappedEdu = (u.education || []).map((e) => ({
+      school: e.school || "",
+      degree: e.degree || "",
+      field: e.field || "",
+      year: e.year || "",
+      grade: "",
+      description: "",
+    }));
+    if (
+      u.education &&
+      JSON.stringify(mappedEdu) !==
+        JSON.stringify(
+          (resume.education || []).map((e) => ({
+            school: e.school || "",
+            degree: e.degree || "",
+            field: e.field || "",
+            year: e.year || "",
+            grade: e.grade || "",
+            description: e.description || "",
+          }))
+        )
+    ) {
+      diffs.push({ field: "Education", path: "education", profileValue: mappedEdu, resumeValue: resume.education || [] });
+    }
+
+    // Certifications sync
+    const mappedCerts = (u.certifications || []).map((c) => ({
+      name: c.name || "",
+      issuer: c.issuer || "",
+      year: c.year || "",
+    }));
+    if (
+      u.certifications &&
+      JSON.stringify(mappedCerts) !==
+        JSON.stringify(
+          (resume.certificates || []).map((c) => ({
+            name: c.name || "",
+            issuer: c.issuer || "",
+            year: c.year || "",
+          }))
+        )
+    ) {
+      diffs.push({ field: "Certifications", path: "certificates", profileValue: mappedCerts, resumeValue: resume.certificates || [] });
+    }
+
+    if (req.method === "POST") {
+      const appliedFields = req.body.applyDiffs || diffs.map((d) => d.path);
       appliedFields.forEach((path) => {
         if (path === "personalInfo.fullName") resume.personalInfo.fullName = u.name;
+        if (path === "personalInfo.email") resume.personalInfo.email = u.email;
         if (path === "personalInfo.phone") resume.personalInfo.phone = u.phone;
         if (path === "personalInfo.headline") {
           resume.personalInfo.headline = u.headline;
           resume.headline = u.headline;
         }
-        if (path === "personalInfo.location") resume.personalInfo.location = u.location;
+        if (path === "personalInfo.location") {
+          resume.personalInfo.location = u.location;
+          if (u.city) resume.personalInfo.city = u.city;
+        }
+        if (path === "personalInfo.linkedin") resume.personalInfo.linkedin = u.linkedin;
+        if (path === "personalInfo.github") resume.personalInfo.github = u.github;
+        if (path === "personalInfo.portfolio") resume.personalInfo.portfolio = u.website;
         if (path === "summary") resume.summary = u.bio;
         if (path === "skills") resume.skills = u.skills;
+        if (path === "experience") resume.experience = mappedWork;
+        if (path === "education") resume.education = mappedEdu;
+        if (path === "certificates") resume.certificates = mappedCerts;
       });
+
+      resume.markModified("personalInfo");
+      resume.markModified("experience");
+      resume.markModified("education");
+      resume.markModified("certificates");
+      resume.markModified("skills");
+
       resume.completeness = calculateCompleteness(resume);
       await resume.save();
       return res.json({ ok: true, item: resume, message: "Profile synchronized with resume" });

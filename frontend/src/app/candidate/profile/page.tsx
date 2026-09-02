@@ -259,6 +259,13 @@ export default function CandidateProfilePage() {
       data.append("file", file);
       const res = await api<{ url: string }>("/upload", { method: "POST", body: data });
       setForm((prev) => ({ ...prev, avatar: res.url }));
+      const patchRes = await api<{ user: any }>("/auth/me", {
+        method: "PATCH",
+        body: JSON.stringify({ avatar: res.url }),
+      });
+      if (patchRes?.user) {
+        dispatch(updateUser(patchRes.user));
+      }
       toast.success("Profile photo updated");
     } catch {
       toast.error("Could not upload photo");
