@@ -59,6 +59,8 @@ const userSchema = new mongoose.Schema(
     emailVerified: { type: Boolean, default: true },
     resetToken: String,
     resetTokenExpires: Date,
+    otpCode: String,
+    otpExpires: Date,
     lastLoginAt: Date,
     profileCompletion: { type: Number, default: 20 },
     savedJobs: [{ type: mongoose.Schema.Types.ObjectId, ref: "Job" }],

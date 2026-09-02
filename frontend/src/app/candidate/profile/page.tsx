@@ -106,17 +106,17 @@ export default function CandidateProfilePage() {
         city: user.city || "",
         country: user.country || "",
         bio: user.bio || "",
-        skills: user.skills || ["React", "Node.js", "SQL"],
-        experienceLevel: user.experienceLevel || "1-3 yrs",
+        skills: user.skills || [],
+        experienceLevel: user.experienceLevel || "Fresher",
         currentSalary: user.currentSalary || "",
         expectedSalary: user.expectedSalary || "",
         noticePeriod: user.noticePeriod || "30 days",
         website: user.website || "",
         linkedin: user.linkedin || "",
         github: user.github || "",
-        languages: user.languages || ["English", "Hindi"],
+        languages: user.languages || [],
         preferredLocations: user.preferredLocations || [],
-        preferredJobTypes: user.preferredJobTypes || ["Full-time"],
+        preferredJobTypes: user.preferredJobTypes || [],
         workExperience: user.workExperience || [],
         education: user.education || [],
         certifications: user.certifications || [],
@@ -360,7 +360,9 @@ export default function CandidateProfilePage() {
                   {form.experienceLevel || "1-3 yrs"}
                 </span>
               </div>
-              <p className="text-sm font-semibold text-slate-700">{form.headline || "Full Stack Developer"}</p>
+              <p className="text-sm font-semibold text-[#0f5daa]">
+                {form.headline || "Add your professional title / headline below"}
+              </p>
               <div className="flex items-center gap-4 text-xs font-medium text-slate-500 pt-0.5 flex-wrap">
                 <span className="flex items-center gap-1">
                   <MapPin size={13} className="text-slate-400" /> {form.location || "Location not set"}

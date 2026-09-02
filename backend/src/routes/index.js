@@ -15,6 +15,8 @@ const router = Router();
 router.post("/auth/register", auth.register);
 router.post("/auth/login", auth.login);
 router.post("/auth/logout", auth.logout);
+router.post("/auth/send-otp", auth.sendOtp);
+router.post("/auth/verify-otp", auth.verifyOtp);
 router.post("/auth/forgot-password", auth.forgotPassword);
 router.post("/auth/reset-password", auth.resetPassword);
 router.get("/auth/me", protect, auth.me);

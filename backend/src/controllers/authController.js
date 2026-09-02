@@ -3,6 +3,7 @@ import crypto from "crypto";
 import User from "../models/User.js";
 import Company from "../models/Company.js";
 import { signToken } from "../middleware/auth.js";
+import { sendOtpEmail } from "../utils/mailer.js";
 
 function publicUser(user) {
   return {
@@ -102,6 +103,69 @@ export async function me(req, res) {
 export async function logout(_req, res) {
   res.clearCookie("token");
   res.json({ ok: true });
+}
+
+export async function sendOtp(req, res) {
+  const { email } = req.body;
+  if (!email || !email.trim()) {
+    return res.status(400).json({ message: "Email address is required" });
+  }
+
+  const user = await User.findOne({ email: email.trim().toLowerCase() });
+  if (!user) {
+    return res.status(404).json({ message: "No account found with this email address." });
+  }
+
+  // Generate 6-digit OTP
+  const otp = Math.floor(100000 + Math.random() * 900000).toString();
+  user.otpCode = otp;
+  user.otpExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+  await user.save();
+
+  try {
+    await sendOtpEmail(user.email, otp, user.name);
+  } catch (emailErr) {
+    console.error("[OTP MAIL FAILED]", emailErr);
+    return res.status(500).json({ message: "Could not send OTP email. Please verify your email address or try again." });
+  }
+
+  console.log(`[OTP] Sent OTP to registered email ${user.email}`);
+
+  res.json({
+    ok: true,
+    message: `OTP sent successfully to ${user.email}`,
+  });
+}
+
+export async function verifyOtp(req, res) {
+  const { email, otp } = req.body;
+  if (!email || !otp) {
+    return res.status(400).json({ message: "Email and OTP code are required." });
+  }
+
+  const user = await User.findOne({
+    email: email.trim().toLowerCase(),
+    otpCode: otp.trim(),
+    otpExpires: { $gt: new Date() },
+  }).populate("company");
+
+  if (!user) {
+    return res.status(400).json({ message: "Invalid or expired OTP code. Please try again." });
+  }
+
+  if (user.status === "suspended") {
+    return res.status(403).json({ message: "This account is suspended" });
+  }
+
+  // Clear OTP fields
+  user.otpCode = undefined;
+  user.otpExpires = undefined;
+  user.lastLoginAt = new Date();
+  await user.save();
+
+  const token = signToken(user);
+  res.cookie("token", token, { httpOnly: true, sameSite: "lax", maxAge: 7 * 24 * 60 * 60 * 1000 });
+  res.json({ token, user: publicUser(user) });
 }
 
 export async function forgotPassword(req, res) {
