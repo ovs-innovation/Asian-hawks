@@ -212,7 +212,7 @@ export default function ResumeTemplateGalleryPage() {
       </div>
 
       {/* Main Responsive Template Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5">
         {filteredTemplates.map((tplId) => (
           <TemplatePreviewCard
             key={tplId}
@@ -252,13 +252,13 @@ export default function ResumeTemplateGalleryPage() {
 
       {/* Full-Screen Zoom Inspection Dialog */}
       <Dialog open={!!zoomTemplateId} onOpenChange={(open) => !open && setZoomTemplateId(null)}>
-        <DialogContent className="max-w-4xl max-h-[92vh] flex flex-col p-0 overflow-hidden rounded-3xl">
+        <DialogContent className="max-w-4xl h-[88vh] max-h-[88vh] flex flex-col p-0 overflow-hidden rounded-2xl sm:rounded-3xl border border-slate-200 shadow-2xl">
           {zoomTemplateId && (
             <>
               {/* Dialog Header */}
-              <div className="p-5 sm:p-6 border-b border-slate-200/80 bg-white flex items-center justify-between gap-4 shrink-0">
+              <div className="p-4 sm:p-5 border-b border-slate-200/80 bg-white flex items-center justify-between gap-4 shrink-0 z-10 shadow-xs">
                 <div>
-                  <DialogTitle className="text-lg font-bold text-slate-900 flex items-center gap-2">
+                  <DialogTitle className="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
                     <span>{TEMPLATES_META[zoomTemplateId]?.name}</span>
                     {TEMPLATES_META[zoomTemplateId]?.isRecommended && (
                       <Badge tone="blue" className="bg-[#0f5daa] text-white text-[10px] font-bold">
@@ -271,7 +271,7 @@ export default function ResumeTemplateGalleryPage() {
                   </DialogDescription>
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 pr-8 sm:pr-10">
                   {resume.template === zoomTemplateId ? (
                     <Button
                       disabled
@@ -298,8 +298,8 @@ export default function ResumeTemplateGalleryPage() {
               </div>
 
               {/* Printable Zoom Container */}
-              <div className="flex-1 overflow-y-auto bg-slate-100/90 p-4 sm:p-8 flex justify-center">
-                <div className="w-full max-w-[800px] shadow-lg rounded-xl overflow-hidden bg-white">
+              <div className="flex-1 min-h-0 overflow-y-auto bg-slate-100/90 p-4 sm:p-6 block">
+                <div className="mx-auto max-w-[800px] shadow-lg rounded-xl overflow-hidden bg-white my-2 sm:my-4">
                   <TemplateRenderer data={{ ...resume, template: zoomTemplateId }} />
                 </div>
               </div>
