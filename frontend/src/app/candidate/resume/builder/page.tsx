@@ -2,17 +2,12 @@
 
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import {
   ArrowLeft,
   CheckCircle2,
-  Clock,
   Download,
   FileUp,
-  LayoutTemplate,
   RefreshCw,
-  Sparkles,
-  Save,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/primitives";
@@ -31,7 +26,6 @@ import { UploadResumeModal } from "@/components/resume/upload-resume-modal";
 import { printResume } from "@/lib/pdf-export";
 
 export default function ResumeBuilderWorkspace() {
-  const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [resume, setResume] = useState<ResumeData | null>(null);
   const [activeStep, setActiveStep] = useState(0);
@@ -42,7 +36,6 @@ export default function ResumeBuilderWorkspace() {
   const [syncing, setSyncing] = useState(false);
 
   const saveTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const isFirstLoadRef = useRef(true);
 
   // Fetch initial resume
   useEffect(() => {
@@ -55,7 +48,7 @@ export default function ResumeBuilderWorkspace() {
             toast.info("Auto-imported your profile details into a fresh resume!");
           }
         }
-      } catch (err: any) {
+      } catch {
         toast.error("Failed to load resume");
       } finally {
         setLoading(false);

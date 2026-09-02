@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
-import { Download, LayoutTemplate, Sparkles, Printer, Check } from "lucide-react";
+import React from "react";
+import Link from "next/link";
+import { Download, LayoutTemplate, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TemplateRenderer } from "./templates/template-renderer";
-import { TemplateSelectorModal } from "./templates/template-selector-modal";
 import { TEMPLATES_META, type ResumeData, type TemplateId } from "@/types/resume";
 import { printResume } from "@/lib/pdf-export";
 
@@ -13,9 +13,8 @@ export function ResumePreview({
   onChangeTemplate,
 }: {
   resume: ResumeData;
-  onChangeTemplate: (templateId: TemplateId) => void;
+  onChangeTemplate?: (templateId: TemplateId) => void;
 }) {
-  const [selectorOpen, setSelectorOpen] = useState(false);
   const activeMeta = TEMPLATES_META[resume.template] || TEMPLATES_META.ats;
 
   const handleDownload = () => {
@@ -31,13 +30,15 @@ export function ResumePreview({
       <div className="flex flex-wrap items-center justify-between gap-3 bg-white p-3.5 rounded-2xl border border-slate-200/90 shadow-2xs">
         <div className="flex items-center gap-2">
           <Button
-            type="button"
+            asChild
             variant="outline"
-            onClick={() => setSelectorOpen(true)}
-            className="h-9 gap-2 rounded-xl text-xs font-bold text-slate-800 border-slate-200 hover:border-[#0f5daa]"
+            className="h-9 gap-2 rounded-xl text-xs font-bold text-slate-800 border-slate-200 hover:border-[#0f5daa] hover:text-[#0f5daa]"
           >
-            <LayoutTemplate size={14} className="text-[#0f5daa]" />
-            <span>Template: {activeMeta.name}</span>
+            <Link href="/candidate/resume/templates">
+              <LayoutTemplate size={14} className="text-[#0f5daa]" />
+              <span>Template: {activeMeta.name}</span>
+              <span className="text-[10px] text-slate-400 font-medium ml-1">Change →</span>
+            </Link>
           </Button>
           {activeMeta.isRecommended && (
             <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-bold bg-blue-50 text-[#0f5daa] px-2 py-0.5 rounded-md">
@@ -64,15 +65,6 @@ export function ResumePreview({
           <TemplateRenderer data={resume} />
         </div>
       </div>
-
-      {/* Template Selector Modal */}
-      <TemplateSelectorModal
-        open={selectorOpen}
-        onOpenChange={setSelectorOpen}
-        data={resume}
-        activeTemplate={resume.template}
-        onSelect={onChangeTemplate}
-      />
     </div>
   );
 }

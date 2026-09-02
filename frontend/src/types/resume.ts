@@ -107,39 +107,45 @@ export const TEMPLATES_META: Record<
     badge?: string;
     isRecommended?: boolean;
     accentColor: string;
+    category: "ats" | "modern" | "minimal" | "creative" | "executive";
   }
 > = {
   ats: {
     id: "ats",
     name: "ATS Professional",
-    description: "Standard single-column format optimized for ATS parsers and corporate applications.",
-    badge: "Recommended",
+    description: "Standard single-column resume optimized for ATS parsing and corporate applications.",
+    badge: "Recommended for ATS",
     isRecommended: true,
     accentColor: "#0f5daa",
+    category: "ats",
   },
   modern: {
     id: "modern",
     name: "Modern Professional",
-    description: "Clean corporate layout with subtle accent headers and modern skill chips.",
+    description: "Clean corporate layout with subtle modern styling and strong section hierarchy.",
     accentColor: "#0284c7",
+    category: "modern",
   },
   minimal: {
     id: "minimal",
     name: "Minimal",
-    description: "Typography-focused layout with generous whitespace for maximum elegance.",
+    description: "Typography-focused layout with generous whitespace and a clean professional appearance.",
     accentColor: "#334155",
+    category: "minimal",
   },
   creative: {
     id: "creative",
     name: "Creative",
-    description: "Visual design accents and header bar tailored for tech, design & marketing roles.",
+    description: "Modern visual layout with tasteful accent styling for technology, marketing and creative roles.",
     accentColor: "#6366f1",
+    category: "creative",
   },
   executive: {
     id: "executive",
     name: "Executive",
-    description: "Formal structured hierarchy with strong typographic framing for senior roles.",
+    description: "Formal structured layout with strong hierarchy for experienced and leadership-oriented candidates.",
     accentColor: "#0f294a",
+    category: "executive",
   },
 };
 

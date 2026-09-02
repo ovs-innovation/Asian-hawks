@@ -1,12 +1,19 @@
 import { toast } from "sonner";
 
-export function printResume(fileName = "Resume") {
+export function printResume(fileName = "Resume", customElementId?: string) {
   if (typeof window === "undefined") return;
 
-  // 1. Find printable resume content
-  const targetEl =
-    document.querySelector(".resume-document") ||
-    document.getElementById("resume-print-area");
+  // 1. Find printable resume content with high specificity
+  let targetEl: Element | null = null;
+  if (customElementId) {
+    targetEl = document.getElementById(customElementId);
+  }
+  if (!targetEl) {
+    targetEl =
+      document.querySelector("#resume-print-area .resume-document") ||
+      document.getElementById("resume-print-area") ||
+      document.querySelector(".resume-document");
+  }
 
   if (!targetEl) {
     toast.error("Resume document preview not found. Please try again.");
@@ -47,6 +54,14 @@ export function printResume(fileName = "Resume") {
           -webkit-print-color-adjust: exact !important;
           print-color-adjust: exact !important;
         }
+        #global-print-portal a:after {
+          content: none !important;
+        }
+        #global-print-portal section,
+        #global-print-portal header {
+          break-inside: avoid !important;
+          page-break-inside: avoid !important;
+        }
         #global-print-portal .resume-document {
           box-shadow: none !important;
           border: none !important;
@@ -75,7 +90,9 @@ export function printResume(fileName = "Resume") {
   }
 
   // If target element is wrapped inside a container, grab the outer HTML or container HTML
-  const outerContainer = targetEl.closest(".resume-document") || targetEl;
+  const outerContainer = targetEl.classList.contains("resume-document")
+    ? targetEl
+    : targetEl.querySelector(".resume-document") || targetEl;
   portalEl.innerHTML = outerContainer.outerHTML || outerContainer.innerHTML;
 
   toast.info("Opening print preview… Select 'Save as PDF' to download.");
