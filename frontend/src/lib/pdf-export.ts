@@ -36,12 +36,20 @@ export function printResume(fileName = "Resume", customElementId?: string) {
         display: none;
       }
       @media print {
+        html, body {
+          background: white !important;
+          margin: 0 !important;
+          padding: 0 !important;
+          height: auto !important;
+          min-height: 100% !important;
+          overflow: visible !important;
+        }
         body > *:not(#global-print-portal) {
           display: none !important;
         }
         #global-print-portal {
           display: block !important;
-          position: absolute !important;
+          position: relative !important;
           left: 0 !important;
           top: 0 !important;
           width: 100% !important;
@@ -49,23 +57,29 @@ export function printResume(fileName = "Resume", customElementId?: string) {
           padding: 0 !important;
           background: white !important;
           color: black !important;
+          overflow: visible !important;
         }
         #global-print-portal * {
           -webkit-print-color-adjust: exact !important;
           print-color-adjust: exact !important;
+          color-adjust: exact !important;
+        }
+        #global-print-portal a {
+          text-decoration: none !important;
         }
         #global-print-portal a:after {
           content: none !important;
         }
         #global-print-portal section,
-        #global-print-portal header {
+        #global-print-portal header,
+        #global-print-portal .resume-section {
           break-inside: avoid !important;
           page-break-inside: avoid !important;
         }
         #global-print-portal .resume-document {
           box-shadow: none !important;
           border: none !important;
-          margin: 0 !important;
+          margin: 0 auto !important;
           padding: 0 !important;
           width: 100% !important;
           max-width: 100% !important;
@@ -74,7 +88,7 @@ export function printResume(fileName = "Resume", customElementId?: string) {
         }
         @page {
           size: A4 portrait;
-          margin: 8mm 10mm 10mm 10mm;
+          margin: 10mm 12mm 12mm 12mm;
         }
       }
     `;
@@ -89,19 +103,27 @@ export function printResume(fileName = "Resume", customElementId?: string) {
     document.body.appendChild(portalEl);
   }
 
-  // If target element is wrapped inside a container, grab the outer HTML or container HTML
+  // Grab the exact .resume-document element
   const outerContainer = targetEl.classList.contains("resume-document")
     ? targetEl
     : targetEl.querySelector(".resume-document") || targetEl;
-  portalEl.innerHTML = outerContainer.outerHTML || outerContainer.innerHTML;
+
+  portalEl.innerHTML = outerContainer.outerHTML;
 
   toast.info("Opening print preview… Select 'Save as PDF' to download.");
 
+  const cleanup = () => {
+    document.title = originalTitle;
+    if (portalEl) portalEl.innerHTML = "";
+    window.removeEventListener("afterprint", cleanup);
+  };
+
+  window.addEventListener("afterprint", cleanup);
+
+  // Safe timeout to trigger print after browser finishes painting the cloned DOM
   setTimeout(() => {
     window.print();
-    setTimeout(() => {
-      document.title = originalTitle;
-      if (portalEl) portalEl.innerHTML = "";
-    }, 1000);
-  }, 150);
+    // Fallback cleanup after 60 seconds if afterprint didn't trigger
+    setTimeout(cleanup, 60000);
+  }, 200);
 }

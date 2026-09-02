@@ -136,9 +136,6 @@ export function TemplatePreviewCard({
           <h3 className="text-xs sm:text-sm font-bold text-slate-900 group-hover:text-[#0f5daa] transition-colors truncate">
             {meta.name}
           </h3>
-          <p className="mt-0.5 text-[11px] text-slate-500 leading-snug line-clamp-2 min-h-[28px]">
-            {meta.description}
-          </p>
         </div>
 
         {/* Bottom CTA Bar */}

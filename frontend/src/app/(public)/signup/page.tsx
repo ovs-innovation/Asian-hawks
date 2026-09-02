@@ -11,9 +11,18 @@ import { api } from "@/lib/api";
 import { setCredentials, type AuthUser } from "@/store/authSlice";
 import type { RootState } from "@/store";
 
+function dest(role: AuthUser["role"], redirect?: string | null) {
+  if (redirect && redirect.startsWith("/") && !redirect.startsWith("//")) {
+    return redirect;
+  }
+  return role === "candidate" ? "/candidate" : "/recruiter";
+}
+
 function SignupForm() {
   const searchParams = useSearchParams();
   const offer = searchParams.get("offer");
+  const redirect = searchParams.get("redirect");
+
   const [form, setForm] = useState({ name: "", email: "", password: "", role: "candidate", companyName: "" });
   const user = useSelector((s: RootState) => s.auth.user);
   const hydrated = useSelector((s: RootState) => s.auth.hydrated);
@@ -22,9 +31,9 @@ function SignupForm() {
 
   useEffect(() => {
     if (hydrated && user) {
-      router.replace(user.role === "candidate" ? "/candidate" : "/recruiter");
+      router.replace(dest(user.role, redirect));
     }
-  }, [hydrated, user, router]);
+  }, [hydrated, user, redirect, router]);
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
@@ -34,14 +43,16 @@ function SignupForm() {
         body: JSON.stringify(form),
       });
       dispatch(setCredentials(data));
-      router.push(data.user.role === "candidate" ? "/candidate" : "/recruiter");
+      router.push(dest(data.user.role, redirect));
     } catch (err: unknown) {
       toast.error(err instanceof Error ? err.message : "Could not create account");
     }
   }
 
+  const loginHref = redirect ? `/login?redirect=${encodeURIComponent(redirect)}` : "/login";
+
   return (
-    <form onSubmit={onSubmit} className="w-full max-w-[440px] rounded-[14px] border border-slate-200 p-8 shadow-sm dark:border-slate-800">
+    <form onSubmit={onSubmit} className="w-full max-w-[440px] rounded-[14px] border border-slate-200 p-8 shadow-sm dark:border-slate-800 bg-white">
       <h1 className="text-3xl font-bold">Create your account</h1>
       {offer === "99" ? (
         <div className="mt-3 rounded-lg border border-blue-200 bg-blue-50/70 p-3 text-xs text-blue-900">
@@ -69,7 +80,7 @@ function SignupForm() {
         <div><Label>Password</Label><Input className="mt-1" type="password" minLength={8} required value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} /></div>
         <Button className="w-full" type="submit">Create account</Button>
       </div>
-      <p className="mt-4 text-center text-sm text-slate-500">Already have an account? <Link href="/login" className="text-blue-600">Log in</Link></p>
+      <p className="mt-4 text-center text-sm text-slate-500">Already have an account? <Link href={loginHref} className="text-blue-600">Log in</Link></p>
     </form>
   );
 }

@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState, useRef, useCallback, Suspense } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import {
   ArrowLeft,
   CheckCircle2,
@@ -16,16 +17,21 @@ import { api } from "@/lib/api";
 import {
   calculateResumeCompleteness,
   detectMissingFields,
+  TEMPLATES_META,
   type ResumeData,
   type TemplateId,
 } from "@/types/resume";
+import { normalizeTemplateId } from "@/lib/demo-resumes";
 import { ResumeEditor } from "@/components/resume/resume-editor";
 import { ResumePreview } from "@/components/resume/resume-preview";
 import { MissingInfoBanner } from "@/components/resume/missing-info-banner";
 import { UploadResumeModal } from "@/components/resume/upload-resume-modal";
 import { printResume } from "@/lib/pdf-export";
 
-export default function ResumeBuilderWorkspace() {
+function ResumeBuilderContent() {
+  const searchParams = useSearchParams();
+  const templateQuery = searchParams.get("template");
+
   const [loading, setLoading] = useState(true);
   const [resume, setResume] = useState<ResumeData | null>(null);
   const [activeStep, setActiveStep] = useState(0);
@@ -36,26 +42,6 @@ export default function ResumeBuilderWorkspace() {
   const [syncing, setSyncing] = useState(false);
 
   const saveTimerRef = useRef<NodeJS.Timeout | null>(null);
-
-  // Fetch initial resume
-  useEffect(() => {
-    async function load() {
-      try {
-        const data = await api<{ item: ResumeData; isNewDraft?: boolean }>("/resume");
-        if (data?.item) {
-          setResume(data.item);
-          if (data.isNewDraft) {
-            toast.info("Auto-imported your profile details into a fresh resume!");
-          }
-        }
-      } catch {
-        toast.error("Failed to load resume");
-      } finally {
-        setLoading(false);
-      }
-    }
-    load();
-  }, []);
 
   // Safe Debounced Autosave
   const triggerAutosave = useCallback((dataToSave: ResumeData) => {
@@ -78,6 +64,38 @@ export default function ResumeBuilderWorkspace() {
       }
     }, 1200);
   }, []);
+
+  // Fetch initial resume
+  useEffect(() => {
+    async function load() {
+      try {
+        const data = await api<{ item: ResumeData; isNewDraft?: boolean }>("/resume");
+        if (data?.item) {
+          let currentResume = data.item;
+
+          // If a specific template was requested via query param
+          if (templateQuery) {
+            const requestedTemplate = normalizeTemplateId(templateQuery);
+            if (currentResume.template !== requestedTemplate) {
+              currentResume = { ...currentResume, template: requestedTemplate };
+              triggerAutosave(currentResume);
+              toast.success(`Applied ${TEMPLATES_META[requestedTemplate]?.name || "selected"} template!`);
+            }
+          }
+
+          setResume(currentResume);
+          if (data.isNewDraft) {
+            toast.info("Auto-imported your profile details into a fresh resume!");
+          }
+        }
+      } catch {
+        toast.error("Failed to load resume");
+      } finally {
+        setLoading(false);
+      }
+    }
+    load();
+  }, [templateQuery, triggerAutosave]);
 
   const handleResumeChange = (updated: ResumeData) => {
     const completeness = calculateResumeCompleteness(updated);
@@ -263,5 +281,20 @@ export default function ResumeBuilderWorkspace() {
         onMergeExtracted={(merged) => handleResumeChange(merged)}
       />
     </div>
+  );
+}
+
+export default function ResumeBuilderWorkspace() {
+  return (
+    <Suspense fallback={
+      <div className="grid min-h-[70vh] place-items-center">
+        <div className="flex items-center gap-3 rounded-full bg-white px-6 py-3 shadow-xs border border-slate-200 text-slate-500 font-medium text-sm">
+          <div className="h-4 w-4 animate-spin rounded-full border-2 border-[#0f5daa] border-t-transparent" />
+          <span>Loading workspace…</span>
+        </div>
+      </div>
+    }>
+      <ResumeBuilderContent />
+    </Suspense>
   );
 }
